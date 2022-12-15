@@ -1,13 +1,16 @@
+from asyncio import subprocess
 import datetime
 from typing import final
 import requests
 import os.path
 import json
 import ffmpeg
+import subprocess
 from slugify import slugify
 from bs4 import BeautifulSoup
 from pytube import YouTube
 from youtubesearchpython import VideosSearch
+
 
 print("Running sitewatcher.py")
 
@@ -17,6 +20,7 @@ additional_search_text = " official video"
 youtube_search_url_base = "https://youtube.com/results?search_query="
 json_filename = 'songs.json'
 URL="https://xmplaylist.com/station/altnation"
+CREATE_NO_WINDOW = 0x08000000
 
 # Retrieve the current database of saved songs
 with open(json_filename) as json_file:
@@ -41,6 +45,7 @@ for song_element in song_elements:
     # database, then we are done with this song
     songId = songAnchor['href']
     if songId in json_songs['songs'].keys():
+        print (songId + " already added to database")
         continue
 
     # if we are here, then it must be a new song
@@ -142,12 +147,23 @@ for song_element in song_elements:
             audio_stream = ffmpeg.input('audio.mp4')
 
             # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).run()
-            ffmpeg.output(audio_stream, video_stream, videoSavePath + filename, loglevel = "quiet").run()
+            # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).global_args('-loglevel', 'quiet').run()
+            subprocess.run([
+                'ffmpeg',
+                '-i', 'video.mp4',
+                '-i', 'audio.mp4',
+                '-c:v', 'copy',
+                '-c:a', 'aac',
+                '-loglevel', 'quiet',
+                videoSavePath + filename
+                ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=subprocess.DETACHED_PROCESS)
 
         except Exception as err:
             json_songs['songs'][songId]['video-download-error'] = str(err)
             print(f"There was an error {err=}, {type(err)=}")
             continue
+    else:
+        print (filename + " already downloaded")
 
     json_songs['songs'][songId]['video-download-full-filename'] = videoSavePath + filename
     json_songs['songs'][songId]['video-download-datetime'] = str(datetime.datetime.now())
