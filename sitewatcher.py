@@ -18,7 +18,7 @@ from dotenv import load_dotenv
 import os
 
 # Set this to run weekly, every Saturday at about 2:05 PM. The weekly Top 18
-# is played every Saturday at 1:00PM and lasts about an hour.
+# for Alt Nation is played every Saturday at 1:00PM and lasts about an hour.
 
 load_dotenv()
 gmail_pass = os.getenv("GMAILPASS")
