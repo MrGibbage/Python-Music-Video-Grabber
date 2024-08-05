@@ -144,7 +144,7 @@ for idx, song_element in enumerate(song_elements, 1):
     #   print("title: " + title_element.text)
       songTitle = title_element.text.strip()
       logger.info("New song title: " + songTitle)
-      msg += "NEW " + songTitle + " by "
+      msg += "**NEW** " + songTitle + " by "
       search_terms += songTitle
       json_songs['songs'][songId]['song-title'] = songTitle
     else:
@@ -168,7 +168,7 @@ for idx, song_element in enumerate(song_elements, 1):
             artistList += li.text.strip() + " "
             # print(artistList)
         logger.info("artistList = " + artistList)
-        msg += artistList + ". "
+        msg += artistList + ".\r\n"
     else:
         # print("artists is None")
         msg += "No artists found\r\n"
@@ -213,7 +213,7 @@ for idx, song_element in enumerate(song_elements, 1):
     # print(filename)
     logger.info("Filename: " + filename)
 
-    msg += " url: " + videoUrl
+    msg += " url: " + videoUrl + "\r\n"
 
     # save the video (only if it isn't already saved)
     if (not os.path.isfile(videoSavePath + filename)):
