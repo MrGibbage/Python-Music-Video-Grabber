@@ -97,11 +97,15 @@ except:
     logger.info("Aborting")
     msg += "Could not open " + URL
     sendNotificationEmail(logger, msg)
-    exit()
+    exit(1)
 
 # Get the song information
 song_elements = soup.find_all("div", class_=song_elements_class) # line 157 in sample.html
 # print(song_elements)
+if song_elements is None:
+    logger.info("song_elements was None. Aborting")
+    exit(1)
+    
 msg += "Found " + str(len(song_elements)) + " song elements\r\n"
 logger.info("Found " + str(len(song_elements)) + " song elements")
 for idx, song_element in enumerate(song_elements, 1):
@@ -324,3 +328,4 @@ with open(json_channels_filename, 'w') as out_file:
 
 sendNotificationEmail(logger, msg)
 logger.info('Finished')
+exit(0)
