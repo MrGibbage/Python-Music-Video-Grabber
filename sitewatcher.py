@@ -9,11 +9,14 @@ import ffmpeg
 import subprocess
 # pip install python-slugify
 from slugify import slugify
+# pip install bs4
 from bs4 import BeautifulSoup
+# pip install pytube
 from pytube import YouTube
 # pip install youtube-search-python
 from youtubesearchpython import VideosSearch
 import smtplib
+# pip install python-dotenv
 from dotenv import load_dotenv
 import os
 
