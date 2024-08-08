@@ -18,6 +18,11 @@ from dotenv import load_dotenv
 import os
 import logging
 import time
+from pytube.innertube import _default_clients
+
+# https://github.com/pytube/pytube/issues/1894#issuecomment-2026951321
+_default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
+_default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
 
 def sendNotificationEmail(logger, msg):
     load_dotenv()
@@ -197,7 +202,7 @@ for idx, song_element in enumerate(song_elements, 1):
     logger.info("Video url: " + videoUrl)
 
     # get the information about the video
-    yt = YouTube(videoUrl)
+    yt = YouTube(videoUrl, use_oauth=True, allow_oauth_cache=True)
     videoTitle = yt.title
     logger.info("Video title: " + videoTitle)
     # print(yt.streams)
@@ -210,19 +215,19 @@ for idx, song_element in enumerate(song_elements, 1):
     json_songs['songs'][songId]['video-publish-date'] = str(yt.publish_date)
 
     # create the filename for the saved video
-    filename = slugify(artistList, lowercase=False, separator=" ") + " - " + \
+    fname = slugify(artistList, lowercase=False, separator=" ") + " - " + \
         slugify(songTitle, lowercase=False, separator=" ") + \
         " (" + str(videoYear) + ").mp4"
-    json_songs['songs'][songId]['video-filename'] = filename
+    json_songs['songs'][songId]['video-filename'] = fname
     # print(filename)
-    logger.info("Filename: " + filename)
+    logger.info("Filename: " + fname)
 
     msg += " url: " + videoUrl + "\r\n"
 
     # save the video (only if it isn't already saved)
-    if (not os.path.isfile(videoSavePath + filename)):
+    if (not os.path.isfile(videoSavePath + fname)):
         # print("Saving " + videoSavePath + filename)
-        logger.info("Saving " + videoSavePath + filename)
+        logger.info("Saving " + videoSavePath + fname)
         try:
             os.remove("video.mp4")
             os.remove("audio.mp4")
@@ -232,10 +237,12 @@ for idx, song_element in enumerate(song_elements, 1):
         sucessfulDownload = False
         try:
             logger.info("Trying 1080p")
-            video = yt.streams.filter(res="1080p").first().download()
-            os.rename(video,"video.mp4")
+            # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
+            video = yt.streams.filter(res="1080p", file_extension='mp4').order_by('resolution').desc().first().download(filename=videoSavePath + fname)
+            # os.rename(video,"video.mp4")
             sucessfulDownload = True
             logger.info("Downloaded 1080p video")
+            json_songs['songs'][songId]['1080p-video-downloaded'] = fname
         except Exception as err:
             json_songs['songs'][songId]['1080p-video-download-error'] = str(err)
             print(f"There was an error downloading 1080p video {err=}, {type(err)=}")
@@ -246,10 +253,11 @@ for idx, song_element in enumerate(song_elements, 1):
         if (sucessfulDownload == False):
             try:
                 logger.info("Trying 720p")
-                video = yt.streams.filter(res="720p").first().download()
-                os.rename(video,"video.mp4")
+                video = yt.streams.filter(res="720p", file_extension='mp4').order_by('resolution').desc().first().download(filename=videoSavePath + fname)
+                # os.rename(video,"video.mp4")
                 sucessfulDownload = True
                 logger.info("Downloaded 720p video")
+                json_songs['songs'][songId]['720p-video-downloaded'] = fname
             except Exception as err:
                 json_songs['songs'][songId]['720p-video-download-error'] = str(err)
                 print(f"There was an error downloading 720p video {err=}, {type(err)=}")
@@ -260,11 +268,13 @@ for idx, song_element in enumerate(song_elements, 1):
         if (sucessfulDownload == False):
             try:
                 logger.info("Trying for best resolution")
-                video = yt.streams.get_highest_resolution().download()
+                video = yt.streams.filter(file_extension='mp4').order_by('resolution').desc().first().download(filename=videoSavePath + fname)
                 logger.info("Best resolution: " + yt.streams.get_highest_resolution().resolution)
-                os.rename(video,"video.mp4")
+                # os.rename(video,"video.mp4")
                 sucessfulDownload = True
                 logger.info("Downloaded best resolution: " + yt.streams.get_highest_resolution().resolution)
+                json_songs['songs'][songId]['video-downloaded'] = fname
+                json_songs['songs'][songId]['video-downloaded-resolution'] = yt.streams.get_highest_resolution().resolution
             except Exception as err:
                 json_songs['songs'][songId]['video-download-error'] = str(err)
                 print(f"There was an error downloading highest resolution video {err=}, {type(err)=}")
@@ -274,42 +284,43 @@ for idx, song_element in enumerate(song_elements, 1):
                 continue
         
         if (sucessfulDownload):
-            msg += "Saved new video " + filename + "\r\n"
-            logger.info("Saved new video " + filename)
+            msg += "Saved new video " + fname + "\r\n"
+            logger.info("Saved new video " + fname)
         else:
             msg += "Could not download\r\n"
             logger.info("Could not download")
 
-        try:
-            audio = yt.streams.filter(only_audio=True).first().download()
-            os.rename(audio,"audio.mp4")
-            video_stream = ffmpeg.input('video.mp4')
-            audio_stream = ffmpeg.input('audio.mp4')
+        # try:
+        #     audio = yt.streams.filter(only_audio=True).first().download()
+        #     os.rename(audio,"audio.mp4")
+        #     video_stream = ffmpeg.input('video.mp4')
+        #     audio_stream = ffmpeg.input('audio.mp4')
 
-            # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).run()
-            # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).global_args('-loglevel', 'quiet').run()
-            subprocess.run([
-                'ffmpeg',
-                '-i', 'video.mp4',
-                '-i', 'audio.mp4',
-                '-c:v', 'copy',
-                '-c:a', 'aac',
-                '-loglevel', 'quiet',
-                videoSavePath + filename
-                ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=subprocess.DETACHED_PROCESS)
+        #     # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).run()
+        #     # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).global_args('-loglevel', 'quiet').run()
+        #     subprocess.run([
+        #         'ffmpeg',
+        #         '-i', 'video.mp4',
+        #         '-i', 'audio.mp4',
+        #         '-c:v', 'copy',
+        #         '-c:a', 'aac',
+        #         '-loglevel', 'quiet',
+        #         videoSavePath + fname
+        #         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=subprocess.DETACHED_PROCESS)
 
-        except Exception as err:
-            json_songs['songs'][songId]['video-download-error'] = str(err)
-            print(f"There was an error {err=}, {type(err)=}")
-            logger.info(f"There was an error processing the video: {err=}, {type(err)=}")
-            msg += "Error: " + str(err) + "\r\n"
-            continue
+        # except Exception as err:
+        #     json_songs['songs'][songId]['video-download-error'] = str(err)
+        #     print(f"There was an error {err=}, {type(err)=}")
+        #     logger.info(f"There was an error processing the video: {err=}, {type(err)=}")
+        #     msg += "Error: " + str(err) + "\r\n"
+        #     continue
     else:
-        msg += (filename + " already downloaded\r\n")
-        logger.info(filename + " was already downloaded, but wasn't in the database.")
+        msg += (fname + " already downloaded\r\n")
+        json_songs['songs'][songId]['video-already-download'] = videoSavePath + fname
+        logger.info(fname + " was already downloaded, but wasn't in the database.")
     #     print (filename + " already downloaded")
 
-    json_songs['songs'][songId]['video-download-full-filename'] = videoSavePath + filename
+    json_songs['songs'][songId]['video-download-full-filename'] = videoSavePath + fname
     json_songs['songs'][songId]['video-download-datetime'] = str(datetime.datetime.now())
 
     
