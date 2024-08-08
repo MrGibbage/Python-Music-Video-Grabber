@@ -9987,18 +9987,6 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Absofacto - Fantasy (2018).mp4",
             "video-download-datetime": "2024-08-08 11:30:19.464077"
         },
-        "/station/altnation/track/GDCA-110561185-001": {
-            "song-title": "Price On Fun",
-            "song-artist": "Chloe Slater",
-            "video-url": "https://www.youtube.com/watch?v=GXiAyxVQgb4",
-            "video-title": "Chloe Slater - Price On Fun (Music Video)",
-            "video-author": "Chloe Slater",
-            "video-publish-date": "2024-05-23 00:00:00",
-            "video-filename": "Chloe Slater - Price On Fun (2024).mp4",
-            "1080p-video-download-error": "map_functions: could not find match for multiple",
-            "720p-video-download-error": "map_functions: could not find match for multiple",
-            "video-download-error": "map_functions: could not find match for multiple"
-        },
         "/station/altnation/track/GDCA-110610655-001": {
             "song-title": "Happy Again",
             "song-artist": "Phantogram",
@@ -10034,6 +10022,18 @@
             "1080p-video-downloaded": "MISSIO - Underground (2019).mp4",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\MISSIO - Underground (2019).mp4",
             "video-download-datetime": "2024-08-08 11:30:37.593054"
+        },
+        "/station/altnation/track/GDCA-110561185-001": {
+            "song-title": "Price On Fun",
+            "song-artist": "Chloe Slater",
+            "video-url": "https://www.youtube.com/watch?v=GXiAyxVQgb4",
+            "video-title": "Chloe Slater - Price On Fun (Music Video)",
+            "video-author": "Chloe Slater",
+            "video-publish-date": "2024-05-23 00:00:00",
+            "video-filename": "Chloe Slater - Price On Fun (2024).mp4",
+            "1080p-video-downloaded": "Chloe Slater - Price On Fun (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Chloe Slater - Price On Fun (2024).mp4",
+            "video-download-datetime": "2024-08-08 11:47:41.012317"
         }
     }
 }

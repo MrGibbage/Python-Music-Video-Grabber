@@ -18862,3 +18862,359 @@ INFO:__main__:artists is not None
 2024-08-08 11:30:37 Almost done. Writing out the json file now
 2024-08-08 11:30:37 Sending notification email now
 2024-08-08 11:30:39 Finished
+2024-08-08 11:46:42 Started
+2024-08-08 11:46:42 Retrieved data from https://xmplaylist.com/station/altnation
+2024-08-08 11:46:42 Found 24 song elements
+2024-08-08 11:46:42 Song number 1
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-101800994-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-101800994-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Guiding Light
+2024-08-08 11:46:42 Existing song artist: Mumford & Sons
+2024-08-08 11:46:42 Existing song file name: Mumford Sons - Guiding Light (2018).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 2
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110305506-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110305506-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Take A Bite
+2024-08-08 11:46:42 Existing song artist: beabadoobee
+2024-08-08 11:46:42 Existing song file name: beabadoobee - Take A Bite (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 3
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110044874-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110044874-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Overcompensate
+2024-08-08 11:46:42 Existing song artist: Twenty One Pilots
+2024-08-08 11:46:42 Existing song file name: Twenty One Pilots - Overcompensate (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 4
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/NDCA-000011034-002
+2024-08-08 11:46:42 /station/altnation/track/NDCA-000011034-002 is already added to database
+2024-08-08 11:46:42 Existing song title: Feeling This
+2024-08-08 11:46:42 Existing song artist: Blink-182
+2024-08-08 11:46:42 Existing song file name: Blink 182 - Feeling This (2009).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 5
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110614134-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110614134-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Boyfriend
+2024-08-08 11:46:42 Existing song artist: Teenage Dads
+2024-08-08 11:46:42 Existing song file name: Teenage Dads - Boyfriend (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 6
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110509194-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110509194-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Slo Mo
+2024-08-08 11:46:42 Existing song artist: Vinyl Theatre
+2024-08-08 11:46:42 Existing song file name: Vinyl Theatre - Slo Mo (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 7
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110610906-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110610906-001 is already added to database
+2024-08-08 11:46:42 Existing song title: You're Invited
+2024-08-08 11:46:42 Existing song artist: The Dare
+2024-08-08 11:46:42 Existing song file name: The Dare - You re Invited (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 8
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110610901-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110610901-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Beaches
+2024-08-08 11:46:42 Existing song artist: beabadoobee
+2024-08-08 11:46:42 Existing song file name: beabadoobee - Beaches (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 9
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110610908-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110610908-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Hollywood
+2024-08-08 11:46:42 Existing song artist: Toro y Moi Benjamin Gibbard
+2024-08-08 11:46:42 Existing song file name: Toro y Moi Benjamin Gibbard - Hollywood (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 10
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110607404-002
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110607404-002 is already added to database
+2024-08-08 11:46:42 Existing song title: Sighommi
+2024-08-08 11:46:42 Existing song artist: The Smashing Pumpkins
+2024-08-08 11:46:42 Existing song file name: The Smashing Pumpkins - Sighommi (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 11
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110614129-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110614129-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Fantasy
+2024-08-08 11:46:42 Existing song artist: Absofacto
+2024-08-08 11:46:42 Existing song file name: Absofacto - Fantasy (2018).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 12
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110561185-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110561185-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Price On Fun
+2024-08-08 11:46:42 Existing song artist: Chloe Slater
+2024-08-08 11:46:42 Existing song file name: Chloe Slater - Price On Fun (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 13
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110610655-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110610655-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Happy Again
+2024-08-08 11:46:42 Existing song artist: Phantogram
+2024-08-08 11:46:42 Existing song file name: Phantogram - Happy Again (2013).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 14
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-103181546-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-103181546-001 is already added to database
+2024-08-08 11:46:42 Existing song title: My Cheating Heart
+2024-08-08 11:46:42 Existing song artist: Love Fame Tragedy
+2024-08-08 11:46:42 Existing song file name: Love Fame Tragedy - My Cheating Heart (2019).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 15
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-102875452-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-102875452-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Underground
+2024-08-08 11:46:42 Existing song artist: MISSIO
+2024-08-08 11:46:42 Existing song file name: MISSIO - Underground (2019).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 16
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/NDCA-000257240-001
+2024-08-08 11:46:42 /station/altnation/track/NDCA-000257240-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Tongues (feat. Kopps)
+2024-08-08 11:46:42 Existing song artist: Joywave
+2024-08-08 11:46:42 Existing song file name: Joywave - Tongues feat Kopps (2014).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 17
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110137382-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110137382-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Panoramic View
+2024-08-08 11:46:42 Existing song artist: AWOLNATION
+2024-08-08 11:46:42 Existing song file name: AWOLNATION - Panoramic View (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 18
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/NDCA-000292397-002
+2024-08-08 11:46:42 /station/altnation/track/NDCA-000292397-002 is already added to database
+2024-08-08 11:46:42 Existing song title: Leave A Trace
+2024-08-08 11:46:42 Existing song artist: CHVRCHES
+2024-08-08 11:46:42 Existing song file name: CHVRCHES - Leave A Trace (2015).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 19
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110535620-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110535620-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Kinky
+2024-08-08 11:46:42 Existing song artist: bby
+2024-08-08 11:46:42 Existing song file name: bby - Kinky (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 20
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/NDCA-000073738-001
+2024-08-08 11:46:42 /station/altnation/track/NDCA-000073738-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Last Nite
+2024-08-08 11:46:42 Existing song artist: Strokes
+2024-08-08 11:46:42 Existing song file name: Strokes - Last Nite (2009).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 21
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110205060-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110205060-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Starburster
+2024-08-08 11:46:42 Existing song artist: Fontaines D.C.
+2024-08-08 11:46:42 Existing song file name: Fontaines D C - Starburster (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 22
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-101326660-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-101326660-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Love It If We Made It
+2024-08-08 11:46:42 Existing song artist: The 1975
+2024-08-08 11:46:42 Existing song file name: The 1975 - Love It If We Made It (2018).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 23
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/GDCA-110305589-001
+2024-08-08 11:46:42 /station/altnation/track/GDCA-110305589-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Nostalgia
+2024-08-08 11:46:42 Existing song artist: The Band CAMINO
+2024-08-08 11:46:42 Existing song file name: The Band CAMINO - Nostalgia (2024).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Song number 24
+2024-08-08 11:46:42 songAnchor: /station/altnation/track/NDCA-000081611-001
+2024-08-08 11:46:42 /station/altnation/track/NDCA-000081611-001 is already added to database
+2024-08-08 11:46:42 Existing song title: Intro
+2024-08-08 11:46:42 Existing song artist: XX
+2024-08-08 11:46:42 Existing song file name: XX - Intro (2021).mp4
+2024-08-08 11:46:42 Nothing to do. Skipping to next song.
+2024-08-08 11:46:42 Almost done. Writing out the json file now
+2024-08-08 11:46:42 Sending notification email now
+2024-08-08 11:46:43 Finished
+2024-08-08 11:47:34 Started
+2024-08-08 11:47:34 Retrieved data from https://xmplaylist.com/station/altnation
+2024-08-08 11:47:34 Found 24 song elements
+2024-08-08 11:47:34 Song number 1
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-101800994-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-101800994-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Guiding Light
+2024-08-08 11:47:34 Existing song artist: Mumford & Sons
+2024-08-08 11:47:34 Existing song file name: Mumford Sons - Guiding Light (2018).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 2
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110305506-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110305506-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Take A Bite
+2024-08-08 11:47:34 Existing song artist: beabadoobee
+2024-08-08 11:47:34 Existing song file name: beabadoobee - Take A Bite (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 3
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110044874-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110044874-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Overcompensate
+2024-08-08 11:47:34 Existing song artist: Twenty One Pilots
+2024-08-08 11:47:34 Existing song file name: Twenty One Pilots - Overcompensate (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 4
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/NDCA-000011034-002
+2024-08-08 11:47:34 /station/altnation/track/NDCA-000011034-002 is already added to database
+2024-08-08 11:47:34 Existing song title: Feeling This
+2024-08-08 11:47:34 Existing song artist: Blink-182
+2024-08-08 11:47:34 Existing song file name: Blink 182 - Feeling This (2009).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 5
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110614134-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110614134-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Boyfriend
+2024-08-08 11:47:34 Existing song artist: Teenage Dads
+2024-08-08 11:47:34 Existing song file name: Teenage Dads - Boyfriend (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 6
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110509194-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110509194-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Slo Mo
+2024-08-08 11:47:34 Existing song artist: Vinyl Theatre
+2024-08-08 11:47:34 Existing song file name: Vinyl Theatre - Slo Mo (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 7
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110610906-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110610906-001 is already added to database
+2024-08-08 11:47:34 Existing song title: You're Invited
+2024-08-08 11:47:34 Existing song artist: The Dare
+2024-08-08 11:47:34 Existing song file name: The Dare - You re Invited (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 8
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110610901-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110610901-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Beaches
+2024-08-08 11:47:34 Existing song artist: beabadoobee
+2024-08-08 11:47:34 Existing song file name: beabadoobee - Beaches (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 9
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110610908-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110610908-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Hollywood
+2024-08-08 11:47:34 Existing song artist: Toro y Moi Benjamin Gibbard
+2024-08-08 11:47:34 Existing song file name: Toro y Moi Benjamin Gibbard - Hollywood (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 10
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110607404-002
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110607404-002 is already added to database
+2024-08-08 11:47:34 Existing song title: Sighommi
+2024-08-08 11:47:34 Existing song artist: The Smashing Pumpkins
+2024-08-08 11:47:34 Existing song file name: The Smashing Pumpkins - Sighommi (2024).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 11
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110614129-001
+2024-08-08 11:47:34 /station/altnation/track/GDCA-110614129-001 is already added to database
+2024-08-08 11:47:34 Existing song title: Fantasy
+2024-08-08 11:47:34 Existing song artist: Absofacto
+2024-08-08 11:47:34 Existing song file name: Absofacto - Fantasy (2018).mp4
+2024-08-08 11:47:34 Nothing to do. Skipping to next song.
+2024-08-08 11:47:34 Song number 12
+2024-08-08 11:47:34 songAnchor: /station/altnation/track/GDCA-110561185-001
+2024-08-08 11:47:34 New song title: Price On Fun
+2024-08-08 11:47:34 Artists is not None
+2024-08-08 11:47:34 artistList = Chloe Slater 
+2024-08-08 11:47:34 Search terms: Price On Fun Chloe Slater  official video
+2024-08-08 11:47:35 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2024-08-08 11:47:35 Video url: https://www.youtube.com/watch?v=GXiAyxVQgb4
+2024-08-08 11:47:35 Video title: Chloe Slater - Price On Fun (Music Video)
+2024-08-08 11:47:35 Video Author: Chloe Slater
+2024-08-08 11:47:36 Filename: Chloe Slater - Price On Fun (2024).mp4
+2024-08-08 11:47:36 Saving C:\Github-Projects\Python Music Video Grabber\videos\Chloe Slater - Price On Fun (2024).mp4
+2024-08-08 11:47:36 Trying 1080p
+2024-08-08 11:47:41 Downloaded 1080p video
+2024-08-08 11:47:41 Saved new video Chloe Slater - Price On Fun (2024).mp4
+2024-08-08 11:47:41 Song number 13
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-110610655-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-110610655-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Happy Again
+2024-08-08 11:47:41 Existing song artist: Phantogram
+2024-08-08 11:47:41 Existing song file name: Phantogram - Happy Again (2013).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 14
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-103181546-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-103181546-001 is already added to database
+2024-08-08 11:47:41 Existing song title: My Cheating Heart
+2024-08-08 11:47:41 Existing song artist: Love Fame Tragedy
+2024-08-08 11:47:41 Existing song file name: Love Fame Tragedy - My Cheating Heart (2019).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 15
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-102875452-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-102875452-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Underground
+2024-08-08 11:47:41 Existing song artist: MISSIO
+2024-08-08 11:47:41 Existing song file name: MISSIO - Underground (2019).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 16
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/NDCA-000257240-001
+2024-08-08 11:47:41 /station/altnation/track/NDCA-000257240-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Tongues (feat. Kopps)
+2024-08-08 11:47:41 Existing song artist: Joywave
+2024-08-08 11:47:41 Existing song file name: Joywave - Tongues feat Kopps (2014).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 17
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-110137382-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-110137382-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Panoramic View
+2024-08-08 11:47:41 Existing song artist: AWOLNATION
+2024-08-08 11:47:41 Existing song file name: AWOLNATION - Panoramic View (2024).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 18
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/NDCA-000292397-002
+2024-08-08 11:47:41 /station/altnation/track/NDCA-000292397-002 is already added to database
+2024-08-08 11:47:41 Existing song title: Leave A Trace
+2024-08-08 11:47:41 Existing song artist: CHVRCHES
+2024-08-08 11:47:41 Existing song file name: CHVRCHES - Leave A Trace (2015).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 19
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-110535620-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-110535620-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Kinky
+2024-08-08 11:47:41 Existing song artist: bby
+2024-08-08 11:47:41 Existing song file name: bby - Kinky (2024).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 20
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/NDCA-000073738-001
+2024-08-08 11:47:41 /station/altnation/track/NDCA-000073738-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Last Nite
+2024-08-08 11:47:41 Existing song artist: Strokes
+2024-08-08 11:47:41 Existing song file name: Strokes - Last Nite (2009).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 21
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-110205060-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-110205060-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Starburster
+2024-08-08 11:47:41 Existing song artist: Fontaines D.C.
+2024-08-08 11:47:41 Existing song file name: Fontaines D C - Starburster (2024).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 22
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-101326660-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-101326660-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Love It If We Made It
+2024-08-08 11:47:41 Existing song artist: The 1975
+2024-08-08 11:47:41 Existing song file name: The 1975 - Love It If We Made It (2018).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 23
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/GDCA-110305589-001
+2024-08-08 11:47:41 /station/altnation/track/GDCA-110305589-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Nostalgia
+2024-08-08 11:47:41 Existing song artist: The Band CAMINO
+2024-08-08 11:47:41 Existing song file name: The Band CAMINO - Nostalgia (2024).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Song number 24
+2024-08-08 11:47:41 songAnchor: /station/altnation/track/NDCA-000081611-001
+2024-08-08 11:47:41 /station/altnation/track/NDCA-000081611-001 is already added to database
+2024-08-08 11:47:41 Existing song title: Intro
+2024-08-08 11:47:41 Existing song artist: XX
+2024-08-08 11:47:41 Existing song file name: XX - Intro (2021).mp4
+2024-08-08 11:47:41 Nothing to do. Skipping to next song.
+2024-08-08 11:47:41 Almost done. Writing out the json file now
+2024-08-08 11:47:41 Sending notification email now
+2024-08-08 11:47:42 Finished
