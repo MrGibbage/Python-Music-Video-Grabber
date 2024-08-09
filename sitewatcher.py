@@ -33,14 +33,17 @@ def sendNotificationEmail(logger, msg):
     gmail_address = os.getenv("GMAILADDRESS")
     logger.info("Sending notification email now")
     # Send notificaiton email
-    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-    server.ehlo()
-    server.login(gmail_address, gmail_pass)
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(gmail_address, gmail_pass)
 
-    server.sendmail(gmail_address, gmail_address, msg)
+        server.sendmail(gmail_address, gmail_address, msg)
+        server.quit()
+        # print ("Email Sent")
+    except Exception as err:
+        logger.info(f"Error sending email {err=}, {type(err)=}")
 
-    server.quit()
-    print ("Email Sent")
 
 logger = logging.getLogger(__name__)
 
@@ -212,7 +215,10 @@ for idx, song_element in enumerate(song_elements, 1):
     json_songs['songs'][songId]['video-title'] = videoTitle
     videoAuthor = yt.author
     logger.info("Video Author: " + videoAuthor)
+    ageRestricted = yt.age_restricted
+    logger.info("Age Restricted: " + str(ageRestricted))
     json_songs['songs'][songId]['video-author'] = videoAuthor
+    json_songs['songs'][songId]['age-restricted'] = str(ageRestricted)
 
     videoYear = yt.publish_date.year
     json_songs['songs'][songId]['video-publish-date'] = str(yt.publish_date)

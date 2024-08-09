@@ -8993,17 +8993,6 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Something Corporate Andrew McMahon in the Wilderness - Happy (2024).mp4",
             "video-download-datetime": "2024-08-03 11:10:05.013496"
         },
-        "/station/altnation/track/GDCA-110580326-003": {
-            "song-title": "That's How I'm Feeling",
-            "song-artist": "Jack White",
-            "video-url": "https://www.youtube.com/watch?v=Ozv5moXP3YA",
-            "video-title": "That's How I'm Feeling (Official Audio)",
-            "video-author": "Jack White",
-            "video-publish-date": "2024-08-02 00:00:00",
-            "video-filename": "Jack White - That s How I m Feeling (2024).mp4",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Jack White - That s How I m Feeling (2024).mp4",
-            "video-download-datetime": "2024-08-03 11:10:13.635937"
-        },
         "/station/altnation/track/GDCA-110299722-003": {
             "song-title": "Deeply Still In Love",
             "song-artist": "ROLE MODEL",
@@ -9025,17 +9014,6 @@
             "video-filename": "Wallows - Calling After Me (2024).mp4",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Wallows - Calling After Me (2024).mp4",
             "video-download-datetime": "2024-08-03 11:10:41.188916"
-        },
-        "/station/altnation/track/GDCA-109801404-001": {
-            "song-title": "Don't You Want To Sleep With Someone Normal?",
-            "song-artist": "Love Fame Tragedy",
-            "video-url": "https://www.youtube.com/watch?v=nXdR1LZN0KQ",
-            "video-title": "Love Fame Tragedy - Don\u2019t You Want To Sleep With Someone Normal",
-            "video-author": "MDSH Coffee House",
-            "video-publish-date": "2023-12-09 00:00:00",
-            "video-filename": "Love Fame Tragedy - Don t You Want To Sleep With Someone Normal (2023).mp4",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Love Fame Tragedy - Don t You Want To Sleep With Someone Normal (2023).mp4",
-            "video-download-datetime": "2024-08-03 11:10:50.574462"
         },
         "/station/altnation/track/GDCA-110519824-001": {
             "song-title": "Takes One to Know One",
@@ -9357,17 +9335,6 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Struts - Pretty Vicious (2023).mp4",
             "video-download-datetime": "2024-08-04 09:52:19.556346"
         },
-        "/station/altnation/track/GDCA-109932736-001": {
-            "song-title": "Homesick",
-            "song-artist": "Noah Kahan Sam Fender",
-            "video-url": "https://www.youtube.com/watch?v=Y8EPs0D7siE",
-            "video-title": "Homesick (Official Lyric Video)",
-            "video-author": "Noah Kahan & Sam Fender",
-            "video-publish-date": "2024-01-18 00:00:00",
-            "video-filename": "Noah Kahan Sam Fender - Homesick (2024).mp4",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Noah Kahan Sam Fender - Homesick (2024).mp4",
-            "video-download-datetime": "2024-08-04 09:52:28.168900"
-        },
         "/station/altnation/track/GDCA-109257017-002": {
             "song-title": "Sinner",
             "song-artist": "Last Dinner Party",
@@ -9411,17 +9378,6 @@
             "video-filename": "Vacations - Next Exit (2023).mp4",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Vacations - Next Exit (2023).mp4",
             "video-download-datetime": "2024-08-04 09:53:08.611166"
-        },
-        "/station/altnation/track/GDCA-110338138-001": {
-            "song-title": "Sexy to Someone",
-            "song-artist": "Clairo",
-            "video-url": "https://www.youtube.com/watch?v=w18NGVqm0bg",
-            "video-title": "Sexy to Someone",
-            "video-author": "Clairo",
-            "video-publish-date": "2024-05-23 00:00:00",
-            "video-filename": "Clairo - Sexy to Someone (2024).mp4",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Clairo - Sexy to Someone (2024).mp4",
-            "video-download-datetime": "2024-08-04 09:53:18.280932"
         },
         "/station/altnation/track/GDCA-110094556-001": {
             "song-title": "Linger EXCLUSIVE",
@@ -9676,19 +9632,6 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Vacations - Midwest (2023).mp4",
             "video-download-datetime": "2024-08-04 23:30:16.141090"
         },
-        "/station/altnation/track/NDCA-000079203-001": {
-            "song-title": "Ruby",
-            "song-artist": "Kaiser Chiefs",
-            "video-url": "https://www.youtube.com/watch?v=qObzgUfCl28",
-            "video-title": "Ruby",
-            "video-author": "Kaiser Chiefs",
-            "video-publish-date": "2009-12-02 00:00:00",
-            "video-filename": "Kaiser Chiefs - Ruby (2009).mp4",
-            "1080p-video-download-error": "'NoneType' object has no attribute 'download'",
-            "720p-video-download-error": "'NoneType' object has no attribute 'download'",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Kaiser Chiefs - Ruby (2009).mp4",
-            "video-download-datetime": "2024-08-05 00:30:11.336926"
-        },
         "/station/altnation/track/GDCA-110283866-001": {
             "song-title": "Claw Foot",
             "song-artist": "Royel Otis",
@@ -9743,19 +9686,6 @@
             "video-filename": "Arcade Fire - Ready To Start (2010).mp4",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Arcade Fire - Ready To Start (2010).mp4",
             "video-download-datetime": "2024-08-05 09:30:15.387861"
-        },
-        "/station/altnation/track/NDCA-000091854-001": {
-            "song-title": "Ain't No Rest For The Wicked",
-            "song-artist": "Cage The Elephant",
-            "video-url": "https://www.youtube.com/watch?v=HKtsdZs9LJo",
-            "video-title": "Ain't No Rest For The Wicked (Official Video)",
-            "video-author": "Cage The Elephant",
-            "video-publish-date": "2010-10-06 00:00:00",
-            "video-filename": "Cage The Elephant - Ain t No Rest For The Wicked (2010).mp4",
-            "1080p-video-download-error": "'NoneType' object has no attribute 'download'",
-            "720p-video-download-error": "'NoneType' object has no attribute 'download'",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Cage The Elephant - Ain t No Rest For The Wicked (2010).mp4",
-            "video-download-datetime": "2024-08-05 09:30:24.676034"
         },
         "/station/altnation/track/GDCA-110087041-001": {
             "song-title": "Run Your Mouth",
@@ -9963,18 +9893,6 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Toro y Moi Benjamin Gibbard - Hollywood (2024).mp4",
             "video-download-datetime": "2024-08-08 11:30:11.853106"
         },
-        "/station/altnation/track/GDCA-110607404-002": {
-            "song-title": "Sighommi",
-            "song-artist": "The Smashing Pumpkins",
-            "video-url": "https://www.youtube.com/watch?v=NtEM0dYhEaA",
-            "video-title": "Sighommi",
-            "video-author": "The Smashing Pumpkins - Topic",
-            "video-publish-date": "2024-08-01 00:00:00",
-            "video-filename": "The Smashing Pumpkins - Sighommi (2024).mp4",
-            "1080p-video-downloaded": "The Smashing Pumpkins - Sighommi (2024).mp4",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Smashing Pumpkins - Sighommi (2024).mp4",
-            "video-download-datetime": "2024-08-08 11:30:15.389572"
-        },
         "/station/altnation/track/GDCA-110614129-001": {
             "song-title": "Fantasy",
             "song-artist": "Absofacto",
@@ -10011,18 +9929,6 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Love Fame Tragedy - My Cheating Heart (2019).mp4",
             "video-download-datetime": "2024-08-08 11:30:33.821445"
         },
-        "/station/altnation/track/GDCA-102875452-001": {
-            "song-title": "Underground",
-            "song-artist": "MISSIO",
-            "video-url": "https://www.youtube.com/watch?v=W3FN5az25Zg",
-            "video-title": "MISSIO - Underground (Audio)",
-            "video-author": "MISSIOVEVO",
-            "video-publish-date": "2019-04-11 00:00:00",
-            "video-filename": "MISSIO - Underground (2019).mp4",
-            "1080p-video-downloaded": "MISSIO - Underground (2019).mp4",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\MISSIO - Underground (2019).mp4",
-            "video-download-datetime": "2024-08-08 11:30:37.593054"
-        },
         "/station/altnation/track/GDCA-110561185-001": {
             "song-title": "Price On Fun",
             "song-artist": "Chloe Slater",
@@ -10034,6 +9940,149 @@
             "1080p-video-downloaded": "Chloe Slater - Price On Fun (2024).mp4",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Chloe Slater - Price On Fun (2024).mp4",
             "video-download-datetime": "2024-08-08 11:47:41.012317"
+        },
+        "/station/altnation/track/GDCA-108883101-001": {
+            "song-title": "Hold Me Like A Grudge",
+            "song-artist": "Fall Out Boy",
+            "video-url": "https://www.youtube.com/watch?v=1rAQGxRFvN0",
+            "video-title": "Fall Out Boy - Hold Me Like A Grudge (Official Video)",
+            "video-author": "Fall Out Boy",
+            "age-restricted": "False",
+            "video-publish-date": "2023-03-24 00:00:00",
+            "video-filename": "Fall Out Boy - Hold Me Like A Grudge (2023).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/GDCA-110580326-003": {
+            "song-title": "That's How I'm Feeling",
+            "song-artist": "Jack White",
+            "video-url": "https://www.youtube.com/watch?v=Ozv5moXP3YA",
+            "video-title": "Jack White - That's How I'm Feeling (Official Audio)",
+            "video-author": "JackWhiteVEVO",
+            "age-restricted": "False",
+            "video-publish-date": "2024-08-02 00:00:00",
+            "video-filename": "Jack White - That s How I m Feeling (2024).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/GDCA-110607404-002": {
+            "song-title": "Sighommi",
+            "song-artist": "The Smashing Pumpkins",
+            "video-url": "https://www.youtube.com/watch?v=NtEM0dYhEaA",
+            "video-title": "Sighommi",
+            "video-author": "The Smashing Pumpkins - Topic",
+            "age-restricted": "False",
+            "video-publish-date": "2024-08-01 00:00:00",
+            "video-filename": "The Smashing Pumpkins - Sighommi (2024).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/GDCA-109932736-001": {
+            "song-title": "Homesick",
+            "song-artist": "Noah Kahan Sam Fender",
+            "video-url": "https://www.youtube.com/watch?v=Y8EPs0D7siE",
+            "video-title": "Noah Kahan & Sam Fender - Homesick (Official Lyric Video)",
+            "video-author": "NoahKahanVEVO",
+            "age-restricted": "False",
+            "video-publish-date": "2024-01-18 00:00:00",
+            "video-filename": "Noah Kahan Sam Fender - Homesick (2024).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/GDCA-108811364-001": {
+            "song-title": "The Way",
+            "song-artist": "Manchester Orchestra",
+            "video-url": "https://www.youtube.com/watch?v=F9oCB6Rsnqg",
+            "video-title": "Manchester Orchestra - The Way (Official Music Video)",
+            "video-author": "manchesterorchVEVO",
+            "age-restricted": "False",
+            "video-publish-date": "2023-04-07 00:00:00",
+            "video-filename": "Manchester Orchestra - The Way (2023).mp4",
+            "1080p-video-downloaded": "Manchester Orchestra - The Way (2023).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Manchester Orchestra - The Way (2023).mp4",
+            "video-download-datetime": "2024-08-08 17:30:09.922719"
+        },
+        "/station/altnation/track/GDCA-109801404-001": {
+            "song-title": "Don't You Want To Sleep With Someone Normal?",
+            "song-artist": "Love Fame Tragedy",
+            "video-url": "https://www.youtube.com/watch?v=qytnZQY2F_E",
+            "video-title": "DON'T YOU WANNA SLEEP WITH SOMEONE NORMAL | LOVE FAME TRAGEDY (LYRIC VIDEO)",
+            "video-author": "Jorden Frankell",
+            "age-restricted": "False",
+            "video-publish-date": "2024-04-03 00:00:00",
+            "video-filename": "Love Fame Tragedy - Don t You Want To Sleep With Someone Normal (2024).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/GDCA-108959559-002": {
+            "song-title": "Weak In Your Light",
+            "song-artist": "Nation of Language",
+            "video-url": "https://www.youtube.com/watch?v=Mx2xsH7a9cc",
+            "video-title": "Nation of Language - Weak In Your Light",
+            "video-author": "Nation of Language",
+            "age-restricted": "False",
+            "video-publish-date": "2023-04-13 00:00:00",
+            "video-filename": "Nation of Language - Weak In Your Light (2023).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/GDCA-110608515-002": {
+            "song-title": "Bright Lights",
+            "song-artist": "The Killers",
+            "video-url": "https://www.youtube.com/watch?v=gMK5XIkmDgo",
+            "video-title": "The Killers - Bright Lights (Official Music Video)",
+            "video-author": "TheKillersVEVO",
+            "age-restricted": "False",
+            "video-publish-date": "2024-08-08 00:00:00",
+            "video-filename": "The Killers - Bright Lights (2024).mp4",
+            "1080p-video-download-error": "gMK5XIkmDgo is streaming live and cannot be loaded",
+            "720p-video-download-error": "gMK5XIkmDgo is streaming live and cannot be loaded",
+            "video-download-error": "gMK5XIkmDgo is streaming live and cannot be loaded"
+        },
+        "/station/altnation/track/GDCA-110338138-001": {
+            "song-title": "Sexy to Someone",
+            "song-artist": "Clairo",
+            "video-url": "https://www.youtube.com/watch?v=w18NGVqm0bg",
+            "video-title": "Clairo - Sexy to Someone",
+            "video-author": "Claire Cottrill",
+            "age-restricted": "False",
+            "video-publish-date": "2024-05-23 00:00:00",
+            "video-filename": "Clairo - Sexy to Someone (2024).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/GDCA-108793124-001": {
+            "song-title": "Living in a Haze",
+            "song-artist": "Milky Chance",
+            "video-url": "https://www.youtube.com/watch?v=kmgKRmSXQUY",
+            "video-title": "Milky Chance - Living In A Haze (Official Video)",
+            "video-author": "Milky Chance Official",
+            "age-restricted": "False",
+            "video-publish-date": "2023-03-01 00:00:00",
+            "video-filename": "Milky Chance - Living in a Haze (2023).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
+        },
+        "/station/altnation/track/NDCA-000233949-001": {
+            "song-title": "Afraid",
+            "song-artist": "Neighbourhood",
+            "video-url": "https://www.youtube.com/watch?v=WFDGg6q_4g8",
+            "video-title": "The Neighbourhood - Afraid (Official Video - Clean)",
+            "video-author": "TheNeighbourhoodVEVO",
+            "age-restricted": "False",
+            "video-publish-date": "2013-10-17 00:00:00",
+            "video-filename": "Neighbourhood - Afraid (2013).mp4",
+            "1080p-video-download-error": "map_functions: could not find match for multiple",
+            "720p-video-download-error": "map_functions: could not find match for multiple",
+            "video-download-error": "map_functions: could not find match for multiple"
         }
     }
 }
