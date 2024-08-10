@@ -1,12 +1,7 @@
-from asyncio import subprocess
 import datetime
-from typing import final
 import requests
 import os.path
 import json
-# pip install ffmpeg-python
-import ffmpeg
-import subprocess
 # pip install python-slugify
 from slugify import slugify
 # pip install bs4
@@ -20,7 +15,6 @@ import smtplib
 from dotenv import load_dotenv
 import os
 import logging
-import time
 from pytube.innertube import _default_clients
 
 # https://github.com/pytube/pytube/issues/1894#issuecomment-2026951321
@@ -86,15 +80,8 @@ artist_class = "mt-1 text-sm text-gray-900 md:text-base md:leading-6 lg:text-sm 
 with open(json_songs_filename) as json_songs_file:
     json_songs = json.load(json_songs_file)
 
-with open(json_channels_filename) as json_channels_file:
-    json_channels = json.load(json_channels_file)
-
-for song in json_songs['songs'].items():
-    # print(song[1]['video-author'])
-    # print(type(song))
-    channel = song[1]['video-author']
-    if channel not in json_channels['validated'] and channel not in json_channels['invalid'] and channel not in json_channels['unknown']:
-        json_channels['unknown'].append(channel)
+# with open(json_channels_filename) as json_channels_file:
+#     json_channels = json.load(json_channels_file)
 
 try:
     # Check the xmplaylist.com for recently played songs
@@ -299,30 +286,6 @@ for idx, song_element in enumerate(song_elements, 1):
             msg += "Could not download\r\n"
             logger.info("Could not download")
 
-        # try:
-        #     audio = yt.streams.filter(only_audio=True).first().download()
-        #     os.rename(audio,"audio.mp4")
-        #     video_stream = ffmpeg.input('video.mp4')
-        #     audio_stream = ffmpeg.input('audio.mp4')
-
-        #     # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).run()
-        #     # ffmpeg.output(audio_stream, video_stream, videoSavePath + filename).global_args('-loglevel', 'quiet').run()
-        #     subprocess.run([
-        #         'ffmpeg',
-        #         '-i', 'video.mp4',
-        #         '-i', 'audio.mp4',
-        #         '-c:v', 'copy',
-        #         '-c:a', 'aac',
-        #         '-loglevel', 'quiet',
-        #         videoSavePath + fname
-        #         ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=subprocess.DETACHED_PROCESS)
-
-        # except Exception as err:
-        #     json_songs['songs'][songId]['video-download-error'] = str(err)
-        #     print(f"There was an error {err=}, {type(err)=}")
-        #     logger.info(f"There was an error processing the video: {err=}, {type(err)=}")
-        #     msg += "Error: " + str(err) + "\r\n"
-        #     continue
     else:
         msg += (fname + " already downloaded\r\n")
         json_songs['songs'][songId]['video-already-download'] = videoSavePath + fname
@@ -332,9 +295,6 @@ for idx, song_element in enumerate(song_elements, 1):
     json_songs['songs'][songId]['video-download-full-filename'] = videoSavePath + fname
     json_songs['songs'][songId]['video-download-datetime'] = str(datetime.datetime.now())
 
-    
-    if videoAuthor not in json_channels['validated'] and channel not in json_channels['invalid'] and channel not in json_channels['unknown']:
-        json_channels['unknown'].append(videoAuthor)
 
 # Update the json file
 # print ("Almost done. Writing out the json file now")
@@ -342,9 +302,6 @@ logger.info("Almost done. Writing out the json file now")
 with open(json_songs_filename, 'w') as out_file:
     json.dump(json_songs, out_file, indent=4)
 # print ("All done! Enjoy the videos")
-
-with open(json_channels_filename, 'w') as out_file:
-    json.dump(json_channels, out_file, indent=4)
 
 sendNotificationEmail(logger, msg)
 logger.info('Finished')
