@@ -31,13 +31,13 @@ for video in music_video_library.all():
 
 
 # testing code below
-vid = music_video_library.get("Young the Giant - Cough Syrup (2011)")
-vid.edit(**{"originallyAvailableAt.value":vid.title[-5:len(vid.title)-1]+"-01-01 00:00:00"})
-myMix = ArtMixin()
-vid.uploadArt(url="https://upload.wikimedia.org/wikipedia/en/a/a3/Young_the_Giant_-_Cough_Syrup.jpg")
-vid.uploadPoster(url="https://upload.wikimedia.org/wikipedia/en/a/a3/Young_the_Giant_-_Cough_Syrup.jpg")
-vid.edit(**{"thumb.value":"https://upload.wikimedia.org/wikipedia/en/a/a3/Young_the_Giant_-_Cough_Syrup.jpg"})
-vid.reload()
-# thisvid = music_video_library.get("Arlo Parks - Weightless (2023)")
-print(vid.originallyAvailableAt)
-print(vid.thumb)
+# vid = music_video_library.get("Young the Giant - Cough Syrup (2011)")
+# vid.edit(**{"originallyAvailableAt.value":vid.title[-5:len(vid.title)-1]+"-01-01 00:00:00"})
+# myMix = ArtMixin()
+# vid.uploadArt(url="https://upload.wikimedia.org/wikipedia/en/a/a3/Young_the_Giant_-_Cough_Syrup.jpg")
+# vid.uploadPoster(url="https://upload.wikimedia.org/wikipedia/en/a/a3/Young_the_Giant_-_Cough_Syrup.jpg")
+# vid.edit(**{"thumb.value":"https://upload.wikimedia.org/wikipedia/en/a/a3/Young_the_Giant_-_Cough_Syrup.jpg"})
+# vid.reload()
+# # thisvid = music_video_library.get("Arlo Parks - Weightless (2023)")
+# print(vid.originallyAvailableAt)
+# print(vid.thumb)
