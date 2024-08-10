@@ -20,17 +20,17 @@ music_video_library = plex.library.section('Music Videos')
 
 # Run this video periodically to update the dates
 
-# for video in music_video_library.all():
-#     if str(video.originallyAvailableAt.year) != video.title[-5:len(video.title)-1]:
-#         print("Editing " + video.title)
-#         try:
-#             video.edit(**{"originallyAvailableAt.value":video.title[-5:len(video.title)-1]+"-01-01 00:00:00"})
-#             video.reload()
-#         except:
-#             print("Couldn't Edit " + video.title)
+for video in music_video_library.all():
+    if str(video.originallyAvailableAt.year) != video.title[-5:len(video.title)-1]:
+        print("Editing " + video.title)
+        try:
+            video.edit(**{"originallyAvailableAt.value":video.title[-5:len(video.title)-1]+"-01-01 00:00:00"})
+            video.reload()
+        except:
+            print("Couldn't Edit " + video.title)
 
 
-
+# testing code below
 vid = music_video_library.get("Young the Giant - Cough Syrup (2011)")
 vid.edit(**{"originallyAvailableAt.value":vid.title[-5:len(vid.title)-1]+"-01-01 00:00:00"})
 myMix = ArtMixin()
