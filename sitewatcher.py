@@ -254,23 +254,24 @@ for idx, song_element in enumerate(song_elements, 1):
             msg += "2160p error\r\n"
             # continue
         
-        try:
-            logger.info("Trying 1080p")
-            # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
-            video = yt.streams.filter(res="1080p", file_extension='mp4', adaptive=True).order_by('resolution').desc().first().download(filename=video_fname)
-            audio = yt.streams.get_audio_only().download(filename=audio_fname)
-            video_stream = ffmpeg.input(video_fname)
-            audio_stream = ffmpeg.input(audio_fname)
-            ffmpeg.output(audio_stream, video_stream, saved_video).run()            # os.rename(video,"video.mp4")
-            sucessfulDownload = True
-            logger.info("Downloaded 1080p video")
-            json_songs['songs'][songId]['1080p-video-downloaded'] = fname
-        except Exception as err:
-            json_songs['songs'][songId]['1080p-video-download-error'] = str(err)
-            print(f"There was an error downloading 1080p video {err=}, {type(err)=}")
-            logger.info(f"There was an error downloading 1080p video {err=}, {type(err)=}")
-            msg += "1080p error\r\n"
-            # continue
+        if (sucessfulDownload == False):
+            try:
+                logger.info("Trying 1080p")
+                # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
+                video = yt.streams.filter(res="1080p", file_extension='mp4', adaptive=True).order_by('resolution').desc().first().download(filename=video_fname)
+                audio = yt.streams.get_audio_only().download(filename=audio_fname)
+                video_stream = ffmpeg.input(video_fname)
+                audio_stream = ffmpeg.input(audio_fname)
+                ffmpeg.output(audio_stream, video_stream, saved_video).run()            # os.rename(video,"video.mp4")
+                sucessfulDownload = True
+                logger.info("Downloaded 1080p video")
+                json_songs['songs'][songId]['1080p-video-downloaded'] = fname
+            except Exception as err:
+                json_songs['songs'][songId]['1080p-video-download-error'] = str(err)
+                print(f"There was an error downloading 1080p video {err=}, {type(err)=}")
+                logger.info(f"There was an error downloading 1080p video {err=}, {type(err)=}")
+                msg += "1080p error\r\n"
+                # continue
         
         if (sucessfulDownload == False):
             try:
