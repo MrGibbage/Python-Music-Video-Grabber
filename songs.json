@@ -10282,6 +10282,16 @@
             "2160p-video-downloaded": "FINNEAS - Lotus Eater (2024).mp4",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\FINNEAS - Lotus Eater (2024).mp4",
             "video-download-datetime": "2024-10-03 15:34:47.550079"
+        },
+        "/station/altnation/track/GDCA-110305854-001": {
+            "song-title": "Rainbow",
+            "song-artist": "Cage The Elephant",
+            "video-url": "https://www.youtube.com/watch?v=YBV-KqJrpcY",
+            "video-filename": "Cage The Elephant - Rainbow (2024).mp4",
+            "2160p-video-download-error": "'NoneType' object has no attribute 'download'",
+            "1080p-video-downloaded": "Cage The Elephant - Rainbow (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Cage The Elephant - Rainbow (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:50:23.490067"
         }
     }
 }
