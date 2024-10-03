@@ -10,6 +10,107 @@ import subprocess
 
 videoSavePath = "C:\\Github-Projects\\Python Music Video Grabber\\videos\\"
 
+def easyDownloadFromYoutube(videoUrl, artist, songTitle):
+    _default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
+    _default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
+    # print(videoUrl)
+    yt = YouTube(videoUrl, use_oauth=True, allow_oauth_cache=True)
+    # print(yt.streams)
+
+    videoYear = yt.publish_date.year
+    fname = slugify(artist, lowercase=False, separator=" ") + " - " + \
+        slugify(songTitle, lowercase=False, separator=" ") + \
+        " (" + str(videoYear) + ").mp4"
+    saved_video = videoSavePath + fname
+    localMsg = "Looking for " + videoUrl + "\r\n"
+
+    try:
+        os.remove("vid.mp4")
+    except:
+        pass
+    try:
+        os.remove("aud.mp4")
+    except:
+        pass
+    try:
+        os.remove("out.mp4")
+    except:
+        pass
+
+    sucessfulDownload = False
+    try:
+        # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
+        videoFirstStream = yt.streams.filter(file_extension='mp4', progressive=False, res="2160p").first()
+        videoFirstStream.download(filename="vid.mp4")
+        yt.streams.get_audio_only().download(filename="aud.mp4")
+
+        subprocess.run([
+                        'ffmpeg',
+                        '-i', 'vid.mp4',
+                        '-i', 'aud.mp4',
+                        '-c:v', 'copy',
+                        '-c:a', 'aac',
+                        '-loglevel', 'info',
+                        saved_video
+                        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=subprocess.DETACHED_PROCESS)
+
+        # ffmpeg.output(audio_stream, video_stream, "out.mp4").run()            # os.rename(video,"video.mp4")
+        sucessfulDownload = True
+        localMsg += "Saved 2160p\r\n"
+        localMsg += saved_video  + "\r\n"
+    except Exception as err:
+        # print(f"There was an error downloading 2160p video {err=}, {type(err)=}")
+        localMsg += "2160p error\r\n"
+    
+    if (sucessfulDownload == False):
+        try:
+            # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
+            videoFirstStream = yt.streams.filter(file_extension='mp4', progressive=False, res="1080p").first()
+            videoFirstStream.download(filename="vid.mp4")
+            yt.streams.get_audio_only().download(filename="aud.mp4")
+
+            subprocess.run([
+                            'ffmpeg',
+                            '-i', 'vid.mp4',
+                            '-i', 'aud.mp4',
+                            '-c:v', 'copy',
+                            '-c:a', 'aac',
+                            '-loglevel', 'info',
+                            saved_video
+                            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=subprocess.DETACHED_PROCESS)
+            sucessfulDownload = True
+            localMsg += "Saved 1080p\r\n"
+            localMsg += saved_video + "\r\n"
+        except Exception as err:
+            localMsg += "1080p error\r\n"
+    
+    if (sucessfulDownload == False):
+        try:
+            video = yt.streams.filter(res="720p", file_extension='mp4').order_by('resolution').desc().first().download(filename=videoSavePath + fname)
+            # os.rename(video,"video.mp4")
+            sucessfulDownload = True
+            localMsg += "Saved 720p\r\n"
+            localMsg += saved_video + "\r\n"
+        except Exception as err:
+            localMsg += "720p error\r\n"
+
+    if (sucessfulDownload == False):
+        try:
+            video = yt.streams.filter(file_extension='mp4').order_by('resolution').desc().first().download(filename=videoSavePath + fname)
+            # os.rename(video,"video.mp4")
+            sucessfulDownload = True
+            localMsg += "Saved " + yt.streams.get_highest_resolution().resolution + "\r\n"
+            localMsg += saved_video + "\r\n"
+        except Exception as err:
+            # print(f"There was an error downloading highest resolution video {err=}, {type(err)=}")
+            localMsg += "any resolution error\r\n"
+    
+    if (sucessfulDownload):
+        localMsg += "Saved new video " + fname + "\r\n"
+    else:
+        localMsg += "Could not download\r\n"
+    print(localMsg)
+
 def downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTitle):
     _default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
     _default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
@@ -157,3 +258,5 @@ def downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTi
     json_songs['songs'][songId]['video-download-datetime'] = str(datetime.datetime.now())
 
     return localMsg
+
+easyDownloadFromYoutube("https://www.youtube.com/watch?v=oEMy1cPYbQ4", "The Dare", "You're Invited")
