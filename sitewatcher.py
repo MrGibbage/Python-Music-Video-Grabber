@@ -27,14 +27,20 @@ def sendNotificationEmail(logger, msg):
     load_dotenv()
     gmail_pass = os.getenv("GMAILPASS")
     gmail_address = os.getenv("GMAILADDRESS")
+    # print(gmail_address)
     logger.info("Sending notification email now")
     # Send notificaiton email
     try:
+        logger.info("Creating server")
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        logger.info("ehlo")
         server.ehlo()
+        logger.info("Logging in")
         server.login(gmail_address, gmail_pass)
 
+        logger.info("Sending")
         server.sendmail(gmail_address, gmail_address, msg)
+        logger.info("Quitting")
         server.quit()
         # print ("Email Sent")
     except Exception as err:
@@ -196,14 +202,9 @@ for idx, song_element in enumerate(song_elements, 1):
     # print(videoUrl)
     logger.info("Video url: " + videoUrl)
 
-    yt = YouTube(videoUrl, use_oauth=True, allow_oauth_cache=True)
-
     # create the filename for the saved video
-    videoYear = yt.publish_date.year
-    fname = slugify(artistList, lowercase=False, separator=" ") + " - " + \
-        slugify(songTitle, lowercase=False, separator=" ") + \
-        " (" + str(videoYear) + ").mp4"
-    downloader.downloadFromYoutube(yt, fname, json_songs, songId, logger)
+    # Call the downloader method
+    msg += downloader.downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTitle)
 
 # Update the json file
 # print ("Almost done. Writing out the json file now")
@@ -211,6 +212,19 @@ logger.info("Almost done. Writing out the json file now")
 with open(json_songs_filename, 'w') as out_file:
     json.dump(json_songs, out_file, indent=4)
 # print ("All done! Enjoy the videos")
+
+try:
+    os.remove("vid.mp4")
+except:
+    pass
+try:
+    os.remove("aud.mp4")
+except:
+    pass
+try:
+    os.remove("out.mp4")
+except:
+    pass
 
 sendNotificationEmail(logger, msg)
 logger.info('Finished')
