@@ -716,17 +716,6 @@
             "video-download-full-filename": "C:\\Users\\skip\\OneDrive\\Documents\\Python Music Video Grabber\\videos\\Vampire Weekend - Unbelievers (2014).mp4",
             "video-download-datetime": "2022-10-16 19:57:10.443679"
         },
-        "/station/altnation/track/NDCA-000097184-005": {
-            "song-title": "Clocks",
-            "song-artist": "Coldplay",
-            "video-url": "https://www.youtube.com/watch?v=d020hcWA_Wg",
-            "video-title": "Coldplay - Clocks (Official Video)",
-            "video-author": "Coldplay",
-            "video-publish-date": "2011-05-27 00:00:00",
-            "video-filename": "Coldplay - Clocks (2011).mp4",
-            "video-download-full-filename": "C:\\Users\\skip\\OneDrive\\Documents\\Python Music Video Grabber\\videos\\Coldplay - Clocks (2011).mp4",
-            "video-download-datetime": "2022-10-16 19:58:44.415215"
-        },
         "/station/altnation/track/GDCA-108322445-001": {
             "song-title": "Did I Make You Up",
             "song-artist": "half alive",
@@ -891,17 +880,6 @@
             "video-filename": "Wombats - Greek Tragedy (2015).mp4",
             "video-download-full-filename": "C:\\Users\\skip\\OneDrive\\Documents\\Python Music Video Grabber\\videos\\Wombats - Greek Tragedy (2015).mp4",
             "video-download-datetime": "2022-10-16 21:55:02.782525"
-        },
-        "/station/altnation/track/GDCA-107690331-001": {
-            "song-title": "Clarity",
-            "song-artist": "Vance Joy",
-            "video-url": "https://www.youtube.com/watch?v=7RREsx9lnNI",
-            "video-title": "Vance Joy - Clarity [Official Video]",
-            "video-author": "Vance Joy",
-            "video-publish-date": "2022-04-06 00:00:00",
-            "video-filename": "Vance Joy - Clarity (2022).mp4",
-            "video-download-full-filename": "C:\\Users\\skip\\OneDrive\\Documents\\Python Music Video Grabber\\videos\\Vance Joy - Clarity (2022).mp4",
-            "video-download-datetime": "2022-10-16 21:56:11.065962"
         },
         "/station/altnation/track/GDCA-106099303-001": {
             "song-title": "The Bandit",
@@ -9049,17 +9027,6 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Wishy - Love On The Outside (2024).mp4",
             "video-download-datetime": "2024-08-03 11:11:35.129070"
         },
-        "/station/altnation/track/GDCA-110305854-001": {
-            "song-title": "Rainbow",
-            "song-artist": "Cage The Elephant",
-            "video-url": "https://www.youtube.com/watch?v=YBV-KqJrpcY",
-            "video-title": "Rainbow (Lyric Video)",
-            "video-author": "Cage The Elephant",
-            "video-publish-date": "2024-05-16 00:00:00",
-            "video-filename": "Cage The Elephant - Rainbow (2024).mp4",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Cage The Elephant - Rainbow (2024).mp4",
-            "video-download-datetime": "2024-08-03 11:11:45.989807"
-        },
         "/station/altnation/track/GDCA-109782831-001": {
             "song-title": "Dilemma",
             "song-artist": "Green Day",
@@ -10213,6 +10180,108 @@
             "1080p-video-downloaded": "The Dare - All Night (2024).mp4",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Dare - All Night (2024).mp4",
             "video-download-datetime": "2024-09-28 14:05:13.755467"
+        },
+        "/station/altnation/track/GDCA-110824143-001": {
+            "song-title": "We Made It",
+            "song-artist": "Circa Waves",
+            "video-url": "https://www.youtube.com/watch?v=YN5uk3jyJUo",
+            "video-filename": "Circa Waves - We Made It (2024).mp4",
+            "2160p-video-download-error": "'NoneType' object has no attribute 'download'",
+            "1080p-video-downloaded": "Circa Waves - We Made It (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Circa Waves - We Made It (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:26:52.099064"
+        },
+        "/station/altnation/track/GDCA-110798758-002": {
+            "song-title": "Picture Of You (X+W)",
+            "song-artist": "U2",
+            "video-url": "https://www.youtube.com/watch?v=_fIXQXTE-v8",
+            "video-filename": "U2 - Picture Of You X W (2024).mp4",
+            "2160p-video-download-error": "'NoneType' object has no attribute 'download'",
+            "1080p-video-downloaded": "U2 - Picture Of You X W (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\U2 - Picture Of You X W (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:27:07.443323"
+        },
+        "/station/altnation/track/GDCA-110823986-001": {
+            "song-title": "Deadbeat Blues",
+            "song-artist": "Beach Weather Bel",
+            "video-url": "https://www.youtube.com/watch?v=-N-NhQyLDII",
+            "video-filename": "Beach Weather Bel - Deadbeat Blues (2024).mp4",
+            "2160p-video-download-error": "'NoneType' object has no attribute 'download'",
+            "1080p-video-downloaded": "Beach Weather Bel - Deadbeat Blues (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Beach Weather Bel - Deadbeat Blues (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:27:20.196959"
+        },
+        "/station/altnation/track/GDCA-110823984-001": {
+            "song-title": "Like You (Like You)",
+            "song-artist": "Dexter and the Moonrocks",
+            "video-url": "https://www.youtube.com/watch?v=ZCCSArlfxLw",
+            "video-filename": "Dexter and the Moonrocks - Like You Like You (2024).mp4",
+            "video-already-download": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Dexter and the Moonrocks - Like You Like You (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Dexter and the Moonrocks - Like You Like You (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:27:22.625882"
+        },
+        "/station/altnation/track/GDCA-110823990-001": {
+            "song-title": "If Our Love Is Dead",
+            "song-artist": "Royel Otis",
+            "video-url": "https://www.youtube.com/watch?v=iHF4m26fZSk",
+            "video-filename": "Royel Otis - If Our Love Is Dead (2024).mp4",
+            "video-already-download": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Royel Otis - If Our Love Is Dead (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Royel Otis - If Our Love Is Dead (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:27:24.608144"
+        },
+        "/station/altnation/track/GDCA-110824139-001": {
+            "song-title": "Something In The Air",
+            "song-artist": "Lauren Mayberry",
+            "video-url": "https://www.youtube.com/watch?v=5qxVv0H2v5M",
+            "video-filename": "Lauren Mayberry - Something In The Air (2024).mp4",
+            "video-already-download": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Lauren Mayberry - Something In The Air (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Lauren Mayberry - Something In The Air (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:27:26.028327"
+        },
+        "/station/altnation/track/GDCA-110823979-001": {
+            "song-title": "Always, Everytime",
+            "song-artist": "The Wrecks",
+            "video-url": "https://www.youtube.com/watch?v=x6632OWS_5c",
+            "video-filename": "The Wrecks - Always Everytime (2022).mp4",
+            "video-already-download": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Wrecks - Always Everytime (2022).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Wrecks - Always Everytime (2022).mp4",
+            "video-download-datetime": "2024-10-03 15:27:27.423935"
+        },
+        "/station/altnation/track/GDCA-110737062-001": {
+            "song-title": "Mindless Creatures",
+            "song-artist": "Dayglow",
+            "video-url": "https://www.youtube.com/watch?v=mNjJDLnnh0A",
+            "video-filename": "Dayglow - Mindless Creatures (2024).mp4",
+            "video-already-download": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Dayglow - Mindless Creatures (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Dayglow - Mindless Creatures (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:27:29.878662"
+        },
+        "/station/altnation/track/GDCA-110316792-005": {
+            "song-title": "Stargazing",
+            "song-artist": "Myles Smith",
+            "video-url": "https://www.youtube.com/watch?v=9p9EauIOPm8",
+            "video-filename": "Myles Smith - Stargazing (2024).mp4",
+            "video-already-download": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Myles Smith - Stargazing (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Myles Smith - Stargazing (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:27:31.603074"
+        },
+        "/station/altnation/track/GDCA-110823974-001": {
+            "song-title": "Silverlines",
+            "song-artist": "Damiano David",
+            "video-url": "https://www.youtube.com/watch?v=btSgDtXYpzc",
+            "video-filename": "Damiano David - Silverlines (2024).mp4",
+            "2160p-video-downloaded": "Damiano David - Silverlines (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Damiano David - Silverlines (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:29:18.907088"
+        },
+        "/station/altnation/track/GDCA-110823973-001": {
+            "song-title": "Lotus Eater",
+            "song-artist": "FINNEAS",
+            "video-url": "https://www.youtube.com/watch?v=gTpMv-gK-lE",
+            "video-filename": "FINNEAS - Lotus Eater (2024).mp4",
+            "2160p-video-downloaded": "FINNEAS - Lotus Eater (2024).mp4",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\FINNEAS - Lotus Eater (2024).mp4",
+            "video-download-datetime": "2024-10-03 15:34:47.550079"
         }
     }
 }
