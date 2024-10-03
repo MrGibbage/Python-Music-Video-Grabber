@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 import os
 import logging
 from pytube.innertube import _default_clients
+import ffmpeg
 
 # https://github.com/pytube/pytube/issues/1894#issuecomment-2026951321
 _default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
@@ -214,6 +215,10 @@ for idx, song_element in enumerate(song_elements, 1):
     fname = slugify(artistList, lowercase=False, separator=" ") + " - " + \
         slugify(songTitle, lowercase=False, separator=" ") + \
         " (" + str(videoYear) + ").mp4"
+    video_fname = videoSavePath + "video_" + fname
+    audio_fname = videoSavePath + "audio_" + fname
+    saved_video = videoSavePath + fname
+    
     json_songs['songs'][songId]['video-filename'] = fname
     # print(filename)
     logger.info("Filename: " + fname)
@@ -232,10 +237,31 @@ for idx, song_element in enumerate(song_elements, 1):
         
         sucessfulDownload = False
         try:
+            logger.info("Trying 2160p")
+            # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
+            video = yt.streams.filter(res="2160p", file_extension='mp4').order_by('resolution').desc().first().download(filename=video_fname)
+            audio = yt.streams.get_audio_only().download(filename=audio_fname)
+            video_stream = ffmpeg.input(video_fname)
+            audio_stream = ffmpeg.input(audio_fname)
+            ffmpeg.output(audio_stream, video_stream, saved_video).run()            # os.rename(video,"video.mp4")
+            sucessfulDownload = True
+            logger.info("Downloaded 2160p video")
+            json_songs['songs'][songId]['2160p-video-downloaded'] = fname
+        except Exception as err:
+            json_songs['songs'][songId]['2160p-video-download-error'] = str(err)
+            print(f"There was an error downloading 2160p video {err=}, {type(err)=}")
+            logger.info(f"There was an error downloading 2160p video {err=}, {type(err)=}")
+            msg += "2160p error\r\n"
+            # continue
+        
+        try:
             logger.info("Trying 1080p")
             # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
-            video = yt.streams.filter(res="1080p", file_extension='mp4').order_by('resolution').desc().first().download(filename=videoSavePath + fname)
-            # os.rename(video,"video.mp4")
+            video = yt.streams.filter(res="1080p", file_extension='mp4').order_by('resolution').desc().first().download(filename=video_fname)
+            audio = yt.streams.get_audio_only().download(filename=audio_fname)
+            video_stream = ffmpeg.input(video_fname)
+            audio_stream = ffmpeg.input(audio_fname)
+            ffmpeg.output(audio_stream, video_stream, saved_video).run()            # os.rename(video,"video.mp4")
             sucessfulDownload = True
             logger.info("Downloaded 1080p video")
             json_songs['songs'][songId]['1080p-video-downloaded'] = fname
