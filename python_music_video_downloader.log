@@ -36786,3 +36786,190 @@ INFO:__main__:artists is not None
 2024-10-03 15:39:07 Logging in
 2024-10-03 15:39:07 Error sending email err=AttributeError("'NoneType' object has no attribute 'encode'"), type(err)=<class 'AttributeError'>
 2024-10-03 15:39:07 Finished
+2024-10-03 15:50:12 Started
+2024-10-03 15:50:12 Retrieved data from https://xmplaylist.com/station/altnation
+2024-10-03 15:50:12 Found 24 song elements
+2024-10-03 15:50:12 Song number 1
+2024-10-03 15:50:12 songAnchor: /station/altnation/track/NDCA-000044302-001
+2024-10-03 15:50:12 /station/altnation/track/NDCA-000044302-001 is already added to database
+2024-10-03 15:50:12 Existing song title: Take Me Out
+2024-10-03 15:50:12 Existing song artist: Franz Ferdinand
+2024-10-03 15:50:12 Existing song file name: Franz Ferdinand - Take Me Out (2010).mp4
+2024-10-03 15:50:12 Nothing to do. Skipping to next song.
+2024-10-03 15:50:12 Song number 2
+2024-10-03 15:50:12 songAnchor: /station/altnation/track/GDCA-110305854-001
+2024-10-03 15:50:12 New song title: Rainbow
+2024-10-03 15:50:12 Artists is not None
+2024-10-03 15:50:12 artistList = Cage The Elephant 
+2024-10-03 15:50:12 Search terms: Rainbow Cage The Elephant  official video
+2024-10-03 15:50:13 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2024-10-03 15:50:13 Video url: https://www.youtube.com/watch?v=YBV-KqJrpcY
+2024-10-03 15:50:14 Filename: Cage The Elephant - Rainbow (2024).mp4
+2024-10-03 15:50:14 Saving C:\Github-Projects\Python Music Video Grabber\videos\Cage The Elephant - Rainbow (2024).mp4
+2024-10-03 15:50:14 Trying 2160p
+2024-10-03 15:50:16 There was an error downloading 2160p video err=AttributeError("'NoneType' object has no attribute 'download'"), type(err)=<class 'AttributeError'>
+2024-10-03 15:50:16 Trying 1080p
+2024-10-03 15:50:23 Downloaded 1080p video
+2024-10-03 15:50:23 Saved new video Cage The Elephant - Rainbow (2024).mp4
+2024-10-03 15:50:23 Song number 3
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-106465563-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-106465563-001 is already added to database
+2024-10-03 15:50:23 Existing song title: He Said She Said
+2024-10-03 15:50:23 Existing song artist: CHVRCHES
+2024-10-03 15:50:23 Existing song file name: CHVRCHES - He Said She Said (2021).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 4
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110328542-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110328542-001 is already added to database
+2024-10-03 15:50:23 Existing song title: The Craving (single version)
+2024-10-03 15:50:23 Existing song artist: Twenty One Pilots
+2024-10-03 15:50:23 Existing song file name: Twenty One Pilots - The Craving single version (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 5
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/NDCA-000050518-001
+2024-10-03 15:50:23 /station/altnation/track/NDCA-000050518-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Campus
+2024-10-03 15:50:23 Existing song artist: Vampire Weekend
+2024-10-03 15:50:23 Existing song file name: Vampire Weekend - Campus (2013).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 6
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110823973-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110823973-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Lotus Eater
+2024-10-03 15:50:23 Existing song artist: FINNEAS
+2024-10-03 15:50:23 Existing song file name: FINNEAS - Lotus Eater (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 7
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110823974-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110823974-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Silverlines
+2024-10-03 15:50:23 Existing song artist: Damiano David
+2024-10-03 15:50:23 Existing song file name: Damiano David - Silverlines (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 8
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110824143-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110824143-001 is already added to database
+2024-10-03 15:50:23 Existing song title: We Made It
+2024-10-03 15:50:23 Existing song artist: Circa Waves
+2024-10-03 15:50:23 Existing song file name: Circa Waves - We Made It (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 9
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110798758-002
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110798758-002 is already added to database
+2024-10-03 15:50:23 Existing song title: Picture Of You (X+W)
+2024-10-03 15:50:23 Existing song artist: U2
+2024-10-03 15:50:23 Existing song file name: U2 - Picture Of You X W (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 10
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110823986-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110823986-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Deadbeat Blues
+2024-10-03 15:50:23 Existing song artist: Beach Weather Bel
+2024-10-03 15:50:23 Existing song file name: Beach Weather Bel - Deadbeat Blues (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 11
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110823984-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110823984-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Like You (Like You)
+2024-10-03 15:50:23 Existing song artist: Dexter and the Moonrocks
+2024-10-03 15:50:23 Existing song file name: Dexter and the Moonrocks - Like You Like You (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 12
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110823990-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110823990-001 is already added to database
+2024-10-03 15:50:23 Existing song title: If Our Love Is Dead
+2024-10-03 15:50:23 Existing song artist: Royel Otis
+2024-10-03 15:50:23 Existing song file name: Royel Otis - If Our Love Is Dead (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 13
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110824139-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110824139-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Something In The Air
+2024-10-03 15:50:23 Existing song artist: Lauren Mayberry
+2024-10-03 15:50:23 Existing song file name: Lauren Mayberry - Something In The Air (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 14
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110823979-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110823979-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Always, Everytime
+2024-10-03 15:50:23 Existing song artist: The Wrecks
+2024-10-03 15:50:23 Existing song file name: The Wrecks - Always Everytime (2022).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 15
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110716028-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110716028-001 is already added to database
+2024-10-03 15:50:23 Existing song title: All Night
+2024-10-03 15:50:23 Existing song artist: The Dare
+2024-10-03 15:50:23 Existing song file name: The Dare - All Night (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 16
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110122326-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110122326-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Calling After Me
+2024-10-03 15:50:23 Existing song artist: Wallows
+2024-10-03 15:50:23 Existing song file name: Wallows - Calling After Me (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 17
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-109102089-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-109102089-001 is already added to database
+2024-10-03 15:50:23 Existing song title: The Narcissist
+2024-10-03 15:50:23 Existing song artist: Blur
+2024-10-03 15:50:23 Existing song file name: Blur - The Narcissist (2023).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 18
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-106312648-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-106312648-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Serotonin
+2024-10-03 15:50:23 Existing song artist: girl in red
+2024-10-03 15:50:23 Existing song file name: girl in red - Serotonin (2021).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 19
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110737062-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110737062-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Mindless Creatures
+2024-10-03 15:50:23 Existing song artist: Dayglow
+2024-10-03 15:50:23 Existing song file name: Dayglow - Mindless Creatures (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 20
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/NDCA-000161982-001
+2024-10-03 15:50:23 /station/altnation/track/NDCA-000161982-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Dog Days Are Over
+2024-10-03 15:50:23 Existing song artist: Florence & The Machine
+2024-10-03 15:50:23 Existing song file name: Florence The Machine - Dog Days Are Over (2010).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 21
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110316792-005
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110316792-005 is already added to database
+2024-10-03 15:50:23 Existing song title: Stargazing
+2024-10-03 15:50:23 Existing song artist: Myles Smith
+2024-10-03 15:50:23 Existing song file name: Myles Smith - Stargazing (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 22
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/NDCA-000237800-001
+2024-10-03 15:50:23 /station/altnation/track/NDCA-000237800-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Do I Wanna Know
+2024-10-03 15:50:23 Existing song artist: Arctic Monkeys
+2024-10-03 15:50:23 Existing song file name: Arctic Monkeys - Do I Wanna Know (2013).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 23
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-110736663-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-110736663-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Blue Sky & The Painter
+2024-10-03 15:50:23 Existing song artist: Bastille
+2024-10-03 15:50:23 Existing song file name: Bastille - Blue Sky The Painter (2024).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Song number 24
+2024-10-03 15:50:23 songAnchor: /station/altnation/track/GDCA-100201556-001
+2024-10-03 15:50:23 /station/altnation/track/GDCA-100201556-001 is already added to database
+2024-10-03 15:50:23 Existing song title: Live In The Moment
+2024-10-03 15:50:23 Existing song artist: Portugal. The Man
+2024-10-03 15:50:23 Existing song file name: Portugal The Man - Live In The Moment (2017).mp4
+2024-10-03 15:50:23 Nothing to do. Skipping to next song.
+2024-10-03 15:50:23 Almost done. Writing out the json file now
+2024-10-03 15:50:23 Sending notification email now
+2024-10-03 15:50:23 Creating server
+2024-10-03 15:50:23 ehlo
+2024-10-03 15:50:23 Logging in
+2024-10-03 15:50:23 Sending
+2024-10-03 15:50:24 Quitting
+2024-10-03 15:50:24 Finished

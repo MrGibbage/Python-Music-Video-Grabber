@@ -73,11 +73,11 @@ def downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTi
             sucessfulDownload = True
             logger.info("Downloaded 2160p video")
             json_songs['songs'][songId]['2160p-video-downloaded'] = fname
+            localMsg += "Saved 2160p\r\n"
         except Exception as err:
             json_songs['songs'][songId]['2160p-video-download-error'] = str(err)
             # print(f"There was an error downloading 2160p video {err=}, {type(err)=}")
             logger.info(f"There was an error downloading 2160p video {err=}, {type(err)=}")
-            localMsg += "2160p error\r\n"
             # continue
         
         if (sucessfulDownload == False):
@@ -100,11 +100,11 @@ def downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTi
                 sucessfulDownload = True
                 logger.info("Downloaded 1080p video")
                 json_songs['songs'][songId]['1080p-video-downloaded'] = fname
+                localMsg += "Saved 1080p\r\n"
             except Exception as err:
                 json_songs['songs'][songId]['1080p-video-download-error'] = str(err)
                 # print(f"There was an error downloading 1080p video {err=}, {type(err)=}")
                 logger.info(f"There was an error downloading 1080p video {err=}, {type(err)=}")
-                localMsg += "1080p error\r\n"
                 # continue
         
         if (sucessfulDownload == False):
@@ -115,11 +115,11 @@ def downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTi
                 sucessfulDownload = True
                 logger.info("Downloaded 720p video")
                 json_songs['songs'][songId]['720p-video-downloaded'] = fname
+                localMsg += "Saved 720p\r\n"
             except Exception as err:
                 json_songs['songs'][songId]['720p-video-download-error'] = str(err)
                 # print(f"There was an error downloading 720p video {err=}, {type(err)=}")
                 logger.info(f"There was an error downloading 720p video {err=}, {type(err)=}")
-                localMsg += "720p error\r\n"
                 # continue
 
         if (sucessfulDownload == False):
@@ -132,6 +132,7 @@ def downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTi
                 logger.info("Downloaded best resolution: " + yt.streams.get_highest_resolution().resolution)
                 json_songs['songs'][songId]['video-downloaded'] = fname
                 json_songs['songs'][songId]['video-downloaded-resolution'] = yt.streams.get_highest_resolution().resolution
+                localMsg += "Saved " + yt.streams.get_highest_resolution().resolution
             except Exception as err:
                 json_songs['songs'][songId]['video-download-error'] = str(err)
                 # print(f"There was an error downloading highest resolution video {err=}, {type(err)=}")
