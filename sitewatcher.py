@@ -239,7 +239,7 @@ for idx, song_element in enumerate(song_elements, 1):
         try:
             logger.info("Trying 2160p")
             # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
-            video = yt.streams.filter(res="2160p", file_extension='mp4').order_by('resolution').desc().first().download(filename=video_fname)
+            video = yt.streams.filter(res="2160p", file_extension='mp4', adaptive=True).order_by('resolution').desc().first().download(filename=video_fname)
             audio = yt.streams.get_audio_only().download(filename=audio_fname)
             video_stream = ffmpeg.input(video_fname)
             audio_stream = ffmpeg.input(audio_fname)
@@ -257,7 +257,7 @@ for idx, song_element in enumerate(song_elements, 1):
         try:
             logger.info("Trying 1080p")
             # video = yt.streams.filter(res="1080p", progressive=True, file_extension='mp4').first().download(filename=videoSavePath + fname)
-            video = yt.streams.filter(res="1080p", file_extension='mp4').order_by('resolution').desc().first().download(filename=video_fname)
+            video = yt.streams.filter(res="1080p", file_extension='mp4', adaptive=True).order_by('resolution').desc().first().download(filename=video_fname)
             audio = yt.streams.get_audio_only().download(filename=audio_fname)
             video_stream = ffmpeg.input(video_fname)
             audio_stream = ffmpeg.input(audio_fname)
