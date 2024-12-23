@@ -39,7 +39,7 @@ def sendNotificationEmail(logger, msg):
         server.login(gmail_address, gmail_pass)
 
         logger.info("Sending")
-        server.sendmail(gmail_address, gmail_address, msg)
+        server.sendmail(gmail_address, gmail_address, msg.encode('utf-8', errors='replace'))
         logger.info("Quitting")
         server.quit()
         # print ("Email Sent")
@@ -198,13 +198,39 @@ for idx, song_element in enumerate(song_elements, 1):
     # the best video.
     videosearch = VideosSearch(search_terms, limit=1)
     videoUrl = videosearch.result()["result"][0]["link"]
+    youtube_id = videosearch.result()["result"][0]["id"]
     json_songs['songs'][songId]['video-url'] = videoUrl
     # print(videoUrl)
     logger.info("Video url: " + videoUrl)
 
     # create the filename for the saved video
     # Call the downloader method
-    msg += downloader.downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTitle)
+    try:
+        msg += downloader.downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTitle)
+    except Exception as e:
+        msg += f"There was a problem downloading the file\r\n{e}\r\n"
+
+    headers = {
+    'Authorization': 'Token d665f3c6027d3add542896e753d354e5026d0afe',
+    'Content-Type': 'application/json',
+    }
+
+    json_data = {
+        'data': [
+            {
+                'youtube_id': youtube_id,
+                'status': 'pending',
+            },
+        ],
+    }
+    msg += "Trying to add the video to tubearchivist\r\n"
+    try:
+        print(youtube_id)
+        print(json_data)
+        response = requests.post('https://tubearchivist.skipm.synology.me/api/download/', headers=headers, json=json_data)
+        msg += "Video was added. Check https://tubearchivist.skipm.synology.me for new downloads\r\n"
+    except Exception as e:
+        msg += f"Could not add video to tube archivist\r\n{e}\r\n"
 
 # Update the json file
 # print ("Almost done. Writing out the json file now")
