@@ -31,16 +31,10 @@ def sendNotificationEmail(logger, msg):
     logger.info("Sending notification email now")
     # Send notificaiton email
     try:
-        logger.info("Creating server")
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        logger.info("ehlo")
         server.ehlo()
-        logger.info("Logging in")
         server.login(gmail_address, gmail_pass)
-
-        logger.info("Sending")
         server.sendmail(gmail_address, gmail_address, msg.encode('utf-8', errors='replace'))
-        logger.info("Quitting")
         server.quit()
         # print ("Email Sent")
     except Exception as err:
@@ -192,7 +186,6 @@ for idx, song_element in enumerate(song_elements, 1):
     search_terms += artistList
     search_terms += additional_search_text
     # print (search_terms)
-    logger.info("Search terms: " + search_terms)
     
     # Search youtube for the video. Feeling lucky that the first hit will be
     # the best video.
@@ -201,7 +194,6 @@ for idx, song_element in enumerate(song_elements, 1):
     youtube_id = videosearch.result()["result"][0]["id"]
     json_songs['songs'][songId]['video-url'] = videoUrl
     # print(videoUrl)
-    logger.info("Video url: " + videoUrl)
 
     # create the filename for the saved video
     # Call the downloader method
@@ -211,7 +203,7 @@ for idx, song_element in enumerate(song_elements, 1):
         msg += f"There was a problem downloading the file\r\n{e}\r\n"
 
     headers = {
-    'Authorization': 'Token d665f3c6027d3add542896e753d354e5026d0afe',
+    'Authorization': os.getenv("AUTHORIZATION"),
     'Content-Type': 'application/json',
     }
 
@@ -227,8 +219,8 @@ for idx, song_element in enumerate(song_elements, 1):
     try:
         print(youtube_id)
         print(json_data)
-        response = requests.post('https://tubearchivist.skipm.synology.me/api/download/', headers=headers, json=json_data)
-        msg += "Video was added. Check https://tubearchivist.skipm.synology.me for new downloads\r\n"
+        response = requests.post(os.getenv("TUBEARCHURL"), headers=headers, json=json_data)
+        msg += "Video was added. Check " + os.getenv("TUBEARCHURL") + " for new downloads\r\n"
     except Exception as e:
         msg += f"Could not add video to tube archivist\r\n{e}\r\n"
 
