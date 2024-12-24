@@ -4,3 +4,4 @@ bs4
 pytube
 youtube-search-python
 python-dotenv
+requests
