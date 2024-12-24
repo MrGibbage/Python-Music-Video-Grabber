@@ -10555,6 +10555,54 @@
             "video-download-error": "HTTP Error 400: Bad Request",
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Justice Tame Impala - Neverender (2024).mp4",
             "video-download-datetime": "2024-12-14 14:05:06.871947"
+        },
+        "/station/altnation/track/GDCA-110976554-001": {
+            "song-title": "Jeanie",
+            "song-artist": "The Kooks & lovelytheband",
+            "video-url": "https://www.youtube.com/watch?v=IL1hKEDN5cw",
+            "video-filename": "The Kooks lovelytheband - Jeanie (2024).mp4",
+            "2160p-video-download-error": "HTTP Error 400: Bad Request",
+            "1080p-video-download-error": "HTTP Error 400: Bad Request",
+            "720p-video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Kooks lovelytheband - Jeanie (2024).mp4",
+            "video-download-datetime": "2024-12-24 09:13:43.649162"
+        },
+        "/station/altnation/track/GDCA-110875175-001": {
+            "song-title": "Ok, But This Is The Last Time",
+            "song-artist": "The Offspring",
+            "video-url": "https://www.youtube.com/watch?v=tnNMQsKVe8w",
+            "video-filename": "The Offspring - Ok But This Is The Last Time (2024).mp4",
+            "2160p-video-download-error": "HTTP Error 400: Bad Request",
+            "1080p-video-download-error": "HTTP Error 400: Bad Request",
+            "720p-video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Offspring - Ok But This Is The Last Time (2024).mp4",
+            "video-download-datetime": "2024-12-24 09:13:47.260832"
+        },
+        "/station/altnation/track/NDCA-000037438-001": {
+            "song-title": "Bandages",
+            "song-artist": "Hot Hot Heat",
+            "video-url": "https://www.youtube.com/watch?v=i_K36y-iLUk",
+            "video-filename": "Hot Hot Heat - Bandages (2008).mp4",
+            "2160p-video-download-error": "HTTP Error 400: Bad Request",
+            "1080p-video-download-error": "HTTP Error 400: Bad Request",
+            "720p-video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Hot Hot Heat - Bandages (2008).mp4",
+            "video-download-datetime": "2024-12-24 09:13:50.625590"
+        },
+        "/station/altnation/track/GDCA-110875181-001": {
+            "song-title": "I Look Alive",
+            "song-artist": "Phoneboy",
+            "video-url": "https://www.youtube.com/watch?v=LqDPZDso-F0",
+            "video-filename": "Phoneboy - I Look Alive (2024).mp4",
+            "2160p-video-download-error": "HTTP Error 400: Bad Request",
+            "1080p-video-download-error": "HTTP Error 400: Bad Request",
+            "720p-video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-error": "HTTP Error 400: Bad Request",
+            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Phoneboy - I Look Alive (2024).mp4",
+            "video-download-datetime": "2024-12-24 09:13:54.048590"
         }
     }
 }

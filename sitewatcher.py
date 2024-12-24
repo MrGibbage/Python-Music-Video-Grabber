@@ -189,9 +189,13 @@ for idx, song_element in enumerate(song_elements, 1):
     
     # Search youtube for the video. Feeling lucky that the first hit will be
     # the best video.
+    logger.info("Calling VideoSearch")
     videosearch = VideosSearch(search_terms, limit=1)
-    videoUrl = videosearch.result()["result"][0]["link"]
+    logger.info("Getting videoUrl")
+    videoUrl = videosearch.result()["result"][0]["link"] 
+    logger.info("Getting youtube_id")
     youtube_id = videosearch.result()["result"][0]["id"]
+    logger.info("updating json_songs")
     json_songs['songs'][songId]['video-url'] = videoUrl
     # print(videoUrl)
 
