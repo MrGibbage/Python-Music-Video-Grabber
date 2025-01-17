@@ -22,6 +22,7 @@ import smtplib
 from dotenv import load_dotenv
 import os
 import logging
+from logging.handlers import RotatingFileHandler
 from pytube.innertube import _default_clients
 
 # https://github.com/pytube/pytube/issues/1894#issuecomment-2026951321
@@ -49,9 +50,25 @@ def sendNotificationEmail(logger, msg):
 
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
-FORMAT = '%(asctime)s %(message)s'
-logging.basicConfig(filename='python_music_video_downloader.log', level=logging.INFO, format=FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
+# Create a rotating file handler
+handler = RotatingFileHandler(
+    'pmvd.log', maxBytes=20000, backupCount=5, encoding='utf-8', errors='replace'
+)
+handler.setLevel(logging.DEBUG)
+
+# Create a formatter and set it for the handler
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+handler.setFormatter(formatter)
+
+# Add the handler to the logger
+logger.addHandler(handler)
+
+handler.doRollover()
+
+# FORMAT = '%(asctime)s %(message)s'
+# logging.basicConfig(filename='python_music_video_downloader.log', level=logging.INFO, format=FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
 # logging.basicConfig(format=FORMAT)
 logger.info('Started')
 
@@ -108,7 +125,7 @@ except:
 song_elements = soup.find_all("div", class_=song_elements_class) # line 157 in sample.html
 # print(song_elements)
 if song_elements is None:
-    logger.info("song_elements was None. Aborting")
+    logger.error("song_elements was None. Aborting")
     exit(1)
     
 msg += "Found " + str(len(song_elements)) + " song elements\r\n"
@@ -129,8 +146,10 @@ for idx, song_element in enumerate(song_elements, 1):
     try:
         songId = songAnchor['href']
     except Exception as e:
-        print(f'Could not get a song id. The error was {e}')
-        exit(1)
+        logger.error(f'Could not get a song id. The error was {e}')
+        logger.error('songAnchor:')
+        logger.error(f'{songAnchor}')
+        continue
 
     # print("Song ID: " + songId)
     logger.info("songAnchor: " + songAnchor['href'])
@@ -164,16 +183,12 @@ for idx, song_element in enumerate(song_elements, 1):
     else:
         # print("title_element is None")
         msg += "Title element was none\r\n"
-        logger.info("Title element was none. Skipping to next song.")
+        logger.error("Title element was none. We cannot proccess this song further. Skipping to next song.")
         continue
 
     # get the list of artists
     artists = song_element.find("ul", class_=artist_class)
     if (artists is not None):
-        # print("artists is not none")
-        # print(artists)
-        logger.info("Artists is not None")
-        # logger.info("Artist list: " + artists)
         search_terms += " "
         artistList = ""
 
@@ -186,7 +201,7 @@ for idx, song_element in enumerate(song_elements, 1):
     else:
         # print("artists is None")
         msg += "No artists found\r\n"
-        logger.info("No artists found. Aborting this song.")
+        logger.error("No artists found. Aborting this song.")
         continue
     
     json_songs['songs'][songId]['song-artist'] = artistList.strip()
@@ -205,7 +220,6 @@ for idx, song_element in enumerate(song_elements, 1):
     videoUrl = videosearch.result()["result"][0]["link"] 
     logger.info("Getting youtube_id")
     youtube_id = videosearch.result()["result"][0]["id"]
-    logger.info("updating json_songs")
     json_songs['songs'][songId]['video-url'] = videoUrl
     # print(videoUrl)
 
@@ -223,15 +237,15 @@ for idx, song_element in enumerate(song_elements, 1):
     # Create a yt-dlp object with the given options
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         try:
+            logger.info(f'Downloading {videoUrl}')
             info_dict = ydl.extract_info(videoUrl, download=True)
             output_filename = ydl.prepare_filename(info_dict)
-            print(f"downloaded {output_filename}")
             json_songs['songs'][songId]['output_filename'] = output_filename
-            json_songs['songs'][songId]['video-filename'] = info_dict['requested_downloads'][0]['filename']
-            json_songs['songs'][songId]['saved_filepath'] = info_dict['requested_downloads'][0]['filepath']
+            json_songs['songs'][songId]['video-filename'] = info_dict['requested_downloads'][0]['filepath']
             json_songs['songs'][songId]['resolution'] = info_dict['requested_downloads'][0]['resolution']
-            logger.info(f"File saved: {output_filename}")
-            msg += f'{output_filename}\n'
+            logger.info(f"* * * * File saved: {info_dict['requested_downloads'][0]['filepath']}")
+            msg += f'{info_dict['requested_downloads'][0]['filepath']}\n'
+            msg += f'{videoUrl}\n'
         except Exception as e:
             logger.error(f'Error downloading the video: {e}')
             msg += f'Error downloading the video: {e}\n'
@@ -244,4 +258,3 @@ with open(json_songs_filename, 'w') as out_file:
 
 sendNotificationEmail(logger, msg)
 logger.info('Finished')
-exit(0)
