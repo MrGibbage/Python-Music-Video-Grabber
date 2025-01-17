@@ -1,3 +1,11 @@
+# Set this to run weekly, every Saturday at about 2:05 PM. The weekly Top 18
+# for Alt Nation is played every Saturday at 1:00PM and lasts about an hour.
+#
+# To create an executable file, run
+# .venv\Scripts\pyinstaller.exe --noconsole -F sitewatcher.py
+# Then copy the sitewatcher.exe file from dist to the 
+# python-music-video-grabber folder
+#
 import requests
 import os.path
 import json
@@ -35,13 +43,13 @@ def sendNotificationEmail(logger, msg):
         server.quit()
         # print ("Email Sent")
     except Exception as err:
+        server.sendmail(gmail_address, gmail_address, f'There was an error sending the message: {e}')
+        server.quit()
         logger.info(f"Error sending email {err=}, {type(err)=}")
 
 
 logger = logging.getLogger(__name__)
 
-# Set this to run weekly, every Saturday at about 2:05 PM. The weekly Top 18
-# for Alt Nation is played every Saturday at 1:00PM and lasts about an hour.
 FORMAT = '%(asctime)s %(message)s'
 logging.basicConfig(filename='python_music_video_downloader.log', level=logging.INFO, format=FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
 # logging.basicConfig(format=FORMAT)
@@ -118,7 +126,12 @@ for idx, song_element in enumerate(song_elements, 1):
 
     # the song anchor is a unique key for each song. If it is already in the
     # database, then we are done with this song
-    songId = songAnchor['href']
+    try:
+        songId = songAnchor['href']
+    except Exception as e:
+        print(f'Could not get a song id. The error was {e}')
+        exit(1)
+
     # print("Song ID: " + songId)
     logger.info("songAnchor: " + songAnchor['href'])
     if songId in json_songs['songs'].keys():
@@ -209,14 +222,19 @@ for idx, song_element in enumerate(song_elements, 1):
 
     # Create a yt-dlp object with the given options
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info_dict = ydl.extract_info(videoUrl, download=True)
-        output_filename = ydl.prepare_filename(info_dict)
-        print(f"downloaded {output_filename}")
-        json_songs['songs'][songId]['output_filename'] = output_filename
-        json_songs['songs'][songId]['video-filename'] = info_dict['requested_downloads'][0]['filename']
-        json_songs['songs'][songId]['saved_filepath'] = info_dict['requested_downloads'][0]['filepath']
-        json_songs['songs'][songId]['resolution'] = info_dict['requested_downloads'][0]['resolution']
-        logger.info(f"File saved: {output_filename}")
+        try:
+            info_dict = ydl.extract_info(videoUrl, download=True)
+            output_filename = ydl.prepare_filename(info_dict)
+            print(f"downloaded {output_filename}")
+            json_songs['songs'][songId]['output_filename'] = output_filename
+            json_songs['songs'][songId]['video-filename'] = info_dict['requested_downloads'][0]['filename']
+            json_songs['songs'][songId]['saved_filepath'] = info_dict['requested_downloads'][0]['filepath']
+            json_songs['songs'][songId]['resolution'] = info_dict['requested_downloads'][0]['resolution']
+            logger.info(f"File saved: {output_filename}")
+            msg += f'{output_filename}\n'
+        except Exception as e:
+            logger.error(f'Error downloading the video: {e}')
+            msg += f'Error downloading the video: {e}\n'
 
 
 logger.info("Almost done. Writing out the json file now")
