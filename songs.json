@@ -10400,209 +10400,68 @@
             "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Lauren Mayberry - Crocodile Tears (2024).mp4",
             "video-download-datetime": "2024-11-09 14:05:21.729166"
         },
-        "/station/altnation/track/GDCA-110540077-001": {
-            "song-title": "Show Pony",
-            "song-artist": "Glass Animals",
-            "video-url": "https://www.youtube.com/watch?v=cAG_-GXDGME",
-            "video-filename": "Glass Animals - Show Pony (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Glass Animals - Show Pony (2024).mp4",
-            "video-download-datetime": "2024-11-23 14:05:07.267870"
-        },
-        "/station/altnation/track/GDCA-110910934-001": {
-            "song-title": "ALL MY LOVE",
-            "song-artist": "Coldplay",
-            "video-url": "https://www.youtube.com/watch?v=xfawgZ5bfBQ",
-            "video-filename": "Coldplay - ALL MY LOVE (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Coldplay - ALL MY LOVE (2024).mp4",
-            "video-download-datetime": "2024-11-23 14:05:09.930725"
-        },
-        "/station/altnation/track/GDCA-110865246-003": {
-            "song-title": "Arrow",
-            "song-artist": "The Head & The Heart",
-            "video-url": "https://www.youtube.com/watch?v=BH2KtmVp1CA",
-            "video-filename": "The Head The Heart - Arrow (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Head The Heart - Arrow (2024).mp4",
-            "video-download-datetime": "2024-11-23 14:05:12.428142"
-        },
-        "/station/altnation/track/GDCA-110875173-001": {
-            "song-title": "Automatic",
-            "song-artist": "half alive",
-            "video-url": "https://www.youtube.com/watch?v=LMknL58AAyY",
-            "video-filename": "half alive - Automatic (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\half alive - Automatic (2024).mp4",
-            "video-download-datetime": "2024-11-30 14:05:07.895637"
-        },
-        "/station/altnation/track/GDCA-110638810-001": {
-            "song-title": "See You In The Afterlife",
-            "song-artist": "Foster The People",
-            "video-url": "https://www.youtube.com/watch?v=wRpRyJnZYdk",
-            "video-filename": "Foster The People - See You In The Afterlife (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Foster The People - See You In The Afterlife (2024).mp4",
-            "video-download-datetime": "2024-11-30 14:05:11.533368"
-        },
-        "/station/altnation/track/GDCA-110980486-001": {
-            "song-title": "People Watching",
-            "song-artist": "Sam Fender",
-            "video-url": "https://www.youtube.com/watch?v=DHzaHMmXB6Y",
-            "video-filename": "Sam Fender - People Watching (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Sam Fender - People Watching (2024).mp4",
-            "video-download-datetime": "2024-11-30 14:05:14.279468"
-        },
-        "/station/altnation/track/GDCA-111010153-001": {
-            "song-title": "My Promise (90 Days)",
-            "song-artist": "Jack Kays",
-            "video-url": "https://www.youtube.com/watch?v=YO8S9cWfGdc",
-            "video-filename": "Jack Kays - My Promise 90 Days (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Jack Kays - My Promise 90 Days (2024).mp4",
-            "video-download-datetime": "2024-11-30 14:05:17.892021"
-        },
-        "/station/altnation/track/GDCA-110763118-001": {
-            "song-title": "Vienna (Everything's Fine)",
-            "song-artist": "Vienna Vienna",
-            "video-url": "https://www.youtube.com/watch?v=TGBwaqf_UbI",
-            "video-filename": "Vienna Vienna - Vienna Everything s Fine (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Vienna Vienna - Vienna Everything s Fine (2024).mp4",
-            "video-download-datetime": "2024-12-07 14:05:06.551516"
-        },
-        "/station/altnation/track/GDCA-110901123-001": {
-            "song-title": "My Serotonin",
-            "song-artist": "Bishop Briggs",
-            "video-url": "https://www.youtube.com/watch?v=qK3sNbkJsSg",
-            "video-filename": "Bishop Briggs - My Serotonin (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Bishop Briggs - My Serotonin (2024).mp4",
-            "video-download-datetime": "2024-12-07 14:05:09.526987"
-        },
-        "/station/altnation/track/GDCA-111009079-001": {
-            "song-title": "Occasional Stoner",
-            "song-artist": "Eyedress",
-            "video-url": "https://www.youtube.com/watch?v=gzKqa7u1-Io",
-            "video-filename": "Eyedress - Occasional Stoner (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Eyedress - Occasional Stoner (2024).mp4",
-            "video-download-datetime": "2024-12-14 08:35:25.509638"
+        "/station/altnation/track/GDCA-111165516-002": {
+            "song-title": "Same Old Song",
+            "song-artist": "The Lumineers",
+            "video-url": "https://www.youtube.com/watch?v=cZ-VW3QYQQA",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\The Lumineers - Same Old Song (Official Music Video).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\The Lumineers - Same Old Song (Official Music Video).webm",
+            "saved_filepath": "S:\\media\\Music Videos - Alternative\\The Lumineers - Same Old Song (Official Music Video).mp4",
+            "resolution": "1440x1080"
         },
         "/station/altnation/track/GDCA-110850308-001": {
             "song-title": "Come Alive",
             "song-artist": "Phantogram",
             "video-url": "https://www.youtube.com/watch?v=mVQKyp5pUxQ",
-            "video-filename": "Phantogram - Come Alive (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Phantogram - Come Alive (2024).mp4",
-            "video-download-datetime": "2024-12-14 08:35:28.874380"
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Phantogram - Come Alive.webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Phantogram - Come Alive.webm",
+            "saved_filepath": "S:\\media\\Music Videos - Alternative\\Phantogram - Come Alive.mp4",
+            "resolution": "1920x1080"
         },
-        "/station/altnation/track/GDCA-110002642-003": {
-            "song-title": "Capricorn",
-            "song-artist": "Vampire Weekend",
-            "video-url": "https://www.youtube.com/watch?v=8lCmyFCj580",
-            "video-filename": "Vampire Weekend - Capricorn (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Vampire Weekend - Capricorn (2024).mp4",
-            "video-download-datetime": "2024-12-14 14:05:03.977353"
+        "/station/altnation/track/GDCA-110540077-001": {
+            "song-title": "Show Pony",
+            "song-artist": "Glass Animals",
+            "video-url": "https://www.youtube.com/watch?v=cAG_-GXDGME",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Glass Animals - Show Pony (Official Video).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Glass Animals - Show Pony (Official Video).webm",
+            "saved_filepath": "S:\\media\\Music Videos - Alternative\\Glass Animals - Show Pony (Official Video).mp4",
+            "resolution": "2880x2160"
         },
-        "/station/altnation/track/GDCA-110241793-005": {
-            "song-title": "Neverender",
-            "song-artist": "Justice Tame Impala",
-            "video-url": "https://www.youtube.com/watch?v=E7FU_mqhFGk",
-            "video-filename": "Justice Tame Impala - Neverender (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Justice Tame Impala - Neverender (2024).mp4",
-            "video-download-datetime": "2024-12-14 14:05:06.871947"
+        "/station/altnation/track/GDCA-111107793-001": {
+            "song-title": "Cunning City",
+            "song-artist": "Balming Tiger",
+            "video-url": "https://www.youtube.com/watch?v=PEQkxD_MpjE",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Balming Tiger - Cunning City.webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Balming Tiger - Cunning City.webm",
+            "saved_filepath": "S:\\media\\Music Videos - Alternative\\Balming Tiger - Cunning City.mp4",
+            "resolution": "3840x2160"
         },
-        "/station/altnation/track/GDCA-110976554-001": {
-            "song-title": "Jeanie",
-            "song-artist": "The Kooks & lovelytheband",
-            "video-url": "https://www.youtube.com/watch?v=IL1hKEDN5cw",
-            "video-filename": "The Kooks lovelytheband - Jeanie (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Kooks lovelytheband - Jeanie (2024).mp4",
-            "video-download-datetime": "2024-12-24 09:13:43.649162"
+        "/station/altnation/track/GDCA-110934172-001": {
+            "song-title": "ROCKMAN",
+            "song-artist": "Mk.gee",
+            "video-url": "https://www.youtube.com/watch?v=pULkm-3b_1M",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Mk.gee\uff1a ROCKMAN (Live) - SNL.webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Mk.gee\uff1a ROCKMAN (Live) - SNL.webm",
+            "saved_filepath": "S:\\media\\Music Videos - Alternative\\Mk.gee\uff1a ROCKMAN (Live) - SNL.mp4",
+            "resolution": "1920x1080"
         },
-        "/station/altnation/track/GDCA-110875175-001": {
-            "song-title": "Ok, But This Is The Last Time",
-            "song-artist": "The Offspring",
-            "video-url": "https://www.youtube.com/watch?v=tnNMQsKVe8w",
-            "video-filename": "The Offspring - Ok But This Is The Last Time (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\The Offspring - Ok But This Is The Last Time (2024).mp4",
-            "video-download-datetime": "2024-12-24 09:13:47.260832"
+        "/station/altnation/track/GDCA-110305912-001": {
+            "song-title": "Metaverse",
+            "song-artist": "Cage The Elephant",
+            "video-url": "https://www.youtube.com/watch?v=1ahYmrwRHNA",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Cage The Elephant - Metaverse (Lyric Video).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Cage The Elephant - Metaverse (Lyric Video).webm",
+            "saved_filepath": "S:\\media\\Music Videos - Alternative\\Cage The Elephant - Metaverse (Lyric Video).mp4",
+            "resolution": "1440x1080"
         },
-        "/station/altnation/track/NDCA-000037438-001": {
-            "song-title": "Bandages",
-            "song-artist": "Hot Hot Heat",
-            "video-url": "https://www.youtube.com/watch?v=i_K36y-iLUk",
-            "video-filename": "Hot Hot Heat - Bandages (2008).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Hot Hot Heat - Bandages (2008).mp4",
-            "video-download-datetime": "2024-12-24 09:13:50.625590"
-        },
-        "/station/altnation/track/GDCA-110875181-001": {
-            "song-title": "I Look Alive",
-            "song-artist": "Phoneboy",
-            "video-url": "https://www.youtube.com/watch?v=LqDPZDso-F0",
-            "video-filename": "Phoneboy - I Look Alive (2024).mp4",
-            "2160p-video-download-error": "HTTP Error 400: Bad Request",
-            "1080p-video-download-error": "HTTP Error 400: Bad Request",
-            "720p-video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-error": "HTTP Error 400: Bad Request",
-            "video-download-full-filename": "C:\\Github-Projects\\Python Music Video Grabber\\videos\\Phoneboy - I Look Alive (2024).mp4",
-            "video-download-datetime": "2024-12-24 09:13:54.048590"
+        "/station/altnation/track/GDCA-110486957-001": {
+            "song-title": "daisies",
+            "song-artist": "Good Neighbours",
+            "video-url": "https://www.youtube.com/watch?v=WvIX5o6LpCc",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Good Neighbours - Daisies (Live At Village Underground).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Good Neighbours - Daisies (Live At Village Underground).webm",
+            "saved_filepath": "S:\\media\\Music Videos - Alternative\\Good Neighbours - Daisies (Live At Village Underground).mp4",
+            "resolution": "3840x2026"
         }
     }
 }

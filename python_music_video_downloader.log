@@ -487,3 +487,1350 @@
 2024-12-24 09:13:54 Sending notification email now
 2024-12-24 09:13:54 Error sending email err=AttributeError("'NoneType' object has no attribute 'encode'"), type(err)=<class 'AttributeError'>
 2024-12-24 09:13:54 Finished
+2025-01-14 20:23:45 Started
+2025-01-14 20:23:45 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-14 20:23:45 Found 24 song elements
+2025-01-14 20:23:45 Song number 1
+2025-01-14 20:23:45 songAnchor: /station/altnation/track/GDCA-110875173-001
+2025-01-14 20:23:45 /station/altnation/track/GDCA-110875173-001 is already added to database
+2025-01-14 20:23:45 Existing song title: Automatic
+2025-01-14 20:23:45 Existing song artist: half alive
+2025-01-14 20:23:45 Existing song file name: half alive - Automatic (2024).mp4
+2025-01-14 20:23:45 Nothing to do. Skipping to next song.
+2025-01-14 20:23:45 Song number 2
+2025-01-14 20:23:45 songAnchor: /station/altnation/track/GDCA-110639153-002
+2025-01-14 20:23:45 /station/altnation/track/GDCA-110639153-002 is already added to database
+2025-01-14 20:23:45 Existing song title: Nobody's Soldier
+2025-01-14 20:23:45 Existing song artist: Hozier
+2025-01-14 20:23:45 Existing song file name: Hozier - Nobody s Soldier (2024).mp4
+2025-01-14 20:23:45 Nothing to do. Skipping to next song.
+2025-01-14 20:23:45 Song number 3
+2025-01-14 20:23:45 songAnchor: /station/altnation/track/NDCA-000044302-001
+2025-01-14 20:23:45 /station/altnation/track/NDCA-000044302-001 is already added to database
+2025-01-14 20:23:45 Existing song title: Take Me Out
+2025-01-14 20:23:45 Existing song artist: Franz Ferdinand
+2025-01-14 20:23:45 Existing song file name: Franz Ferdinand - Take Me Out (2010).mp4
+2025-01-14 20:23:45 Nothing to do. Skipping to next song.
+2025-01-14 20:23:45 Song number 4
+2025-01-14 20:23:45 songAnchor: /station/altnation/track/GDCA-109801404-001
+2025-01-14 20:23:45 /station/altnation/track/GDCA-109801404-001 is already added to database
+2025-01-14 20:23:45 Existing song title: Don't You Want To Sleep With Someone Normal?
+2025-01-14 20:23:45 Existing song artist: Love Fame Tragedy
+2025-01-14 20:23:45 Existing song file name: Love Fame Tragedy - Don t You Want To Sleep With Someone Normal (2024).mp4
+2025-01-14 20:23:45 Nothing to do. Skipping to next song.
+2025-01-14 20:23:45 Song number 5
+2025-01-14 20:23:45 songAnchor: /station/altnation/track/GDCA-111034533-001
+2025-01-14 20:23:45 New song title: Comeback Kid
+2025-01-14 20:23:45 Artists is not None
+2025-01-14 20:23:45 artistList = The Kites 
+2025-01-14 20:23:45 Calling VideoSearch
+2025-01-14 20:23:46 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 20:23:46 Getting videoUrl
+2025-01-14 20:23:46 Getting youtube_id
+2025-01-14 20:23:46 updating json_songs
+2025-01-14 20:23:47 Filename: The Kites - Comeback Kid (2024).mp4
+2025-01-14 20:23:47 Saving C:\Github-Projects\Python Music Video Grabber\videos\The Kites - Comeback Kid (2024).mp4
+2025-01-14 20:23:47 Trying 2160p
+2025-01-14 21:42:23 Started
+2025-01-14 21:42:23 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-14 21:42:23 Found 24 song elements
+2025-01-14 21:42:23 Song number 1
+2025-01-14 21:42:23 songAnchor: /station/altnation/track/NDCA-000127494-004
+2025-01-14 21:42:23 New song title: Maps
+2025-01-14 21:42:23 Artists is not None
+2025-01-14 21:42:23 artistList = Yeah Yeah Yeahs 
+2025-01-14 21:42:23 Calling VideoSearch
+2025-01-14 21:42:25 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:42:25 Getting videoUrl
+2025-01-14 21:42:25 Getting youtube_id
+2025-01-14 21:42:25 updating json_songs
+2025-01-14 21:42:26 Filename: Yeah Yeah Yeahs - Maps (2009).mp4
+2025-01-14 21:42:26 Saving C:\Github-Projects\Python Music Video Grabber\videos\Yeah Yeah Yeahs - Maps (2009).mp4
+2025-01-14 21:42:26 Trying 2160p
+2025-01-14 21:43:08 There was an error downloading 2160p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:43:08 Trying 1080p
+2025-01-14 21:44:01 There was an error downloading 1080p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:44:01 Trying 720p
+2025-01-14 21:44:49 There was an error downloading 720p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:44:49 Trying for best resolution
+2025-01-14 21:45:39 There was an error downloading highest resolution video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:45:39 Aborting this song.
+2025-01-14 21:45:39 Could not download
+2025-01-14 21:45:39 Song number 2
+2025-01-14 21:45:39 songAnchor: /station/altnation/track/GDCA-110875181-001
+2025-01-14 21:45:39 /station/altnation/track/GDCA-110875181-001 is already added to database
+2025-01-14 21:45:39 Existing song title: I Look Alive
+2025-01-14 21:45:39 Existing song artist: Phoneboy
+2025-01-14 21:45:39 Existing song file name: Phoneboy - I Look Alive (2024).mp4
+2025-01-14 21:45:39 Nothing to do. Skipping to next song.
+2025-01-14 21:45:39 Song number 3
+2025-01-14 21:45:39 songAnchor: /station/altnation/track/GDCA-107589574-001
+2025-01-14 21:45:39 /station/altnation/track/GDCA-107589574-001 is already added to database
+2025-01-14 21:45:39 Existing song title: Synchronize
+2025-01-14 21:45:39 Existing song artist: Milky Chance
+2025-01-14 21:45:39 Existing song file name: Milky Chance - Synchronize (2022).mp4
+2025-01-14 21:45:39 Nothing to do. Skipping to next song.
+2025-01-14 21:45:39 Song number 4
+2025-01-14 21:45:39 songAnchor: /station/altnation/track/GDCA-110901134-001
+2025-01-14 21:45:39 /station/altnation/track/GDCA-110901134-001 is already added to database
+2025-01-14 21:45:39 Existing song title: Meditations
+2025-01-14 21:45:39 Existing song artist: Cold War Kids
+2025-01-14 21:45:39 Existing song file name: Cold War Kids - Meditations (2024).mp4
+2025-01-14 21:45:39 Nothing to do. Skipping to next song.
+2025-01-14 21:45:39 Song number 5
+2025-01-14 21:45:39 songAnchor: /station/altnation/track/GDCA-107292724-001
+2025-01-14 21:45:39 /station/altnation/track/GDCA-107292724-001 is already added to database
+2025-01-14 21:45:39 Existing song title: Memory
+2025-01-14 21:45:39 Existing song artist: Windser
+2025-01-14 21:45:39 Existing song file name: Windser - Memory (2022).mp4
+2025-01-14 21:45:39 Nothing to do. Skipping to next song.
+2025-01-14 21:45:39 Song number 6
+2025-01-14 21:45:39 songAnchor: /station/altnation/track/GDCA-111167410-001
+2025-01-14 21:45:39 New song title: That's So True EXCLUSIVE
+2025-01-14 21:45:39 Artists is not None
+2025-01-14 21:45:39 artistList = bby 
+2025-01-14 21:45:39 Calling VideoSearch
+2025-01-14 21:45:40 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:45:40 Getting videoUrl
+2025-01-14 21:45:40 Getting youtube_id
+2025-01-14 21:45:40 updating json_songs
+2025-01-14 21:45:41 Filename: bby - That s So True EXCLUSIVE (2024).mp4
+2025-01-14 21:45:41 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - That s So True EXCLUSIVE (2024).mp4
+2025-01-14 21:45:41 Trying 2160p
+2025-01-14 21:46:20 There was an error downloading 2160p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:46:20 Trying 1080p
+2025-01-14 21:46:52 There was an error downloading 1080p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:46:52 Trying 720p
+2025-01-14 21:47:24 There was an error downloading 720p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:47:24 Trying for best resolution
+2025-01-14 21:48:07 There was an error downloading highest resolution video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:48:07 Aborting this song.
+2025-01-14 21:48:07 Could not download
+2025-01-14 21:48:07 Song number 7
+2025-01-14 21:48:07 songAnchor: /station/altnation/track/GDCA-111167209-001
+2025-01-14 21:48:07 New song title: Kinky EXCLUSIVE
+2025-01-14 21:48:07 Artists is not None
+2025-01-14 21:48:07 artistList = bby 
+2025-01-14 21:48:07 Calling VideoSearch
+2025-01-14 21:48:07 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:48:07 Getting videoUrl
+2025-01-14 21:48:07 Getting youtube_id
+2025-01-14 21:48:07 updating json_songs
+2025-01-14 21:48:08 Filename: bby - Kinky EXCLUSIVE (2024).mp4
+2025-01-14 21:48:08 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - Kinky EXCLUSIVE (2024).mp4
+2025-01-14 21:48:08 Trying 2160p
+2025-01-14 21:48:43 There was an error downloading 2160p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:48:43 Trying 1080p
+2025-01-14 21:49:12 There was an error downloading 1080p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:49:12 Trying 720p
+2025-01-14 21:49:45 There was an error downloading 720p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:49:45 Trying for best resolution
+2025-01-14 21:50:20 There was an error downloading highest resolution video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:50:20 Aborting this song.
+2025-01-14 21:50:20 Could not download
+2025-01-14 21:50:20 Song number 8
+2025-01-14 21:50:20 songAnchor: /station/altnation/track/GDCA-111167412-001
+2025-01-14 21:50:20 New song title: Voices In My Head EXCLUSIVE
+2025-01-14 21:50:20 Artists is not None
+2025-01-14 21:50:20 artistList = bby 
+2025-01-14 21:50:20 Calling VideoSearch
+2025-01-14 21:50:21 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:50:21 Getting videoUrl
+2025-01-14 21:50:21 Getting youtube_id
+2025-01-14 21:50:21 updating json_songs
+2025-01-14 21:50:21 Filename: bby - Voices In My Head EXCLUSIVE (2024).mp4
+2025-01-14 21:50:21 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - Voices In My Head EXCLUSIVE (2024).mp4
+2025-01-14 21:50:21 Trying 2160p
+2025-01-14 21:51:35 There was an error downloading 2160p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:51:35 Trying 1080p
+2025-01-14 21:52:18 There was an error downloading 1080p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:52:18 Trying 720p
+2025-01-14 21:52:41 There was an error downloading 720p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:52:41 Trying for best resolution
+2025-01-14 21:52:59 There was an error downloading highest resolution video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:52:59 Aborting this song.
+2025-01-14 21:52:59 Could not download
+2025-01-14 21:52:59 Song number 9
+2025-01-14 21:52:59 songAnchor: /station/altnation/track/GDCA-111167206-001
+2025-01-14 21:52:59 New song title: Leftside EXCLUSIVE
+2025-01-14 21:52:59 Artists is not None
+2025-01-14 21:52:59 artistList = bby 
+2025-01-14 21:52:59 Calling VideoSearch
+2025-01-14 21:53:00 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:53:00 Getting videoUrl
+2025-01-14 21:53:00 Getting youtube_id
+2025-01-14 21:53:00 updating json_songs
+2025-01-14 21:53:01 Filename: bby - Leftside EXCLUSIVE (2024).mp4
+2025-01-14 21:53:01 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - Leftside EXCLUSIVE (2024).mp4
+2025-01-14 21:53:01 Trying 2160p
+2025-01-14 21:54:09 Started
+2025-01-14 21:54:10 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-14 21:54:10 Found 24 song elements
+2025-01-14 21:54:10 Song number 1
+2025-01-14 21:54:10 songAnchor: /station/altnation/track/GDCA-110980486-001
+2025-01-14 21:54:10 /station/altnation/track/GDCA-110980486-001 is already added to database
+2025-01-14 21:54:10 Existing song title: People Watching
+2025-01-14 21:54:10 Existing song artist: Sam Fender
+2025-01-14 21:54:10 Existing song file name: Sam Fender - People Watching (2024).mp4
+2025-01-14 21:54:10 Nothing to do. Skipping to next song.
+2025-01-14 21:54:10 Song number 2
+2025-01-14 21:54:10 songAnchor: /station/altnation/track/NDCA-000152764-001
+2025-01-14 21:54:10 /station/altnation/track/NDCA-000152764-001 is already added to database
+2025-01-14 21:54:10 Existing song title: Kids
+2025-01-14 21:54:10 Existing song artist: MGMT
+2025-01-14 21:54:10 Existing song file name: MGMT - Kids (2009).mp4
+2025-01-14 21:54:10 Nothing to do. Skipping to next song.
+2025-01-14 21:54:10 Song number 3
+2025-01-14 21:54:10 songAnchor: /station/altnation/track/GDCA-109102089-001
+2025-01-14 21:54:10 /station/altnation/track/GDCA-109102089-001 is already added to database
+2025-01-14 21:54:10 Existing song title: The Narcissist
+2025-01-14 21:54:10 Existing song artist: Blur
+2025-01-14 21:54:10 Existing song file name: Blur - The Narcissist (2023).mp4
+2025-01-14 21:54:10 Nothing to do. Skipping to next song.
+2025-01-14 21:54:10 Song number 4
+2025-01-14 21:54:10 songAnchor: /station/altnation/track/NDCA-000127494-004
+2025-01-14 21:54:10 New song title: Maps
+2025-01-14 21:54:10 Artists is not None
+2025-01-14 21:54:10 artistList = Yeah Yeah Yeahs 
+2025-01-14 21:54:10 Calling VideoSearch
+2025-01-14 21:54:11 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:54:11 Getting videoUrl
+2025-01-14 21:54:11 Getting youtube_id
+2025-01-14 21:54:11 updating json_songs
+2025-01-14 21:54:12 Filename: Yeah Yeah Yeahs - Maps (2009).mp4
+2025-01-14 21:54:12 Saving C:\Github-Projects\Python Music Video Grabber\videos\Yeah Yeah Yeahs - Maps (2009).mp4
+2025-01-14 21:54:12 Trying 2160p
+2025-01-14 21:54:35 There was an error downloading 2160p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:54:35 Trying 1080p
+2025-01-14 21:55:23 There was an error downloading 1080p video err=FileNotFoundError(2, 'The system cannot find the path specified'), type(err)=<class 'FileNotFoundError'>
+2025-01-14 21:55:23 Trying 720p
+2025-01-14 21:58:04 Started
+2025-01-14 21:58:04 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-14 21:58:04 Found 24 song elements
+2025-01-14 21:58:04 Song number 1
+2025-01-14 21:58:04 songAnchor: /station/altnation/track/GDCA-109512694-001
+2025-01-14 21:58:04 /station/altnation/track/GDCA-109512694-001 is already added to database
+2025-01-14 21:58:04 Existing song title: Modern Girl
+2025-01-14 21:58:04 Existing song artist: Bleachers
+2025-01-14 21:58:04 Existing song file name: Bleachers - Modern Girl (2023).mp4
+2025-01-14 21:58:04 Nothing to do. Skipping to next song.
+2025-01-14 21:58:04 Song number 2
+2025-01-14 21:58:04 songAnchor: /station/altnation/track/GDCA-108104574-001
+2025-01-14 21:58:04 /station/altnation/track/GDCA-108104574-001 is already added to database
+2025-01-14 21:58:04 Existing song title: Sex, Drugs, Etc.
+2025-01-14 21:58:04 Existing song artist: Beach Weather
+2025-01-14 21:58:04 Existing song file name: Beach Weather - Sex Drugs Etc (2022).mp4
+2025-01-14 21:58:04 Nothing to do. Skipping to next song.
+2025-01-14 21:58:04 Song number 3
+2025-01-14 21:58:04 songAnchor: /station/altnation/track/GDCA-110980486-001
+2025-01-14 21:58:04 /station/altnation/track/GDCA-110980486-001 is already added to database
+2025-01-14 21:58:04 Existing song title: People Watching
+2025-01-14 21:58:04 Existing song artist: Sam Fender
+2025-01-14 21:58:04 Existing song file name: Sam Fender - People Watching (2024).mp4
+2025-01-14 21:58:04 Nothing to do. Skipping to next song.
+2025-01-14 21:58:04 Song number 4
+2025-01-14 21:58:04 songAnchor: /station/altnation/track/NDCA-000152764-001
+2025-01-14 21:58:04 /station/altnation/track/NDCA-000152764-001 is already added to database
+2025-01-14 21:58:04 Existing song title: Kids
+2025-01-14 21:58:04 Existing song artist: MGMT
+2025-01-14 21:58:04 Existing song file name: MGMT - Kids (2009).mp4
+2025-01-14 21:58:04 Nothing to do. Skipping to next song.
+2025-01-14 21:58:04 Song number 5
+2025-01-14 21:58:04 songAnchor: /station/altnation/track/GDCA-109102089-001
+2025-01-14 21:58:04 /station/altnation/track/GDCA-109102089-001 is already added to database
+2025-01-14 21:58:04 Existing song title: The Narcissist
+2025-01-14 21:58:04 Existing song artist: Blur
+2025-01-14 21:58:04 Existing song file name: Blur - The Narcissist (2023).mp4
+2025-01-14 21:58:04 Nothing to do. Skipping to next song.
+2025-01-14 21:58:04 Song number 6
+2025-01-14 21:58:04 songAnchor: /station/altnation/track/NDCA-000127494-004
+2025-01-14 21:58:04 New song title: Maps
+2025-01-14 21:58:04 Artists is not None
+2025-01-14 21:58:04 artistList = Yeah Yeah Yeahs 
+2025-01-14 21:58:04 Calling VideoSearch
+2025-01-14 21:58:05 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:05 Getting videoUrl
+2025-01-14 21:58:05 Getting youtube_id
+2025-01-14 21:58:05 updating json_songs
+2025-01-14 21:58:06 Filename: Yeah Yeah Yeahs - Maps (2009).mp4
+2025-01-14 21:58:06 Saving C:\Github-Projects\Python Music Video Grabber\videos\Yeah Yeah Yeahs - Maps (2009).mp4
+2025-01-14 21:58:06 Trying 2160p
+2025-01-14 21:58:07 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:07 Trying 1080p
+2025-01-14 21:58:07 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:07 Trying 720p
+2025-01-14 21:58:07 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:07 Trying for best resolution
+2025-01-14 21:58:07 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:07 Aborting this song.
+2025-01-14 21:58:07 Could not download
+2025-01-14 21:58:08 Song number 7
+2025-01-14 21:58:08 songAnchor: /station/altnation/track/GDCA-110875181-001
+2025-01-14 21:58:08 /station/altnation/track/GDCA-110875181-001 is already added to database
+2025-01-14 21:58:08 Existing song title: I Look Alive
+2025-01-14 21:58:08 Existing song artist: Phoneboy
+2025-01-14 21:58:08 Existing song file name: Phoneboy - I Look Alive (2024).mp4
+2025-01-14 21:58:08 Nothing to do. Skipping to next song.
+2025-01-14 21:58:08 Song number 8
+2025-01-14 21:58:08 songAnchor: /station/altnation/track/GDCA-107589574-001
+2025-01-14 21:58:08 /station/altnation/track/GDCA-107589574-001 is already added to database
+2025-01-14 21:58:08 Existing song title: Synchronize
+2025-01-14 21:58:08 Existing song artist: Milky Chance
+2025-01-14 21:58:08 Existing song file name: Milky Chance - Synchronize (2022).mp4
+2025-01-14 21:58:08 Nothing to do. Skipping to next song.
+2025-01-14 21:58:08 Song number 9
+2025-01-14 21:58:08 songAnchor: /station/altnation/track/GDCA-110901134-001
+2025-01-14 21:58:08 /station/altnation/track/GDCA-110901134-001 is already added to database
+2025-01-14 21:58:08 Existing song title: Meditations
+2025-01-14 21:58:08 Existing song artist: Cold War Kids
+2025-01-14 21:58:08 Existing song file name: Cold War Kids - Meditations (2024).mp4
+2025-01-14 21:58:08 Nothing to do. Skipping to next song.
+2025-01-14 21:58:08 Song number 10
+2025-01-14 21:58:08 songAnchor: /station/altnation/track/GDCA-107292724-001
+2025-01-14 21:58:08 /station/altnation/track/GDCA-107292724-001 is already added to database
+2025-01-14 21:58:08 Existing song title: Memory
+2025-01-14 21:58:08 Existing song artist: Windser
+2025-01-14 21:58:08 Existing song file name: Windser - Memory (2022).mp4
+2025-01-14 21:58:08 Nothing to do. Skipping to next song.
+2025-01-14 21:58:08 Song number 11
+2025-01-14 21:58:08 songAnchor: /station/altnation/track/GDCA-111167410-001
+2025-01-14 21:58:08 New song title: That's So True EXCLUSIVE
+2025-01-14 21:58:08 Artists is not None
+2025-01-14 21:58:08 artistList = bby 
+2025-01-14 21:58:08 Calling VideoSearch
+2025-01-14 21:58:09 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:09 Getting videoUrl
+2025-01-14 21:58:09 Getting youtube_id
+2025-01-14 21:58:09 updating json_songs
+2025-01-14 21:58:10 Filename: bby - That s So True EXCLUSIVE (2024).mp4
+2025-01-14 21:58:10 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - That s So True EXCLUSIVE (2024).mp4
+2025-01-14 21:58:10 Trying 2160p
+2025-01-14 21:58:11 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:11 Trying 1080p
+2025-01-14 21:58:11 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:11 Trying 720p
+2025-01-14 21:58:11 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:11 Trying for best resolution
+2025-01-14 21:58:11 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:11 Aborting this song.
+2025-01-14 21:58:11 Could not download
+2025-01-14 21:58:11 Song number 12
+2025-01-14 21:58:11 songAnchor: /station/altnation/track/GDCA-111167209-001
+2025-01-14 21:58:11 New song title: Kinky EXCLUSIVE
+2025-01-14 21:58:11 Artists is not None
+2025-01-14 21:58:11 artistList = bby 
+2025-01-14 21:58:11 Calling VideoSearch
+2025-01-14 21:58:12 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:12 Getting videoUrl
+2025-01-14 21:58:12 Getting youtube_id
+2025-01-14 21:58:12 updating json_songs
+2025-01-14 21:58:13 Filename: bby - Kinky EXCLUSIVE (2024).mp4
+2025-01-14 21:58:13 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - Kinky EXCLUSIVE (2024).mp4
+2025-01-14 21:58:13 Trying 2160p
+2025-01-14 21:58:13 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:13 Trying 1080p
+2025-01-14 21:58:13 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:13 Trying 720p
+2025-01-14 21:58:13 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:13 Trying for best resolution
+2025-01-14 21:58:13 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:13 Aborting this song.
+2025-01-14 21:58:13 Could not download
+2025-01-14 21:58:14 Song number 13
+2025-01-14 21:58:14 songAnchor: /station/altnation/track/GDCA-111167412-001
+2025-01-14 21:58:14 New song title: Voices In My Head EXCLUSIVE
+2025-01-14 21:58:14 Artists is not None
+2025-01-14 21:58:14 artistList = bby 
+2025-01-14 21:58:14 Calling VideoSearch
+2025-01-14 21:58:14 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:14 Getting videoUrl
+2025-01-14 21:58:14 Getting youtube_id
+2025-01-14 21:58:14 updating json_songs
+2025-01-14 21:58:15 Filename: bby - Voices In My Head EXCLUSIVE (2024).mp4
+2025-01-14 21:58:15 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - Voices In My Head EXCLUSIVE (2024).mp4
+2025-01-14 21:58:15 Trying 2160p
+2025-01-14 21:58:15 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:15 Trying 1080p
+2025-01-14 21:58:16 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:16 Trying 720p
+2025-01-14 21:58:16 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:16 Trying for best resolution
+2025-01-14 21:58:16 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:16 Aborting this song.
+2025-01-14 21:58:16 Could not download
+2025-01-14 21:58:16 Song number 14
+2025-01-14 21:58:16 songAnchor: /station/altnation/track/GDCA-111167206-001
+2025-01-14 21:58:16 New song title: Leftside EXCLUSIVE
+2025-01-14 21:58:16 Artists is not None
+2025-01-14 21:58:16 artistList = bby 
+2025-01-14 21:58:16 Calling VideoSearch
+2025-01-14 21:58:17 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:17 Getting videoUrl
+2025-01-14 21:58:17 Getting youtube_id
+2025-01-14 21:58:17 updating json_songs
+2025-01-14 21:58:17 Filename: bby - Leftside EXCLUSIVE (2024).mp4
+2025-01-14 21:58:17 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - Leftside EXCLUSIVE (2024).mp4
+2025-01-14 21:58:17 Trying 2160p
+2025-01-14 21:58:18 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:18 Trying 1080p
+2025-01-14 21:58:18 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:18 Trying 720p
+2025-01-14 21:58:18 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:18 Trying for best resolution
+2025-01-14 21:58:18 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:18 Aborting this song.
+2025-01-14 21:58:18 Could not download
+2025-01-14 21:58:18 Song number 15
+2025-01-14 21:58:18 songAnchor: /station/altnation/track/GDCA-111167408-001
+2025-01-14 21:58:18 New song title: Hotline EXCLUSIVE
+2025-01-14 21:58:18 Artists is not None
+2025-01-14 21:58:18 artistList = bby 
+2025-01-14 21:58:18 Calling VideoSearch
+2025-01-14 21:58:19 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:19 Getting videoUrl
+2025-01-14 21:58:19 Getting youtube_id
+2025-01-14 21:58:19 updating json_songs
+2025-01-14 21:58:20 Filename: bby - Hotline EXCLUSIVE (2023).mp4
+2025-01-14 21:58:20 Saving C:\Github-Projects\Python Music Video Grabber\videos\bby - Hotline EXCLUSIVE (2023).mp4
+2025-01-14 21:58:20 Trying 2160p
+2025-01-14 21:58:20 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:20 Trying 1080p
+2025-01-14 21:58:20 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:20 Trying 720p
+2025-01-14 21:58:20 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:20 Trying for best resolution
+2025-01-14 21:58:21 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:21 Aborting this song.
+2025-01-14 21:58:21 Could not download
+2025-01-14 21:58:21 Song number 16
+2025-01-14 21:58:21 songAnchor: /station/altnation/track/GDCA-110305912-001
+2025-01-14 21:58:21 New song title: Metaverse
+2025-01-14 21:58:21 Artists is not None
+2025-01-14 21:58:21 artistList = Cage The Elephant 
+2025-01-14 21:58:21 Calling VideoSearch
+2025-01-14 21:58:21 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:21 Getting videoUrl
+2025-01-14 21:58:21 Getting youtube_id
+2025-01-14 21:58:21 updating json_songs
+2025-01-14 21:58:22 Filename: Cage The Elephant - Metaverse (2024).mp4
+2025-01-14 21:58:22 Saving C:\Github-Projects\Python Music Video Grabber\videos\Cage The Elephant - Metaverse (2024).mp4
+2025-01-14 21:58:22 Trying 2160p
+2025-01-14 21:58:22 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:22 Trying 1080p
+2025-01-14 21:58:23 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:23 Trying 720p
+2025-01-14 21:58:23 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:23 Trying for best resolution
+2025-01-14 21:58:23 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:23 Aborting this song.
+2025-01-14 21:58:23 Could not download
+2025-01-14 21:58:23 Song number 17
+2025-01-14 21:58:23 songAnchor: /station/altnation/track/NDCA-000262788-001
+2025-01-14 21:58:23 /station/altnation/track/NDCA-000262788-001 is already added to database
+2025-01-14 21:58:23 Existing song title: Left Hand Free
+2025-01-14 21:58:23 Existing song artist: alt-J
+2025-01-14 21:58:23 Existing song file name: alt J - Left Hand Free (2014).mp4
+2025-01-14 21:58:23 Nothing to do. Skipping to next song.
+2025-01-14 21:58:23 Song number 18
+2025-01-14 21:58:23 songAnchor: /station/altnation/track/GDCA-110486957-001
+2025-01-14 21:58:23 New song title: daisies
+2025-01-14 21:58:23 Artists is not None
+2025-01-14 21:58:23 artistList = Good Neighbours 
+2025-01-14 21:58:23 Calling VideoSearch
+2025-01-14 21:58:24 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:24 Getting videoUrl
+2025-01-14 21:58:24 Getting youtube_id
+2025-01-14 21:58:24 updating json_songs
+2025-01-14 21:58:25 Filename: Good Neighbours - daisies (2024).mp4
+2025-01-14 21:58:25 Saving C:\Github-Projects\Python Music Video Grabber\videos\Good Neighbours - daisies (2024).mp4
+2025-01-14 21:58:25 Trying 2160p
+2025-01-14 21:58:25 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:25 Trying 1080p
+2025-01-14 21:58:25 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:25 Trying 720p
+2025-01-14 21:58:26 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:26 Trying for best resolution
+2025-01-14 21:58:26 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:26 Aborting this song.
+2025-01-14 21:58:26 Could not download
+2025-01-14 21:58:26 Song number 19
+2025-01-14 21:58:26 songAnchor: /station/altnation/track/NDCA-000157270-003
+2025-01-14 21:58:26 /station/altnation/track/NDCA-000157270-003 is already added to database
+2025-01-14 21:58:26 Existing song title: Lisztomania
+2025-01-14 21:58:26 Existing song artist: Phoenix
+2025-01-14 21:58:26 Existing song file name: Phoenix - Lisztomania (2009).mp4
+2025-01-14 21:58:26 Nothing to do. Skipping to next song.
+2025-01-14 21:58:26 Song number 20
+2025-01-14 21:58:26 songAnchor: /station/altnation/track/GDCA-109911047-004
+2025-01-14 21:58:26 New song title: Bobby Sox
+2025-01-14 21:58:26 Artists is not None
+2025-01-14 21:58:26 artistList = Green Day 
+2025-01-14 21:58:26 Calling VideoSearch
+2025-01-14 21:58:27 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:27 Getting videoUrl
+2025-01-14 21:58:27 Getting youtube_id
+2025-01-14 21:58:27 updating json_songs
+2025-01-14 21:58:28 Filename: Green Day - Bobby Sox (2024).mp4
+2025-01-14 21:58:28 Saving C:\Github-Projects\Python Music Video Grabber\videos\Green Day - Bobby Sox (2024).mp4
+2025-01-14 21:58:28 Trying 2160p
+2025-01-14 21:58:28 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:28 Trying 1080p
+2025-01-14 21:58:28 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:28 Trying 720p
+2025-01-14 21:58:28 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:28 Trying for best resolution
+2025-01-14 21:58:28 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:28 Aborting this song.
+2025-01-14 21:58:28 Could not download
+2025-01-14 21:58:28 Song number 21
+2025-01-14 21:58:28 songAnchor: /station/altnation/track/GDCA-107690331-001
+2025-01-14 21:58:28 New song title: Clarity
+2025-01-14 21:58:28 Artists is not None
+2025-01-14 21:58:28 artistList = Vance Joy 
+2025-01-14 21:58:28 Calling VideoSearch
+2025-01-14 21:58:29 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-14 21:58:29 Getting videoUrl
+2025-01-14 21:58:29 Getting youtube_id
+2025-01-14 21:58:29 updating json_songs
+2025-01-14 21:58:31 Filename: Vance Joy - Clarity (2022).mp4
+2025-01-14 21:58:31 Saving C:\Github-Projects\Python Music Video Grabber\videos\Vance Joy - Clarity (2022).mp4
+2025-01-14 21:58:31 Trying 2160p
+2025-01-14 21:58:31 There was an error downloading 2160p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:31 Trying 1080p
+2025-01-14 21:58:31 There was an error downloading 1080p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:31 Trying 720p
+2025-01-14 21:58:31 There was an error downloading 720p video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:31 Trying for best resolution
+2025-01-14 21:58:31 There was an error downloading highest resolution video err=<HTTPError 400: 'Bad Request'>, type(err)=<class 'urllib.error.HTTPError'>
+2025-01-14 21:58:31 Aborting this song.
+2025-01-14 21:58:31 Could not download
+2025-01-14 21:58:31 Song number 22
+2025-01-14 21:58:31 songAnchor: /station/altnation/track/GDCA-110600354-003
+2025-01-14 21:58:31 /station/altnation/track/GDCA-110600354-003 is already added to database
+2025-01-14 21:58:31 Existing song title: Sailor Song
+2025-01-14 21:58:31 Existing song artist: Gigi Perez
+2025-01-14 21:58:31 Existing song file name: Gigi Perez - Sailor Song (2024).mp4
+2025-01-14 21:58:31 Nothing to do. Skipping to next song.
+2025-01-14 21:58:31 Song number 23
+2025-01-14 21:58:31 songAnchor: /station/altnation/track/DDCA-002524862-002
+2025-01-14 21:58:31 /station/altnation/track/DDCA-002524862-002 is already added to database
+2025-01-14 21:58:31 Existing song title: All The Small Things
+2025-01-14 21:58:31 Existing song artist: blink-182
+2025-01-14 21:58:31 Existing song file name: blink 182 - All The Small Things (2009).mp4
+2025-01-14 21:58:31 Nothing to do. Skipping to next song.
+2025-01-14 21:58:31 Song number 24
+2025-01-14 21:58:31 songAnchor: /station/altnation/track/GDCA-110875175-001
+2025-01-14 21:58:31 /station/altnation/track/GDCA-110875175-001 is already added to database
+2025-01-14 21:58:31 Existing song title: Ok, But This Is The Last Time
+2025-01-14 21:58:31 Existing song artist: The Offspring
+2025-01-14 21:58:31 Existing song file name: The Offspring - Ok But This Is The Last Time (2024).mp4
+2025-01-14 21:58:31 Nothing to do. Skipping to next song.
+2025-01-14 21:58:31 Almost done. Writing out the json file now
+2025-01-14 21:58:31 Sending notification email now
+2025-01-14 21:58:32 Error sending email err=AttributeError("'NoneType' object has no attribute 'encode'"), type(err)=<class 'AttributeError'>
+2025-01-14 21:58:32 Finished
+2025-01-15 19:20:58 Started
+2025-01-15 19:20:59 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-15 19:20:59 Found 24 song elements
+2025-01-15 19:21:21 Song number 1
+2025-01-15 19:21:21 songAnchor: /station/altnation/track/GDCA-111199117-001
+2025-01-15 19:21:21 New song title: Nights That We Needed
+2025-01-15 19:21:21 Artists is not None
+2025-01-15 19:21:21 artistList = DWLLRS 
+2025-01-15 19:21:21 Calling VideoSearch
+2025-01-15 19:21:22 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 19:21:22 Getting videoUrl
+2025-01-15 19:21:22 Getting youtube_id
+2025-01-15 19:21:22 updating json_songs
+2025-01-15 19:22:11 Started
+2025-01-15 19:22:12 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-15 19:22:12 Found 24 song elements
+2025-01-15 19:22:15 Song number 1
+2025-01-15 19:22:15 songAnchor: /station/altnation/track/GDCA-111200002-001
+2025-01-15 19:22:15 New song title: Lady Parts and Mannequins
+2025-01-15 19:22:15 Artists is not None
+2025-01-15 19:22:15 artistList = mehro 
+2025-01-15 19:22:15 Calling VideoSearch
+2025-01-15 19:22:16 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 19:22:16 Getting videoUrl
+2025-01-15 19:22:16 Getting youtube_id
+2025-01-15 19:22:16 updating json_songs
+2025-01-15 19:32:08 Started
+2025-01-15 19:32:09 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-15 19:32:09 Found 24 song elements
+2025-01-15 19:32:13 Song number 1
+2025-01-15 19:32:13 songAnchor: /station/altnation/track/GDCA-111199347-001
+2025-01-15 19:32:13 New song title: Nothing Would Change
+2025-01-15 19:32:13 Artists is not None
+2025-01-15 19:32:13 artistList = The Linda Lindas 
+2025-01-15 19:32:13 Calling VideoSearch
+2025-01-15 19:32:14 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 19:32:14 Getting videoUrl
+2025-01-15 19:32:14 Getting youtube_id
+2025-01-15 19:32:14 updating json_songs
+2025-01-15 19:34:43 Started
+2025-01-15 19:34:44 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-15 19:34:44 Found 24 song elements
+2025-01-15 19:34:47 Song number 1
+2025-01-15 19:34:47 songAnchor: /station/altnation/track/GDCA-111199347-001
+2025-01-15 19:34:47 New song title: Nothing Would Change
+2025-01-15 19:34:47 Artists is not None
+2025-01-15 19:34:47 artistList = The Linda Lindas 
+2025-01-15 19:34:47 Calling VideoSearch
+2025-01-15 19:34:48 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 19:34:48 Getting videoUrl
+2025-01-15 19:34:48 Getting youtube_id
+2025-01-15 19:34:48 updating json_songs
+2025-01-15 21:16:14 Started
+2025-01-15 21:16:15 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-15 21:16:15 Found 24 song elements
+2025-01-15 21:16:18 Song number 1
+2025-01-15 21:16:18 songAnchor: /station/altnation/track/NDCA-000030813-001
+2025-01-15 21:16:18 /station/altnation/track/NDCA-000030813-001 is already added to database
+2025-01-15 21:16:18 Existing song title: Lazy Eye
+2025-01-15 21:16:18 Existing song artist: Silversun Pickups
+2025-01-15 21:16:18 Existing song file name: Silversun Pickups - Lazy Eye (2006).mp4
+2025-01-15 21:16:18 Nothing to do. Skipping to next song.
+2025-01-15 21:16:27 Song number 2
+2025-01-15 21:16:27 songAnchor: /station/altnation/track/GDCA-108036613-001
+2025-01-15 21:16:27 /station/altnation/track/GDCA-108036613-001 is already added to database
+2025-01-15 21:16:27 Existing song title: Stick Season
+2025-01-15 21:16:27 Existing song artist: Noah Kahan
+2025-01-15 21:16:27 Existing song file name: Noah Kahan - Stick Season (2022).mp4
+2025-01-15 21:16:27 Nothing to do. Skipping to next song.
+2025-01-15 21:16:35 Song number 3
+2025-01-15 21:16:35 songAnchor: /station/altnation/track/GDCA-111013684-001
+2025-01-15 21:16:35 New song title: The Line
+2025-01-15 21:16:35 Artists is not None
+2025-01-15 21:16:35 artistList = Twenty One Pilots 
+2025-01-15 21:16:35 Calling VideoSearch
+2025-01-15 21:16:36 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 21:16:36 Getting videoUrl
+2025-01-15 21:16:36 Getting youtube_id
+2025-01-15 21:16:36 updating json_songs
+2025-01-15 21:21:49 Song number 4
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/NDCA-000256842-001
+2025-01-15 21:21:49 /station/altnation/track/NDCA-000256842-001 is already added to database
+2025-01-15 21:21:49 Existing song title: Mind Over Matter
+2025-01-15 21:21:49 Existing song artist: Young the Giant
+2025-01-15 21:21:49 Existing song file name: Young the Giant - Mind Over Matter (2014).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 5
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/GDCA-111010153-001
+2025-01-15 21:21:49 /station/altnation/track/GDCA-111010153-001 is already added to database
+2025-01-15 21:21:49 Existing song title: My Promise (90 Days)
+2025-01-15 21:21:49 Existing song artist: Jack Kays
+2025-01-15 21:21:49 Existing song file name: Jack Kays - My Promise 90 Days (2024).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 6
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/NDCA-000076204-001
+2025-01-15 21:21:49 /station/altnation/track/NDCA-000076204-001 is already added to database
+2025-01-15 21:21:49 Existing song title: Somebody Told Me
+2025-01-15 21:21:49 Existing song artist: Killers
+2025-01-15 21:21:49 Existing song file name: Killers - Somebody Told Me (2009).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 7
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/GDCA-110375819-001
+2025-01-15 21:21:49 /station/altnation/track/GDCA-110375819-001 is already added to database
+2025-01-15 21:21:49 Existing song title: High in Low Places
+2025-01-15 21:21:49 Existing song artist: Beach Weather
+2025-01-15 21:21:49 Existing song file name: Beach Weather - High in Low Places (2024).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 8
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/GDCA-109531755-001
+2025-01-15 21:21:49 /station/altnation/track/GDCA-109531755-001 is already added to database
+2025-01-15 21:21:49 Existing song title: Landmines
+2025-01-15 21:21:49 Existing song artist: Sum 41
+2025-01-15 21:21:49 Existing song file name: Sum 41 - Landmines (2023).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 9
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/GDCA-110976554-001
+2025-01-15 21:21:49 /station/altnation/track/GDCA-110976554-001 is already added to database
+2025-01-15 21:21:49 Existing song title: Jeanie
+2025-01-15 21:21:49 Existing song artist: The Kooks & lovelytheband
+2025-01-15 21:21:49 Existing song file name: The Kooks lovelytheband - Jeanie (2024).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 10
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/NDCA-000237800-001
+2025-01-15 21:21:49 /station/altnation/track/NDCA-000237800-001 is already added to database
+2025-01-15 21:21:49 Existing song title: Do I Wanna Know
+2025-01-15 21:21:49 Existing song artist: Arctic Monkeys
+2025-01-15 21:21:49 Existing song file name: Arctic Monkeys - Do I Wanna Know (2013).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 11
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/GDCA-110865246-003
+2025-01-15 21:21:49 /station/altnation/track/GDCA-110865246-003 is already added to database
+2025-01-15 21:21:49 Existing song title: Arrow
+2025-01-15 21:21:49 Existing song artist: The Head & The Heart
+2025-01-15 21:21:49 Existing song file name: The Head The Heart - Arrow (2024).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 12
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/NDCA-000030855-001
+2025-01-15 21:21:49 /station/altnation/track/NDCA-000030855-001 is already added to database
+2025-01-15 21:21:49 Existing song title: Welcome To The Black Parade
+2025-01-15 21:21:49 Existing song artist: My Chemical Romance
+2025-01-15 21:21:49 Existing song file name: My Chemical Romance - Welcome To The Black Parade (2009).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 13
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/GDCA-110094556-001
+2025-01-15 21:21:49 /station/altnation/track/GDCA-110094556-001 is already added to database
+2025-01-15 21:21:49 Existing song title: Linger EXCLUSIVE
+2025-01-15 21:21:49 Existing song artist: Royel Otis
+2025-01-15 21:21:49 Existing song file name: Royel Otis - Linger EXCLUSIVE (2024).mp4
+2025-01-15 21:21:49 Nothing to do. Skipping to next song.
+2025-01-15 21:21:49 Song number 14
+2025-01-15 21:21:49 songAnchor: /station/altnation/track/GDCA-111107793-001
+2025-01-15 21:21:49 New song title: Cunning City
+2025-01-15 21:21:49 Artists is not None
+2025-01-15 21:21:49 artistList = Balming Tiger 
+2025-01-15 21:21:49 Calling VideoSearch
+2025-01-15 21:21:50 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 21:21:50 Getting videoUrl
+2025-01-15 21:21:50 Getting youtube_id
+2025-01-15 21:21:50 updating json_songs
+2025-01-15 21:27:05 Song number 15
+2025-01-15 21:27:05 songAnchor: /station/altnation/track/GDCA-110763042-001
+2025-01-15 21:27:05 /station/altnation/track/GDCA-110763042-001 is already added to database
+2025-01-15 21:27:05 Existing song title: Along For The Ride
+2025-01-15 21:27:05 Existing song artist: COIN
+2025-01-15 21:27:05 Existing song file name: COIN - Along For The Ride (2024).mp4
+2025-01-15 21:27:05 Nothing to do. Skipping to next song.
+2025-01-15 21:27:05 Song number 16
+2025-01-15 21:27:05 songAnchor: /station/altnation/track/GDCA-103079010-001
+2025-01-15 21:27:05 /station/altnation/track/GDCA-103079010-001 is already added to database
+2025-01-15 21:27:05 Existing song title: Good Things Fall Apart
+2025-01-15 21:27:05 Existing song artist: Illenium Jon Bellion
+2025-01-15 21:27:05 Existing song file name: Illenium Jon Bellion - Good Things Fall Apart (2019).mp4
+2025-01-15 21:27:05 Nothing to do. Skipping to next song.
+2025-01-15 21:27:05 Song number 17
+2025-01-15 21:27:05 songAnchor: /station/altnation/track/GDCA-111165516-002
+2025-01-15 21:27:05 New song title: Same Old Song
+2025-01-15 21:27:05 Artists is not None
+2025-01-15 21:27:05 artistList = The Lumineers 
+2025-01-15 21:27:05 Calling VideoSearch
+2025-01-15 21:27:05 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 21:27:05 Getting videoUrl
+2025-01-15 21:27:05 Getting youtube_id
+2025-01-15 21:27:05 updating json_songs
+2025-01-15 21:28:24 Song number 18
+2025-01-15 21:28:24 songAnchor: /station/altnation/track/GDCA-100400476-001
+2025-01-15 21:28:24 /station/altnation/track/GDCA-100400476-001 is already added to database
+2025-01-15 21:28:24 Existing song title: I Feel Like I'm Drowning
+2025-01-15 21:28:24 Existing song artist: Two Feet
+2025-01-15 21:28:24 Existing song file name: Two Feet - I Feel Like I m Drowning (2018).mp4
+2025-01-15 21:28:24 Nothing to do. Skipping to next song.
+2025-01-15 21:28:24 Song number 19
+2025-01-15 21:28:24 songAnchor: /station/altnation/track/GDCA-111013809-001
+2025-01-15 21:28:24 New song title: Messy
+2025-01-15 21:28:24 Artists is not None
+2025-01-15 21:28:24 artistList = Lola Young 
+2025-01-15 21:28:24 Calling VideoSearch
+2025-01-15 21:28:25 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 21:28:25 Getting videoUrl
+2025-01-15 21:28:25 Getting youtube_id
+2025-01-15 21:28:25 updating json_songs
+2025-01-15 21:29:42 Song number 20
+2025-01-15 21:29:42 songAnchor: /station/altnation/track/GDCA-110715561-001
+2025-01-15 21:29:42 /station/altnation/track/GDCA-110715561-001 is already added to database
+2025-01-15 21:29:42 Existing song title: Darkerside
+2025-01-15 21:29:42 Existing song artist: David Kushner
+2025-01-15 21:29:42 Existing song file name: David Kushner - Darkerside (2024).mp4
+2025-01-15 21:29:42 Nothing to do. Skipping to next song.
+2025-01-15 21:29:42 Song number 21
+2025-01-15 21:29:42 songAnchor: /station/altnation/track/GDCA-100172246-001
+2025-01-15 21:29:42 /station/altnation/track/GDCA-100172246-001 is already added to database
+2025-01-15 21:29:42 Existing song title: The Gold
+2025-01-15 21:29:42 Existing song artist: Manchester Orchestra
+2025-01-15 21:29:42 Existing song file name: Manchester Orchestra - The Gold (2017).mp4
+2025-01-15 21:29:42 Nothing to do. Skipping to next song.
+2025-01-15 21:29:42 Song number 22
+2025-01-15 21:29:42 songAnchor: /station/altnation/track/GDCA-110486957-001
+2025-01-15 21:29:42 /station/altnation/track/GDCA-110486957-001 is already added to database
+2025-01-15 21:29:42 Existing song title: daisies
+2025-01-15 21:29:42 Existing song artist: Good Neighbours
+2025-01-15 21:29:42 Existing song file name: Good Neighbours - daisies (2024).mp4
+2025-01-15 21:29:42 Nothing to do. Skipping to next song.
+2025-01-15 21:29:42 Song number 23
+2025-01-15 21:29:42 songAnchor: /station/altnation/track/NDCA-000073738-001
+2025-01-15 21:29:42 /station/altnation/track/NDCA-000073738-001 is already added to database
+2025-01-15 21:29:42 Existing song title: Last Nite
+2025-01-15 21:29:42 Existing song artist: Strokes
+2025-01-15 21:29:42 Existing song file name: Strokes - Last Nite (2009).mp4
+2025-01-15 21:29:42 Nothing to do. Skipping to next song.
+2025-01-15 21:29:42 Song number 24
+2025-01-15 21:29:42 songAnchor: /station/altnation/track/GDCA-110305912-001
+2025-01-15 21:29:42 /station/altnation/track/GDCA-110305912-001 is already added to database
+2025-01-15 21:29:42 Existing song title: Metaverse
+2025-01-15 21:29:42 Existing song artist: Cage The Elephant
+2025-01-15 21:29:42 Existing song file name: Cage The Elephant - Metaverse (2024).mp4
+2025-01-15 21:29:42 Nothing to do. Skipping to next song.
+2025-01-15 21:29:42 Almost done. Writing out the json file now
+2025-01-15 21:29:42 Sending notification email now
+2025-01-15 21:29:43 Error sending email err=AttributeError("'NoneType' object has no attribute 'encode'"), type(err)=<class 'AttributeError'>
+2025-01-15 21:29:43 Finished
+2025-01-15 21:32:46 Started
+2025-01-15 21:32:47 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-15 21:32:47 Found 24 song elements
+2025-01-15 21:32:47 Song number 1
+2025-01-15 21:32:47 songAnchor: /station/altnation/track/GDCA-111146408-001
+2025-01-15 21:32:47 New song title: Ultraviolet
+2025-01-15 21:32:47 Artists is not None
+2025-01-15 21:32:47 artistList = Clover County 
+2025-01-15 21:32:47 Calling VideoSearch
+2025-01-15 21:32:48 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 21:32:48 Getting videoUrl
+2025-01-15 21:32:48 Getting youtube_id
+2025-01-15 21:32:48 updating json_songs
+2025-01-15 21:35:43 Song number 2
+2025-01-15 21:35:43 songAnchor: /station/altnation/track/GDCA-102392577-001
+2025-01-15 21:35:43 /station/altnation/track/GDCA-102392577-001 is already added to database
+2025-01-15 21:35:43 Existing song title: Are You Bored Yet?
+2025-01-15 21:35:43 Existing song artist: Wallows Clairo
+2025-01-15 21:35:43 Existing song file name: Wallows Clairo - Are You Bored Yet (2019).mp4
+2025-01-15 21:35:43 Nothing to do. Skipping to next song.
+2025-01-15 21:35:43 Song number 3
+2025-01-15 21:35:43 songAnchor: /station/altnation/track/GDCA-110133223-002
+2025-01-15 21:35:43 /station/altnation/track/GDCA-110133223-002 is already added to database
+2025-01-15 21:35:43 Existing song title: Too Sweet
+2025-01-15 21:35:43 Existing song artist: Hozier
+2025-01-15 21:35:43 Existing song file name: Hozier - Too Sweet (2024).mp4
+2025-01-15 21:35:43 Nothing to do. Skipping to next song.
+2025-01-15 21:35:43 Song number 4
+2025-01-15 21:35:43 songAnchor: /station/altnation/track/GDCA-110540077-001
+2025-01-15 21:35:43 /station/altnation/track/GDCA-110540077-001 is already added to database
+2025-01-15 21:35:43 Existing song title: Show Pony
+2025-01-15 21:35:43 Existing song artist: Glass Animals
+2025-01-15 21:35:43 Existing song file name: Glass Animals - Show Pony (2024).mp4
+2025-01-15 21:35:43 Nothing to do. Skipping to next song.
+2025-01-15 21:35:43 Song number 5
+2025-01-15 21:35:43 songAnchor: /station/altnation/track/NDCA-000030813-001
+2025-01-15 21:35:43 /station/altnation/track/NDCA-000030813-001 is already added to database
+2025-01-15 21:35:43 Existing song title: Lazy Eye
+2025-01-15 21:35:43 Existing song artist: Silversun Pickups
+2025-01-15 21:35:43 Existing song file name: Silversun Pickups - Lazy Eye (2006).mp4
+2025-01-15 21:35:43 Nothing to do. Skipping to next song.
+2025-01-15 21:35:43 Song number 6
+2025-01-15 21:35:43 songAnchor: /station/altnation/track/GDCA-108036613-001
+2025-01-15 21:35:43 /station/altnation/track/GDCA-108036613-001 is already added to database
+2025-01-15 21:35:43 Existing song title: Stick Season
+2025-01-15 21:35:43 Existing song artist: Noah Kahan
+2025-01-15 21:35:43 Existing song file name: Noah Kahan - Stick Season (2022).mp4
+2025-01-15 21:35:43 Nothing to do. Skipping to next song.
+2025-01-15 21:35:43 Song number 7
+2025-01-15 21:35:43 songAnchor: /station/altnation/track/GDCA-111013684-001
+2025-01-15 21:35:43 New song title: The Line
+2025-01-15 21:35:43 Artists is not None
+2025-01-15 21:35:43 artistList = Twenty One Pilots 
+2025-01-15 21:35:43 Calling VideoSearch
+2025-01-15 21:35:44 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 21:35:44 Getting videoUrl
+2025-01-15 21:35:44 Getting youtube_id
+2025-01-15 21:35:44 updating json_songs
+2025-01-15 21:40:40 Song number 8
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/NDCA-000256842-001
+2025-01-15 21:40:40 /station/altnation/track/NDCA-000256842-001 is already added to database
+2025-01-15 21:40:40 Existing song title: Mind Over Matter
+2025-01-15 21:40:40 Existing song artist: Young the Giant
+2025-01-15 21:40:40 Existing song file name: Young the Giant - Mind Over Matter (2014).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 9
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/GDCA-111010153-001
+2025-01-15 21:40:40 /station/altnation/track/GDCA-111010153-001 is already added to database
+2025-01-15 21:40:40 Existing song title: My Promise (90 Days)
+2025-01-15 21:40:40 Existing song artist: Jack Kays
+2025-01-15 21:40:40 Existing song file name: Jack Kays - My Promise 90 Days (2024).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 10
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/NDCA-000076204-001
+2025-01-15 21:40:40 /station/altnation/track/NDCA-000076204-001 is already added to database
+2025-01-15 21:40:40 Existing song title: Somebody Told Me
+2025-01-15 21:40:40 Existing song artist: Killers
+2025-01-15 21:40:40 Existing song file name: Killers - Somebody Told Me (2009).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 11
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/GDCA-110375819-001
+2025-01-15 21:40:40 /station/altnation/track/GDCA-110375819-001 is already added to database
+2025-01-15 21:40:40 Existing song title: High in Low Places
+2025-01-15 21:40:40 Existing song artist: Beach Weather
+2025-01-15 21:40:40 Existing song file name: Beach Weather - High in Low Places (2024).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 12
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/GDCA-109531755-001
+2025-01-15 21:40:40 /station/altnation/track/GDCA-109531755-001 is already added to database
+2025-01-15 21:40:40 Existing song title: Landmines
+2025-01-15 21:40:40 Existing song artist: Sum 41
+2025-01-15 21:40:40 Existing song file name: Sum 41 - Landmines (2023).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 13
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/GDCA-110976554-001
+2025-01-15 21:40:40 /station/altnation/track/GDCA-110976554-001 is already added to database
+2025-01-15 21:40:40 Existing song title: Jeanie
+2025-01-15 21:40:40 Existing song artist: The Kooks & lovelytheband
+2025-01-15 21:40:40 Existing song file name: The Kooks lovelytheband - Jeanie (2024).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 14
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/NDCA-000237800-001
+2025-01-15 21:40:40 /station/altnation/track/NDCA-000237800-001 is already added to database
+2025-01-15 21:40:40 Existing song title: Do I Wanna Know
+2025-01-15 21:40:40 Existing song artist: Arctic Monkeys
+2025-01-15 21:40:40 Existing song file name: Arctic Monkeys - Do I Wanna Know (2013).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 15
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/GDCA-110865246-003
+2025-01-15 21:40:40 /station/altnation/track/GDCA-110865246-003 is already added to database
+2025-01-15 21:40:40 Existing song title: Arrow
+2025-01-15 21:40:40 Existing song artist: The Head & The Heart
+2025-01-15 21:40:40 Existing song file name: The Head The Heart - Arrow (2024).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 16
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/NDCA-000030855-001
+2025-01-15 21:40:40 /station/altnation/track/NDCA-000030855-001 is already added to database
+2025-01-15 21:40:40 Existing song title: Welcome To The Black Parade
+2025-01-15 21:40:40 Existing song artist: My Chemical Romance
+2025-01-15 21:40:40 Existing song file name: My Chemical Romance - Welcome To The Black Parade (2009).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 17
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/GDCA-110094556-001
+2025-01-15 21:40:40 /station/altnation/track/GDCA-110094556-001 is already added to database
+2025-01-15 21:40:40 Existing song title: Linger EXCLUSIVE
+2025-01-15 21:40:40 Existing song artist: Royel Otis
+2025-01-15 21:40:40 Existing song file name: Royel Otis - Linger EXCLUSIVE (2024).mp4
+2025-01-15 21:40:40 Nothing to do. Skipping to next song.
+2025-01-15 21:40:40 Song number 18
+2025-01-15 21:40:40 songAnchor: /station/altnation/track/GDCA-111107793-001
+2025-01-15 21:40:40 New song title: Cunning City
+2025-01-15 21:40:40 Artists is not None
+2025-01-15 21:40:40 artistList = Balming Tiger 
+2025-01-15 21:40:40 Calling VideoSearch
+2025-01-15 21:40:41 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 21:40:41 Getting videoUrl
+2025-01-15 21:40:41 Getting youtube_id
+2025-01-15 21:40:41 updating json_songs
+2025-01-15 22:14:47 Started
+2025-01-15 22:14:47 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-15 22:14:47 Found 24 song elements
+2025-01-15 22:14:47 Song number 1
+2025-01-15 22:14:47 songAnchor: /station/altnation/track/NDCA-000245077-001
+2025-01-15 22:14:47 /station/altnation/track/NDCA-000245077-001 is already added to database
+2025-01-15 22:14:47 Existing song title: Dangerous (feat. Joywave)
+2025-01-15 22:14:47 Existing song artist: Big Data
+2025-01-15 22:14:47 Existing song file name: Big Data - Dangerous feat Joywave (2014).mp4
+2025-01-15 22:14:47 Nothing to do. Skipping to next song.
+2025-01-15 22:14:47 Song number 2
+2025-01-15 22:14:47 songAnchor: /station/altnation/track/GDCA-110283395-001
+2025-01-15 22:14:47 /station/altnation/track/GDCA-110283395-001 is already added to database
+2025-01-15 22:14:47 Existing song title: Long Dark Night
+2025-01-15 22:14:47 Existing song artist: Judah & The Lion
+2025-01-15 22:14:47 Existing song file name: Judah The Lion - Long Dark Night (2024).mp4
+2025-01-15 22:14:47 Nothing to do. Skipping to next song.
+2025-01-15 22:14:47 Song number 3
+2025-01-15 22:14:47 songAnchor: /station/altnation/track/GDCA-110305854-001
+2025-01-15 22:14:47 /station/altnation/track/GDCA-110305854-001 is already added to database
+2025-01-15 22:14:47 Existing song title: Rainbow
+2025-01-15 22:14:47 Existing song artist: Cage The Elephant
+2025-01-15 22:14:47 Existing song file name: Cage The Elephant - Rainbow (2024).mp4
+2025-01-15 22:14:47 Nothing to do. Skipping to next song.
+2025-01-15 22:14:47 Song number 4
+2025-01-15 22:14:47 songAnchor: /station/altnation/track/GDCA-111077356-001
+2025-01-15 22:14:47 New song title: Birds Of A Feather EXCLUSIVE
+2025-01-15 22:14:47 Artists is not None
+2025-01-15 22:14:47 artistList = Bastille 
+2025-01-15 22:14:47 Calling VideoSearch
+2025-01-15 22:14:48 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 22:14:48 Getting videoUrl
+2025-01-15 22:14:48 Getting youtube_id
+2025-01-15 22:14:48 updating json_songs
+2025-01-15 22:16:43 Song number 5
+2025-01-15 22:16:43 songAnchor: /station/altnation/track/GDCA-101800994-001
+2025-01-15 22:16:43 /station/altnation/track/GDCA-101800994-001 is already added to database
+2025-01-15 22:16:43 Existing song title: Guiding Light
+2025-01-15 22:16:43 Existing song artist: Mumford & Sons
+2025-01-15 22:16:43 Existing song file name: Mumford Sons - Guiding Light (2018).mp4
+2025-01-15 22:16:43 Nothing to do. Skipping to next song.
+2025-01-15 22:16:43 Song number 6
+2025-01-15 22:16:43 songAnchor: /station/altnation/track/GDCA-109941332-001
+2025-01-15 22:16:43 /station/altnation/track/GDCA-109941332-001 is already added to database
+2025-01-15 22:16:43 Existing song title: Edge of the Earth
+2025-01-15 22:16:43 Existing song artist: The Beaches
+2025-01-15 22:16:43 Existing song file name: The Beaches - Edge of the Earth (2024).mp4
+2025-01-15 22:16:43 Nothing to do. Skipping to next song.
+2025-01-15 22:16:43 Song number 7
+2025-01-15 22:16:43 songAnchor: /station/altnation/track/NDCA-000022949-001
+2025-01-15 22:16:43 /station/altnation/track/NDCA-000022949-001 is already added to database
+2025-01-15 22:16:43 Existing song title: Are You Gonna Be My Girl
+2025-01-15 22:16:43 Existing song artist: Jet
+2025-01-15 22:16:43 Existing song file name: Jet - Are You Gonna Be My Girl (2009).mp4
+2025-01-15 22:16:43 Nothing to do. Skipping to next song.
+2025-01-15 22:16:43 Song number 8
+2025-01-15 22:16:43 songAnchor: /station/altnation/track/GDCA-110850308-001
+2025-01-15 22:16:43 New song title: Come Alive
+2025-01-15 22:16:43 Artists is not None
+2025-01-15 22:16:43 artistList = Phantogram 
+2025-01-15 22:16:43 Calling VideoSearch
+2025-01-15 22:16:44 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 22:16:44 Getting videoUrl
+2025-01-15 22:16:44 Getting youtube_id
+2025-01-15 22:16:44 updating json_songs
+2025-01-15 22:17:31 Song number 9
+2025-01-15 22:17:31 songAnchor: /station/altnation/track/NDCA-000199084-001
+2025-01-15 22:17:31 /station/altnation/track/NDCA-000199084-001 is already added to database
+2025-01-15 22:17:31 Existing song title: Trojans
+2025-01-15 22:17:31 Existing song artist: Atlas Genius
+2025-01-15 22:17:31 Existing song file name: Atlas Genius - Trojans (2012).mp4
+2025-01-15 22:17:31 Nothing to do. Skipping to next song.
+2025-01-15 22:17:31 Song number 10
+2025-01-15 22:17:31 songAnchor: /station/altnation/track/GDCA-110241793-005
+2025-01-15 22:17:31 New song title: Neverender
+2025-01-15 22:17:31 Artists is not None
+2025-01-15 22:17:31 artistList = Justice Tame Impala 
+2025-01-15 22:17:31 Calling VideoSearch
+2025-01-15 22:17:32 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 22:17:32 Getting videoUrl
+2025-01-15 22:17:32 Getting youtube_id
+2025-01-15 22:17:32 updating json_songs
+2025-01-15 22:18:52 Song number 11
+2025-01-15 22:18:52 songAnchor: /station/altnation/track/NDCA-000098249-001
+2025-01-15 22:18:52 /station/altnation/track/NDCA-000098249-001 is already added to database
+2025-01-15 22:18:52 Existing song title: All My Life
+2025-01-15 22:18:52 Existing song artist: Foo Fighters
+2025-01-15 22:18:52 Existing song file name: Foo Fighters - All My Life (2009).mp4
+2025-01-15 22:18:52 Nothing to do. Skipping to next song.
+2025-01-15 22:18:52 Song number 12
+2025-01-15 22:18:52 songAnchor: /station/altnation/track/GDCA-110658301-001
+2025-01-15 22:18:52 /station/altnation/track/GDCA-110658301-001 is already added to database
+2025-01-15 22:18:52 Existing song title: So Cold
+2025-01-15 22:18:52 Existing song artist: Balu Brigada
+2025-01-15 22:18:52 Existing song file name: Balu Brigada - So Cold (2024).mp4
+2025-01-15 22:18:52 Nothing to do. Skipping to next song.
+2025-01-15 22:18:52 Song number 13
+2025-01-15 22:18:52 songAnchor: /station/altnation/track/GDCA-111146408-001
+2025-01-15 22:18:52 New song title: Ultraviolet
+2025-01-15 22:18:52 Artists is not None
+2025-01-15 22:18:52 artistList = Clover County 
+2025-01-15 22:18:52 Calling VideoSearch
+2025-01-15 22:18:53 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 22:18:53 Getting videoUrl
+2025-01-15 22:18:53 Getting youtube_id
+2025-01-15 22:18:53 updating json_songs
+2025-01-15 22:21:50 Song number 14
+2025-01-15 22:21:50 songAnchor: /station/altnation/track/GDCA-102392577-001
+2025-01-15 22:21:50 /station/altnation/track/GDCA-102392577-001 is already added to database
+2025-01-15 22:21:50 Existing song title: Are You Bored Yet?
+2025-01-15 22:21:50 Existing song artist: Wallows Clairo
+2025-01-15 22:21:50 Existing song file name: Wallows Clairo - Are You Bored Yet (2019).mp4
+2025-01-15 22:21:50 Nothing to do. Skipping to next song.
+2025-01-15 22:21:50 Song number 15
+2025-01-15 22:21:50 songAnchor: /station/altnation/track/GDCA-110133223-002
+2025-01-15 22:21:50 /station/altnation/track/GDCA-110133223-002 is already added to database
+2025-01-15 22:21:50 Existing song title: Too Sweet
+2025-01-15 22:21:50 Existing song artist: Hozier
+2025-01-15 22:21:50 Existing song file name: Hozier - Too Sweet (2024).mp4
+2025-01-15 22:21:50 Nothing to do. Skipping to next song.
+2025-01-15 22:21:50 Song number 16
+2025-01-15 22:21:50 songAnchor: /station/altnation/track/GDCA-110540077-001
+2025-01-15 22:21:50 New song title: Show Pony
+2025-01-15 22:21:50 Artists is not None
+2025-01-15 22:21:50 artistList = Glass Animals 
+2025-01-15 22:21:50 Calling VideoSearch
+2025-01-15 22:21:51 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 22:21:51 Getting videoUrl
+2025-01-15 22:21:51 Getting youtube_id
+2025-01-15 22:21:51 updating json_songs
+2025-01-15 22:30:19 Song number 17
+2025-01-15 22:30:19 songAnchor: /station/altnation/track/NDCA-000030813-001
+2025-01-15 22:30:19 /station/altnation/track/NDCA-000030813-001 is already added to database
+2025-01-15 22:30:19 Existing song title: Lazy Eye
+2025-01-15 22:30:19 Existing song artist: Silversun Pickups
+2025-01-15 22:30:19 Existing song file name: Silversun Pickups - Lazy Eye (2006).mp4
+2025-01-15 22:30:19 Nothing to do. Skipping to next song.
+2025-01-15 22:30:19 Song number 18
+2025-01-15 22:30:19 songAnchor: /station/altnation/track/GDCA-108036613-001
+2025-01-15 22:30:19 /station/altnation/track/GDCA-108036613-001 is already added to database
+2025-01-15 22:30:19 Existing song title: Stick Season
+2025-01-15 22:30:19 Existing song artist: Noah Kahan
+2025-01-15 22:30:19 Existing song file name: Noah Kahan - Stick Season (2022).mp4
+2025-01-15 22:30:19 Nothing to do. Skipping to next song.
+2025-01-15 22:30:19 Song number 19
+2025-01-15 22:30:19 songAnchor: /station/altnation/track/GDCA-111013684-001
+2025-01-15 22:30:19 New song title: The Line
+2025-01-15 22:30:19 Artists is not None
+2025-01-15 22:30:19 artistList = Twenty One Pilots 
+2025-01-15 22:30:19 Calling VideoSearch
+2025-01-15 22:30:20 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 22:30:20 Getting videoUrl
+2025-01-15 22:30:20 Getting youtube_id
+2025-01-15 22:30:20 updating json_songs
+2025-01-15 22:35:11 Song number 20
+2025-01-15 22:35:11 songAnchor: /station/altnation/track/NDCA-000256842-001
+2025-01-15 22:35:11 /station/altnation/track/NDCA-000256842-001 is already added to database
+2025-01-15 22:35:11 Existing song title: Mind Over Matter
+2025-01-15 22:35:11 Existing song artist: Young the Giant
+2025-01-15 22:35:11 Existing song file name: Young the Giant - Mind Over Matter (2014).mp4
+2025-01-15 22:35:11 Nothing to do. Skipping to next song.
+2025-01-15 22:35:11 Song number 21
+2025-01-15 22:35:11 songAnchor: /station/altnation/track/GDCA-111010153-001
+2025-01-15 22:35:11 New song title: My Promise (90 Days)
+2025-01-15 22:35:11 Artists is not None
+2025-01-15 22:35:11 artistList = Jack Kays 
+2025-01-15 22:35:11 Calling VideoSearch
+2025-01-15 22:35:11 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-15 22:35:11 Getting videoUrl
+2025-01-15 22:35:11 Getting youtube_id
+2025-01-15 22:35:11 updating json_songs
+2025-01-15 22:40:31 Song number 22
+2025-01-15 22:40:31 songAnchor: /station/altnation/track/NDCA-000076204-001
+2025-01-15 22:40:31 /station/altnation/track/NDCA-000076204-001 is already added to database
+2025-01-15 22:40:31 Existing song title: Somebody Told Me
+2025-01-15 22:40:31 Existing song artist: Killers
+2025-01-15 22:40:31 Existing song file name: Killers - Somebody Told Me (2009).mp4
+2025-01-15 22:40:31 Nothing to do. Skipping to next song.
+2025-01-15 22:40:31 Song number 23
+2025-01-15 22:40:31 songAnchor: /station/altnation/track/GDCA-110375819-001
+2025-01-15 22:40:31 /station/altnation/track/GDCA-110375819-001 is already added to database
+2025-01-15 22:40:31 Existing song title: High in Low Places
+2025-01-15 22:40:31 Existing song artist: Beach Weather
+2025-01-15 22:40:31 Existing song file name: Beach Weather - High in Low Places (2024).mp4
+2025-01-15 22:40:31 Nothing to do. Skipping to next song.
+2025-01-15 22:40:31 Song number 24
+2025-01-15 22:40:31 songAnchor: /station/altnation/track/GDCA-109531755-001
+2025-01-15 22:40:31 /station/altnation/track/GDCA-109531755-001 is already added to database
+2025-01-15 22:40:31 Existing song title: Landmines
+2025-01-15 22:40:31 Existing song artist: Sum 41
+2025-01-15 22:40:31 Existing song file name: Sum 41 - Landmines (2023).mp4
+2025-01-15 22:40:31 Nothing to do. Skipping to next song.
+2025-01-15 22:40:31 Almost done. Writing out the json file now
+2025-01-15 22:40:31 Sending notification email now
+2025-01-15 22:40:31 Error sending email err=AttributeError("'NoneType' object has no attribute 'encode'"), type(err)=<class 'AttributeError'>
+2025-01-15 22:40:31 Finished
+2025-01-16 18:48:17 Started
+2025-01-16 18:48:17 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-16 18:48:40 Found 24 song elements
+2025-01-16 18:48:51 Song number 1
+2025-01-16 18:48:51 songAnchor: /station/altnation/track/GDCA-110720366-001
+2025-01-16 18:48:51 /station/altnation/track/GDCA-110720366-001 is already added to database
+2025-01-16 18:48:51 Existing song title: The Emptiness Machine
+2025-01-16 18:48:51 Existing song artist: Linkin Park
+2025-01-16 18:48:51 Existing song file name: Linkin Park - The Emptiness Machine (2024).mp4
+2025-01-16 18:49:04 Nothing to do. Skipping to next song.
+2025-01-16 18:49:04 Song number 2
+2025-01-16 18:49:04 songAnchor: /station/altnation/track/GDCA-110736663-001
+2025-01-16 18:49:04 /station/altnation/track/GDCA-110736663-001 is already added to database
+2025-01-16 18:49:04 Existing song title: Blue Sky & The Painter
+2025-01-16 18:49:04 Existing song artist: Bastille
+2025-01-16 18:49:04 Existing song file name: Bastille - Blue Sky The Painter (2024).mp4
+2025-01-16 18:49:11 Nothing to do. Skipping to next song.
+2025-01-16 18:49:11 Song number 3
+2025-01-16 18:49:11 songAnchor: /station/altnation/track/NDCA-000068342-001
+2025-01-16 18:49:11 /station/altnation/track/NDCA-000068342-001 is already added to database
+2025-01-16 18:49:11 Existing song title: I Miss You
+2025-01-16 18:49:11 Existing song artist: Blink-182
+2025-01-16 18:49:11 Existing song file name: Blink 182 - I Miss You (2009).mp4
+2025-01-16 18:49:22 Nothing to do. Skipping to next song.
+2025-01-16 18:49:22 Song number 4
+2025-01-16 18:49:22 songAnchor: /station/altnation/track/GDCA-110850308-001
+2025-01-16 18:49:22 /station/altnation/track/GDCA-110850308-001 is already added to database
+2025-01-16 18:49:22 Existing song title: Come Alive
+2025-01-16 18:49:22 Existing song artist: Phantogram
+2025-01-16 18:54:04 Started
+2025-01-16 18:54:05 Retrieved data from https://xmplaylist.com/station/altnation
+2025-01-16 18:54:05 Found 24 song elements
+2025-01-16 18:54:05 Song number 1
+2025-01-16 18:54:05 songAnchor: /station/altnation/track/GDCA-108089053-002
+2025-01-16 18:54:05 /station/altnation/track/GDCA-108089053-002 is already added to database
+2025-01-16 18:54:05 Existing song title: boy
+2025-01-16 18:54:05 Existing song artist: The Killers
+2025-01-16 18:54:05 Existing song file name: The Killers - boy (2022).mp4
+2025-01-16 18:54:05 Nothing to do. Skipping to next song.
+2025-01-16 18:54:05 Song number 2
+2025-01-16 18:54:05 songAnchor: /station/altnation/track/GDCA-111165516-002
+2025-01-16 18:54:05 New song title: Same Old Song
+2025-01-16 18:54:13 Artists is not None
+2025-01-16 18:54:13 artistList = The Lumineers 
+2025-01-16 18:54:24 Calling VideoSearch
+2025-01-16 18:54:24 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-16 18:54:25 Getting videoUrl
+2025-01-16 18:54:25 Getting youtube_id
+2025-01-16 18:54:25 updating json_songs
+2025-01-16 18:55:48 File saved: S:\media\Music Videos - Alternative\The Lumineers - Same Old Song (Official Music Video).webm
+2025-01-16 18:55:48 Song number 3
+2025-01-16 18:55:48 songAnchor: /station/altnation/track/GDCA-110720366-001
+2025-01-16 18:55:48 /station/altnation/track/GDCA-110720366-001 is already added to database
+2025-01-16 18:55:48 Existing song title: The Emptiness Machine
+2025-01-16 18:55:48 Existing song artist: Linkin Park
+2025-01-16 18:55:48 Existing song file name: Linkin Park - The Emptiness Machine (2024).mp4
+2025-01-16 18:55:48 Nothing to do. Skipping to next song.
+2025-01-16 18:55:48 Song number 4
+2025-01-16 18:55:48 songAnchor: /station/altnation/track/GDCA-110736663-001
+2025-01-16 18:55:48 /station/altnation/track/GDCA-110736663-001 is already added to database
+2025-01-16 18:55:48 Existing song title: Blue Sky & The Painter
+2025-01-16 18:55:48 Existing song artist: Bastille
+2025-01-16 18:55:48 Existing song file name: Bastille - Blue Sky The Painter (2024).mp4
+2025-01-16 18:55:48 Nothing to do. Skipping to next song.
+2025-01-16 18:55:48 Song number 5
+2025-01-16 18:55:48 songAnchor: /station/altnation/track/NDCA-000068342-001
+2025-01-16 18:55:48 /station/altnation/track/NDCA-000068342-001 is already added to database
+2025-01-16 18:55:48 Existing song title: I Miss You
+2025-01-16 18:55:48 Existing song artist: Blink-182
+2025-01-16 18:55:48 Existing song file name: Blink 182 - I Miss You (2009).mp4
+2025-01-16 18:55:48 Nothing to do. Skipping to next song.
+2025-01-16 18:55:48 Song number 6
+2025-01-16 18:55:48 songAnchor: /station/altnation/track/GDCA-110850308-001
+2025-01-16 18:55:48 New song title: Come Alive
+2025-01-16 18:56:54 Artists is not None
+2025-01-16 18:56:54 artistList = Phantogram 
+2025-01-16 18:56:54 Calling VideoSearch
+2025-01-16 18:56:55 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-16 18:56:55 Getting videoUrl
+2025-01-16 18:56:55 Getting youtube_id
+2025-01-16 18:56:55 updating json_songs
+2025-01-16 18:57:44 File saved: S:\media\Music Videos - Alternative\Phantogram - Come Alive.webm
+2025-01-16 18:57:44 Song number 7
+2025-01-16 18:57:44 songAnchor: /station/altnation/track/GDCA-105518846-001
+2025-01-16 18:57:44 /station/altnation/track/GDCA-105518846-001 is already added to database
+2025-01-16 18:57:44 Existing song title: Leave Me Alone
+2025-01-16 18:57:44 Existing song artist: I DON'T KNOW HOW BUT THEY FOUND ME
+2025-01-16 18:57:44 Existing song file name: I DON T KNOW HOW BUT THEY FOUND ME - Leave Me Alone (2020).mp4
+2025-01-16 18:57:44 Nothing to do. Skipping to next song.
+2025-01-16 18:57:44 Song number 8
+2025-01-16 18:57:44 songAnchor: /station/altnation/track/GDCA-110540077-001
+2025-01-16 18:57:44 New song title: Show Pony
+2025-01-16 18:57:53 Artists is not None
+2025-01-16 18:57:53 artistList = Glass Animals 
+2025-01-16 18:57:53 Calling VideoSearch
+2025-01-16 18:57:54 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-16 18:57:54 Getting videoUrl
+2025-01-16 18:57:54 Getting youtube_id
+2025-01-16 18:57:54 updating json_songs
+2025-01-16 19:06:35 File saved: S:\media\Music Videos - Alternative\Glass Animals - Show Pony (Official Video).webm
+2025-01-16 19:06:35 Song number 9
+2025-01-16 19:06:35 songAnchor: /station/altnation/track/NDCA-000068358-001
+2025-01-16 19:06:35 /station/altnation/track/NDCA-000068358-001 is already added to database
+2025-01-16 19:06:35 Existing song title: Fell In Love With A Girl
+2025-01-16 19:06:35 Existing song artist: White Stripes
+2025-01-16 19:06:35 Existing song file name: White Stripes - Fell In Love With A Girl (2009).mp4
+2025-01-16 19:06:35 Nothing to do. Skipping to next song.
+2025-01-16 19:06:35 Song number 10
+2025-01-16 19:06:35 songAnchor: /station/altnation/track/GDCA-109564588-001
+2025-01-16 19:06:35 /station/altnation/track/GDCA-109564588-001 is already added to database
+2025-01-16 19:06:35 Existing song title: Yes I'm A Mess
+2025-01-16 19:06:35 Existing song artist: AJR
+2025-01-16 19:06:35 Existing song file name: AJR - Yes I m A Mess (2023).mp4
+2025-01-16 19:06:35 Nothing to do. Skipping to next song.
+2025-01-16 19:06:35 Song number 11
+2025-01-16 19:06:35 songAnchor: /station/altnation/track/GDCA-111107793-001
+2025-01-16 19:06:35 New song title: Cunning City
+2025-01-16 19:07:18 Artists is not None
+2025-01-16 19:07:18 artistList = Balming Tiger 
+2025-01-16 19:07:18 Calling VideoSearch
+2025-01-16 19:07:19 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-16 19:07:19 Getting videoUrl
+2025-01-16 19:07:19 Getting youtube_id
+2025-01-16 19:07:19 updating json_songs
+2025-01-16 19:12:36 File saved: S:\media\Music Videos - Alternative\Balming Tiger - Cunning City.webm
+2025-01-16 19:12:36 Song number 12
+2025-01-16 19:12:36 songAnchor: /station/altnation/track/GDCA-110658301-001
+2025-01-16 19:12:36 /station/altnation/track/GDCA-110658301-001 is already added to database
+2025-01-16 19:12:36 Existing song title: So Cold
+2025-01-16 19:12:36 Existing song artist: Balu Brigada
+2025-01-16 19:12:36 Existing song file name: Balu Brigada - So Cold (2024).mp4
+2025-01-16 19:12:36 Nothing to do. Skipping to next song.
+2025-01-16 19:12:36 Song number 13
+2025-01-16 19:12:36 songAnchor: /station/altnation/track/NDCA-000346268-001
+2025-01-16 19:12:36 /station/altnation/track/NDCA-000346268-001 is already added to database
+2025-01-16 19:12:36 Existing song title: Broken
+2025-01-16 19:12:36 Existing song artist: lovelytheband
+2025-01-16 19:12:36 Existing song file name: lovelytheband - Broken (2017).mp4
+2025-01-16 19:12:36 Nothing to do. Skipping to next song.
+2025-01-16 19:12:36 Song number 14
+2025-01-16 19:12:36 songAnchor: /station/altnation/track/GDCA-110934172-001
+2025-01-16 19:12:36 New song title: ROCKMAN
+2025-01-16 19:15:41 Artists is not None
+2025-01-16 19:15:41 artistList = Mk.gee 
+2025-01-16 19:15:41 Calling VideoSearch
+2025-01-16 19:15:42 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-16 19:15:42 Getting videoUrl
+2025-01-16 19:15:42 Getting youtube_id
+2025-01-16 19:15:42 updating json_songs
+2025-01-16 19:17:24 File saved: S:\media\Music Videos - Alternative\Mk.gee\uff1a ROCKMAN (Live) - SNL.webm
+2025-01-16 19:17:24 Song number 15
+2025-01-16 19:17:24 songAnchor: /station/altnation/track/NDCA-000253804-001
+2025-01-16 19:17:24 /station/altnation/track/NDCA-000253804-001 is already added to database
+2025-01-16 19:17:24 Existing song title: Coming Of Age
+2025-01-16 19:17:24 Existing song artist: Foster The People
+2025-01-16 19:17:24 Existing song file name: Foster The People - Coming Of Age (2014).mp4
+2025-01-16 19:17:24 Nothing to do. Skipping to next song.
+2025-01-16 19:17:24 Song number 16
+2025-01-16 19:17:24 songAnchor: /station/altnation/track/GDCA-110305912-001
+2025-01-16 19:17:24 New song title: Metaverse
+2025-01-16 19:18:30 Artists is not None
+2025-01-16 19:18:30 artistList = Cage The Elephant 
+2025-01-16 19:18:30 Calling VideoSearch
+2025-01-16 19:18:31 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-16 19:18:31 Getting videoUrl
+2025-01-16 19:18:31 Getting youtube_id
+2025-01-16 19:18:31 updating json_songs
+2025-01-16 19:19:24 File saved: S:\media\Music Videos - Alternative\Cage The Elephant - Metaverse (Lyric Video).webm
+2025-01-16 19:19:24 Song number 17
+2025-01-16 19:19:24 songAnchor: /station/altnation/track/GDCA-110486957-001
+2025-01-16 19:19:24 New song title: daisies
+2025-01-16 19:25:19 Artists is not None
+2025-01-16 19:25:19 artistList = Good Neighbours 
+2025-01-16 19:25:19 Calling VideoSearch
+2025-01-16 19:25:20 HTTP Request: POST https://www.youtube.com/youtubei/v1/search?key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8 "HTTP/1.1 200 OK"
+2025-01-16 19:25:20 Getting videoUrl
+2025-01-16 19:25:20 Getting youtube_id
+2025-01-16 19:25:20 updating json_songs
+2025-01-16 19:38:31 File saved: S:\media\Music Videos - Alternative\Good Neighbours - Daisies (Live At Village Underground).webm
+2025-01-16 19:38:31 Song number 18
+2025-01-16 19:38:31 songAnchor: /station/altnation/track/GDCA-110763042-001
+2025-01-16 19:38:31 /station/altnation/track/GDCA-110763042-001 is already added to database
+2025-01-16 19:38:31 Existing song title: Along For The Ride
+2025-01-16 19:38:31 Existing song artist: COIN
+2025-01-16 19:38:31 Existing song file name: COIN - Along For The Ride (2024).mp4
+2025-01-16 19:38:31 Nothing to do. Skipping to next song.
+2025-01-16 19:38:31 Song number 19
+2025-01-16 19:38:31 songAnchor: /station/altnation/track/DDCA-003128495-004
+2025-01-16 19:38:31 /station/altnation/track/DDCA-003128495-004 is already added to database
+2025-01-16 19:38:31 Existing song title: Feel It Still
+2025-01-16 19:38:31 Existing song artist: Portugal. The Man
+2025-01-16 19:38:31 Existing song file name: Portugal The Man - Feel It Still (2017).mp4
+2025-01-16 19:38:31 Nothing to do. Skipping to next song.
+2025-01-16 19:38:31 Song number 20
+2025-01-16 19:38:31 songAnchor: /station/altnation/track/GDCA-108828028-001
+2025-01-16 19:38:31 /station/altnation/track/GDCA-108828028-001 is already added to database
+2025-01-16 19:38:31 Existing song title: Sofa King
+2025-01-16 19:38:31 Existing song artist: Royel Otis
+2025-01-16 19:38:31 Existing song file name: Royel Otis - Sofa King (2023).mp4
+2025-01-16 19:38:31 Nothing to do. Skipping to next song.
+2025-01-16 19:38:31 Song number 21
+2025-01-16 19:38:31 songAnchor: /station/altnation/track/GDCA-110715561-001
+2025-01-16 19:38:31 /station/altnation/track/GDCA-110715561-001 is already added to database
+2025-01-16 19:38:31 Existing song title: Darkerside
+2025-01-16 19:38:31 Existing song artist: David Kushner
+2025-01-16 19:38:31 Existing song file name: David Kushner - Darkerside (2024).mp4
+2025-01-16 19:38:31 Nothing to do. Skipping to next song.
+2025-01-16 19:38:31 Song number 22
+2025-01-16 19:38:31 songAnchor: /station/altnation/track/NDCA-000082777-005
+2025-01-16 19:38:31 /station/altnation/track/NDCA-000082777-005 is already added to database
+2025-01-16 19:38:31 Existing song title: The Middle
+2025-01-16 19:38:31 Existing song artist: Jimmy Eat World
+2025-01-16 19:38:31 Existing song file name: Jimmy Eat World - The Middle (2010).mp4
+2025-01-16 19:38:31 Nothing to do. Skipping to next song.
+2025-01-16 19:38:31 Song number 23
+2025-01-16 19:38:31 songAnchor: /station/altnation/track/GDCA-110328455-001
+2025-01-16 19:38:31 /station/altnation/track/GDCA-110328455-001 is already added to database
+2025-01-16 19:38:31 Existing song title: Routines in the Night
+2025-01-16 19:38:31 Existing song artist: Twenty One Pilots
+2025-01-16 19:38:31 Existing song file name: Twenty One Pilots - Routines in the Night (2024).mp4
+2025-01-16 19:38:31 Nothing to do. Skipping to next song.
+2025-01-16 19:38:31 Song number 24
+2025-01-16 19:38:31 songAnchor: /station/altnation/track/GDCA-105538811-001
+2025-01-16 19:38:31 /station/altnation/track/GDCA-105538811-001 is already added to database
+2025-01-16 19:38:31 Existing song title: Is It True
+2025-01-16 19:38:31 Existing song artist: Tame Impala
+2025-01-16 19:38:31 Existing song file name: Tame Impala - Is It True (2020).mp4
+2025-01-16 19:38:31 Nothing to do. Skipping to next song.
+2025-01-16 19:39:31 Almost done. Writing out the json file now
+2025-01-16 19:39:46 Sending notification email now
+2025-01-16 19:39:46 Error sending email err=AttributeError("'NoneType' object has no attribute 'encode'"), type(err)=<class 'AttributeError'>
+2025-01-16 19:39:46 Finished
