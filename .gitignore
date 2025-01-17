@@ -2,8 +2,10 @@
 .env
 videos/
 *.mp4
+*.exe
 /build
 /dist
 /sitewatcher.exe
 /sitewatcher.spec
 /cookies.txt
+/www.youtube.com_cookies.txt
