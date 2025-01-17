@@ -1,4 +1,3 @@
-import datetime
 import requests
 import os.path
 import json
@@ -6,18 +5,16 @@ import json
 from slugify import slugify
 # pip install bs4
 from bs4 import BeautifulSoup
-# pip install pytube
-from pytube import YouTube
 # pip install youtube-search-python
 from youtubesearchpython import VideosSearch
+# pip install yt-dlp
+import yt_dlp
 import smtplib
 # pip install python-dotenv
 from dotenv import load_dotenv
 import os
 import logging
 from pytube.innertube import _default_clients
-import ffmpeg
-import downloader
 
 # https://github.com/pytube/pytube/issues/1894#issuecomment-2026951321
 _default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
@@ -199,54 +196,33 @@ for idx, song_element in enumerate(song_elements, 1):
     json_songs['songs'][songId]['video-url'] = videoUrl
     # print(videoUrl)
 
-    # create the filename for the saved video
-    # Call the downloader method
-    try:
-        msg += downloader.downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTitle)
-    except Exception as e:
-        msg += f"There was a problem downloading the file\r\n{e}\r\n"
-
-    headers = {
-    'Authorization': os.getenv("AUTHORIZATION"),
-    'Content-Type': 'application/json',
+    # Options for downloading video and audio
+    ydl_opts = {
+        'format': 'bestvideo+bestaudio/best',
+        'cookiefile': 'www.youtube.com_cookies.txt',
+        'outtmpl' : 'S:/media/Music Videos - Alternative/%(title)s.%(ext)s',
+        'postprocessors': [{
+            'key': 'FFmpegVideoConvertor',
+            'preferedformat': 'mp4',
+        }],
     }
 
-    json_data = {
-        'data': [
-            {
-                'youtube_id': youtube_id,
-                'status': 'pending',
-            },
-        ],
-    }
-    msg += "Trying to add the video to tubearchivist\r\n"
-    try:
-        print(youtube_id)
-        print(json_data)
-        response = requests.post(os.getenv("TUBEARCHURL"), headers=headers, json=json_data)
-        msg += "Video was added. Check " + os.getenv("TUBEARCHURL") + " for new downloads\r\n"
-    except Exception as e:
-        msg += f"Could not add video to tube archivist\r\n{e}\r\n"
+    # Create a yt-dlp object with the given options
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(videoUrl, download=True)
+        output_filename = ydl.prepare_filename(info_dict)
+        print(f"downloaded {output_filename}")
+        json_songs['songs'][songId]['output_filename'] = output_filename
+        json_songs['songs'][songId]['video-filename'] = info_dict['requested_downloads'][0]['filename']
+        json_songs['songs'][songId]['saved_filepath'] = info_dict['requested_downloads'][0]['filepath']
+        json_songs['songs'][songId]['resolution'] = info_dict['requested_downloads'][0]['resolution']
+        logger.info(f"File saved: {output_filename}")
 
-# Update the json file
-# print ("Almost done. Writing out the json file now")
+
 logger.info("Almost done. Writing out the json file now")
 with open(json_songs_filename, 'w') as out_file:
     json.dump(json_songs, out_file, indent=4)
 # print ("All done! Enjoy the videos")
-
-try:
-    os.remove("vid.mp4")
-except:
-    pass
-try:
-    os.remove("aud.mp4")
-except:
-    pass
-try:
-    os.remove("out.mp4")
-except:
-    pass
 
 sendNotificationEmail(logger, msg)
 logger.info('Finished')

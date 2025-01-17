@@ -7,8 +7,33 @@ import datetime
 from slugify import slugify
 from asyncio import subprocess
 import subprocess
+# pip install yt-dlp
+import yt_dlp
+import pprint
 
 videoSavePath = "C:\\Github-Projects\\Python Music Video Grabber\\videos\\"
+
+def yt_dlp_download(videoUrl):
+    ydl_opts = {
+        'format': 'bestvideo+bestaudio/best',
+        # 'outtmpl' : 'S:/media/Music Videos - Alternative/%(title)s.%(ext)s',
+        'cookiefile': 'www.youtube.com_cookies.txt',
+        'postprocessors': [{
+            'key': 'FFmpegVideoConvertor',
+            'preferedformat': 'mp4',
+        }],
+    }
+
+    # Create a yt-dlp object with the given options
+    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+        info_dict = ydl.extract_info(videoUrl, download=True)
+        output_filename = ydl.prepare_filename(info_dict)
+        print(f"downloaded {output_filename}")
+        pprint.pprint(info_dict['requested_downloads'])
+        print('#######################################')
+        print(info_dict['requested_downloads'][0]['filename'])
+        print(info_dict['requested_downloads'][0]['filepath'])
+        print('done')
 
 def easyDownloadFromYoutube(videoUrl, artist, songTitle):
     _default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
@@ -259,4 +284,5 @@ def downloadFromYoutube(videoUrl, json_songs, songId, logger, artistList, songTi
 
     return localMsg
 
-# easyDownloadFromYoutube("https://www.youtube.com/watch?v=oEMy1cPYbQ4", "The Dare", "You're Invited")
+yt_dlp_download("https://www.youtube.com/watch?v=oEMy1cPYbQ4")
+# yt_dlp_download("https://www.youtube.com/watch?v=pcwlsVBPe-M") # Age-restricted

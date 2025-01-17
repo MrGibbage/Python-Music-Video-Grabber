@@ -5,3 +5,4 @@ pytube
 youtube-search-python
 python-dotenv
 requests
+yt-dlp

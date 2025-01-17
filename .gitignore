@@ -1,4 +1,9 @@
 .venv/
 .env
 videos/
-.mp4
+*.mp4
+/build
+/dist
+/sitewatcher.exe
+/sitewatcher.spec
+/cookies.txt
