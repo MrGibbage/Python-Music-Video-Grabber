@@ -257,6 +257,7 @@ def run(channel: str, save_dir:str):
         outtmpl:str = ''
 
         # Now use spotify to get some more metadata
+        # https://developer.spotify.com/dashboard
         sp:SpotifyClientCredentials = None
         load_dotenv()
         spotify_client_id = os.getenv("SPOTIFY_CLIENT_ID")
