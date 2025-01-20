@@ -1,8 +1,5 @@
-ffmpeg
-python-slugify
 bs4
-pytube
-youtube-search-python
 python-dotenv
 requests
+youtube-search-python
 yt-dlp

@@ -10750,6 +10750,38 @@
             "output_filename": "S:\\media\\Music Videos - Alternative\\Green Day - Bobby Sox (Official Music Video).webm",
             "video-filename": "S:\\media\\Music Videos - Alternative\\Green Day - Bobby Sox (Official Music Video).mp4",
             "resolution": "2304x1728"
+        },
+        "/station/altnation/track/GDCA-110875173-001": {
+            "song-title": "Automatic",
+            "song-artist": "half alive",
+            "video-url": "https://www.youtube.com/watch?v=LMknL58AAyY",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\half\u2022alive - Automatic (Official).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\half\u2022alive - Automatic (Official).mp4",
+            "resolution": "3840x2160"
+        },
+        "/station/altnation/track/GDCA-111106968-001": {
+            "song-title": "Seth Cohen",
+            "song-artist": "Beach Weather",
+            "video-url": "https://www.youtube.com/watch?v=Xj0mh0uGKgY",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Beach Weather - Seth Cohen (Lyric Video).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Beach Weather - Seth Cohen (Lyric Video).mp4",
+            "resolution": "3840x2160"
+        },
+        "/station/altnation/track/GDCA-111083784-001": {
+            "song-title": "Sunday Best",
+            "song-artist": "Lauren Mayberry",
+            "video-url": "https://www.youtube.com/watch?v=bBmn2TWCP_Q",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Lauren Mayberry - Sunday Best (Visualiser).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Lauren Mayberry - Sunday Best (Visualiser).mp4",
+            "resolution": "1920x1080"
+        },
+        "/station/altnation/track/NDCA-000097184-005": {
+            "song-title": "Clocks",
+            "song-artist": "Coldplay",
+            "video-url": "https://www.youtube.com/watch?v=d020hcWA_Wg",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\Coldplay - Clocks (Official Video).webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\Coldplay - Clocks (Official Video).mp4",
+            "resolution": "1920x1080"
         }
     }
 }

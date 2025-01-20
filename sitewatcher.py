@@ -6,28 +6,32 @@
 # Then copy the sitewatcher.exe file from dist to the 
 # python-music-video-grabber folder
 #
-import requests
-import os.path
 import json
-# pip install python-slugify
-from slugify import slugify
+import logging
+from logging.handlers import RotatingFileHandler
+import os.path
+import os
+import smtplib
+
 # pip install bs4
 from bs4 import BeautifulSoup
+# pip install python-dotenv
+from dotenv import load_dotenv
+# pip install pytube (see comments below)
+# from pytube.innertube import _default_clients
+# pip install requests
+import requests
 # pip install youtube-search-python
 from youtubesearchpython import VideosSearch
 # pip install yt-dlp
 import yt_dlp
-import smtplib
-# pip install python-dotenv
-from dotenv import load_dotenv
-import os
-import logging
-from logging.handlers import RotatingFileHandler
-from pytube.innertube import _default_clients
+
+# I added this before I switched to yt-dlp. I don't think I need it any more
+# but I am keeping it here just in case.
 
 # https://github.com/pytube/pytube/issues/1894#issuecomment-2026951321
-_default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
-_default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
+# _default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
+# _default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
 
 def sendNotificationEmail(logger, msg):
     load_dotenv()
@@ -44,7 +48,7 @@ def sendNotificationEmail(logger, msg):
         server.quit()
         # print ("Email Sent")
     except Exception as err:
-        server.sendmail(gmail_address, gmail_address, f'There was an error sending the message: {e}')
+        server.sendmail(gmail_address, gmail_address, f'There was an error sending the message: {err}')
         server.quit()
         logger.info(f"Error sending email {err=}, {type(err)=}")
 
@@ -84,7 +88,6 @@ youtube_search_url_base = "https://youtube.com/results?search_query="
 json_songs_filename = 'songs.json'
 json_channels_filename = 'channels.json'
 URL="https://xmplaylist.com/station/altnation"
-CREATE_NO_WINDOW = 0x08000000
 
 # Class strings from the html
 
@@ -101,8 +104,15 @@ song_title_class = "mt-2 text-lg font-semibold leading-5 text-gray-900 md:text-x
 artist_class = "mt-1 text-sm text-gray-900 md:text-base md:leading-6 lg:text-sm xl:text-base"
 
 # Retrieve the current database of saved songs
-with open(json_songs_filename) as json_songs_file:
-    json_songs = json.load(json_songs_file)
+try:
+    with open(json_songs_filename) as json_songs_file:
+        json_songs = json.load(json_songs_file)
+except Exception as e:
+    logger.error("Could not open json file: " + json_songs_filename)
+    logger.error("Aborting")
+    msg += f"Could not open json file: {json_songs_filename}\n"
+    sendNotificationEmail(logger, msg)
+    exit(1)
 
 # with open(json_channels_filename) as json_channels_file:
 #     json_channels = json.load(json_channels_file)
@@ -115,8 +125,8 @@ try:
     # print(str(soup.contents))
     logger.info("Retrieved data from " + URL)
 except:
-    logger.info("Could not open " + URL)
-    logger.info("Aborting")
+    logger.error("Could not open " + URL)
+    logger.error("Aborting")
     msg += "Could not open " + URL
     sendNotificationEmail(logger, msg)
     exit(1)
@@ -130,6 +140,9 @@ if song_elements is None:
     
 msg += "Found " + str(len(song_elements)) + " song elements\r\n"
 logger.info("Found " + str(len(song_elements)) + " song elements")
+
+# We have the list all of the songs that were recently played, so loop
+# through the list and try to find the music videos for each one.
 for idx, song_element in enumerate(song_elements, 1):
     msg += "#" + str(idx) + ": "
     logger.info("Song number " + str(idx))
@@ -244,8 +257,16 @@ for idx, song_element in enumerate(song_elements, 1):
             json_songs['songs'][songId]['video-filename'] = info_dict['requested_downloads'][0]['filepath']
             json_songs['songs'][songId]['resolution'] = info_dict['requested_downloads'][0]['resolution']
             logger.info(f"* * * * File saved: {info_dict['requested_downloads'][0]['filepath']}")
+            msg += f'Searched for {search_terms}\n'
+            msg += f'Downloded {info_dict['title']}\n'
+            msg += f'Uploaded by {info_dict['uploader']}\n'
             msg += f'{info_dict['requested_downloads'][0]['filepath']}\n'
             msg += f'{videoUrl}\n'
+            logger.info(f'Searched for {search_terms}')
+            logger.info(f'Downloded {info_dict['title']}')
+            logger.info(f'Uploaded by {info_dict['uploader']}')
+            logger.info(f'{info_dict['requested_downloads'][0]['filepath']}')
+            logger.info(f'{videoUrl}')
         except Exception as e:
             logger.error(f'Error downloading the video: {e}')
             msg += f'Error downloading the video: {e}\n'
