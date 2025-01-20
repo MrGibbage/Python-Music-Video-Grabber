@@ -10782,6 +10782,16 @@
             "output_filename": "S:\\media\\Music Videos - Alternative\\Coldplay - Clocks (Official Video).webm",
             "video-filename": "S:\\media\\Music Videos - Alternative\\Coldplay - Clocks (Official Video).mp4",
             "resolution": "1920x1080"
+        },
+        "/station/altnation/track/GDCA-110875185-001": {
+            "song-title": "Replace It All",
+            "song-artist": "The Backfires",
+            "video-url": "https://www.youtube.com/watch?v=e9ARHHVVP10",
+            "output_filename": "S:\\media\\Music Videos - Alternative\\The Backfires - Replace It All (Official Video) [2024].webm",
+            "video-filename": "S:\\media\\Music Videos - Alternative\\The Backfires - Replace It All (Official Video) [2024].mp4",
+            "resolution": "3840x2160",
+            "search-terms": "Replace It All The Backfires  official video",
+            "downloaded-date-time": "2025-01-20 17:15:33"
         }
     }
 }

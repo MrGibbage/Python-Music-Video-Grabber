@@ -3,3 +3,4 @@ python-dotenv
 requests
 youtube-search-python
 yt-dlp
+spotipy
