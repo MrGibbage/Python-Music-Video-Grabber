@@ -38,6 +38,7 @@ def yt_dlp_download(videoUrl):
             info_dict = ydl.extract_info(videoUrl, download=True)
             # pprint.pprint(info_dict['requested_downloads'][0])
             output_filename = info_dict['requested_downloads'][0]['filepath']
+            pprint.pprint(info_dict)
             print(f"Saved {output_filename}")
         except Exception as e:
             print(f'Error downloading the video: {e}')
