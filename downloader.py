@@ -24,6 +24,7 @@ def yt_dlp_download(videoUrl):
         'format': 'bestvideo+bestaudio/best',
         'progress_hooks': [yt_dlp_hook],
         'cookiefile': 'www.youtube.com_cookies.txt',
+        'verbose' : True,
         'overwrites': True,
         'outtmpl' : 'S:/media/Music Videos - Alternative/%(title)s.%(ext)s',
         'postprocessors': [{
@@ -44,5 +45,5 @@ def yt_dlp_download(videoUrl):
             print(f'Error downloading the video: {e}')
 
 
-yt_dlp_download("https://www.youtube.com/watch?v=oEMy1cPYbQ4")
-# yt_dlp_download("https://www.youtube.com/watch?v=pcwlsVBPe-M") # Age-restricted
+# yt_dlp_download("https://www.youtube.com/watch?v=oEMy1cPYbQ4")
+yt_dlp_download("https://www.youtube.com/watch?v=pcwlsVBPe-M") # Age-restricted
