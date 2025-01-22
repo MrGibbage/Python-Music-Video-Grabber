@@ -10,19 +10,20 @@ import json
 import logging
 from logging.handlers import RotatingFileHandler
 import os.path
-import os
+import os, sys
 import smtplib
 import shutil
 from datetime import datetime
 
 # pip install bs4
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 # pip install python-dotenv
 from dotenv import load_dotenv
 # pip install pytube (see comments below)
 # from pytube.innertube import _default_clients
 # pip install requests
 import requests
+from requests.models import Response
 # pip install youtube-search-python
 from youtubesearchpython import VideosSearch
 # pip install yt-dlp
@@ -40,7 +41,14 @@ import argparse
 # _default_clients["ANDROID"]["context"]["client"]["clientVersion"] = "19.08.35"
 # _default_clients["ANDROID_MUSIC"] = _default_clients["ANDROID"]
 
+cwd: str = os.getcwd()
+if getattr(sys, 'frozen', False):
+    dir_path = os.path.dirname(sys.executable)
+elif __file__:
+    dir_path = os.path.dirname(__file__)
 
+print(f'{cwd=}')
+print(f'{dir_path=}')
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -125,6 +133,7 @@ def run(channel: str, save_dir:str):
 
     msg = f"Subject: {channel} Music Video Download Report\n\n"
 
+    # Done with setting up logging. Now get the database of songs already downloaded
     json_songs_filename = f'{channel}-songs.json'
     if not os.path.exists(json_songs_filename):
         try:
@@ -137,10 +146,6 @@ def run(channel: str, save_dir:str):
             msg += f"Error opening the json song files {e}"
             exit(1)
     
-    URL=f"https://xmplaylist.com/station/{channel}"
-
-
-    # Retrieve the current database of saved songs
     try:
         with open(json_songs_filename) as json_songs_file:
             json_songs = json.load(json_songs_file)
@@ -152,12 +157,10 @@ def run(channel: str, save_dir:str):
         exit(1)
 
 
+    # Get the most recent songs played
+    URL=f"https://xmplaylist.com/api/station/{channel}"
     try:
-        # Check the xmplaylist.com for recently played songs
-        page = requests.get(URL)
-        # print(str(page.status_code))
-        soup = BeautifulSoup(page.content, "html.parser")
-        # print(str(soup.contents))
+        recentSongs: Response = requests.get(URL)
         logger.info("Retrieved data from " + URL)
     except:
         logger.error("Could not open " + URL)
@@ -165,44 +168,27 @@ def run(channel: str, save_dir:str):
         msg += "Could not open " + URL
         sendNotificationEmail(logger, msg)
         exit(1)
-
-    # Get the song information
-    song_elements = soup.find_all("div", class_=song_elements_class) # line 157 in sample.html
-    # print(song_elements)
-    if song_elements is None:
-        logger.error("song_elements was None. Aborting")
-        exit(1)
-        
-    msg += "Found " + str(len(song_elements)) + " song elements\r\n"
-    logger.info("Found " + str(len(song_elements)) + " song elements")
+    
+    # print(recentSongs.json())
 
     # We have the list all of the songs that were recently played, so loop
     # through the list and try to find the music videos for each one.
-    for idx, song_element in enumerate(song_elements, 1):
+    for idx, song_element in enumerate(recentSongs.json(), 1):
+        print(f'{idx=}, {song_element=}')
         msg += "#" + str(idx) + ": "
         logger.info("Song number " + str(idx))
         search_terms = ""
         songTitle = ""
-        youtube_search_url = youtube_search_url_base
-        # print ("Song element: ", str(song_element))
 
-        songAnchor = song_element.find("a", class_ = song_anchor_class)
-        # print("songAnchor", songAnchor)
-
-        # the song anchor is a unique key for each song. If it is already in the
-        # database, then we are done with this song
         try:
-            songId = songAnchor['href']
+            songId = song_element['id']
+            logger.info(f'Got a songId: {songId}')
         except Exception as e:
-            logger.error(f'Could not get a song id. The error was {e}')
-            logger.error('songAnchor:')
-            logger.error(f'{songAnchor}')
+            logger.error(f'Could not get a song id. Skipping this song. The error was {e}')
             continue
 
-        # print("Song ID: " + songId)
-        logger.info("songAnchor: " + songAnchor['href'])
+        # Check to see if we have already downloaded this song
         if songId in json_songs['songs'].keys():
-            # print (songId + " already added to database")
             logger.info(songId + " is already added to database")
             existingSongTitle = json_songs['songs'][songId]['song-title']
             existingSongArtist = json_songs['songs'][songId]['song-artist']
@@ -220,30 +206,26 @@ def run(channel: str, save_dir:str):
         json_songs['songs'][songId] = {}
 
         # Get the song title
-        title_element = song_element.find("h3", class_=song_title_class)
-        if (title_element is not None):
+        songTitle = song_element['track']['name']
+        if (songTitle is not None):
             #   print("title: " + title_element.text)
-            songTitle = title_element.text.strip()
             logger.info("New song title: " + songTitle)
             msg += "**NEW** " + songTitle + " by "
             search_terms += songTitle
             json_songs['songs'][songId]['song-title'] = songTitle
         else:
             # print("title_element is None")
-            msg += "Title element was none\r\n"
-            logger.error("Title element was none. We cannot proccess this song further. Skipping to next song.")
+            msg += "Song Title was none\r\n"
+            logger.error("Song Title was none. We cannot proccess this song further. Skipping to next song.")
             continue
 
         # get the list of artists
-        artists = song_element.find("ul", class_=artist_class)
+        artists = song_element['track']['artists']
+        print(f'{artists=}')
         if (artists is not None):
             search_terms += " "
-            artistList = ""
+            artistList = " ".join(artists)
 
-            for li in artists.find_all("li"):
-                # print("artist: " + li.text, end=" ")
-                artistList += li.text.strip() + " "
-                # print(artistList)
             logger.info("New song artist(s) = " + artistList)
             msg += artistList + ".\r\n"
         else:
@@ -286,19 +268,21 @@ def run(channel: str, save_dir:str):
         
         # Search youtube for the video. Feeling lucky that the first hit will be
         # the best video.
-        logger.info("Calling VideoSearch")
         videosearch = VideosSearch(search_terms, limit=1)
-        logger.info("Getting videoUrl")
         videoUrl = videosearch.result()["result"][0]["link"] 
-        # logger.info("Getting youtube_id")
-        # youtube_id = videosearch.result()["result"][0]["id"]
+        logger.info(videoUrl)
         json_songs['songs'][songId]['video-url'] = videoUrl
         # print(videoUrl)
 
         # Options for downloading video and audio
+        cookie_file = 'www.youtube.com_cookies.txt'
+        if not os.path.exists('www.youtube.com_cookies.txt'):
+            logger.warning(f'Could not find cookie file {cookie_file} in {dir_path}')
+            msg += f'Could not find cookie file {cookie_file} in {dir_path}\n'
+
         ydl_opts = {
             'format': 'bestvideo+bestaudio/best',
-            'cookiefile': 'www.youtube.com_cookies.txt',
+            'cookiefile': cookie_file,
             'outtmpl' : outtmpl,
             'postprocessors': [{
                 'key': 'FFmpegVideoConvertor',
@@ -310,6 +294,7 @@ def run(channel: str, save_dir:str):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             try:
                 logger.info(f'Downloading {videoUrl}')
+                msg += f'Downloading {videoUrl}\n'
                 info_dict = ydl.extract_info(videoUrl, download=True)
                 output_filename = ydl.prepare_filename(info_dict)
                 json_songs['songs'][songId]['output_filename'] = output_filename
@@ -331,7 +316,9 @@ def run(channel: str, save_dir:str):
                 logger.info(f'{videoUrl}')
             except Exception as e:
                 logger.error(f'Error downloading the video: {e}')
-                msg += f'Error downloading the video: {e}\n'
+                msg += f'ERROR ERROR ERROR downloading the video: {e}\n'
+                json_songs['songs'][songId]['error-message'] = e
+                continue
 
 
     logger.info("Almost done. Writing out the json file now")
