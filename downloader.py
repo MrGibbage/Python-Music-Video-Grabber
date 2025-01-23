@@ -44,6 +44,6 @@ def yt_dlp_download(videoUrl):
         except Exception as e:
             print(f'Error downloading the video: {e}')
 
-
-# yt_dlp_download("https://www.youtube.com/watch?v=oEMy1cPYbQ4")
-yt_dlp_download("https://www.youtube.com/watch?v=pcwlsVBPe-M") # Age-restricted
+if __name__ == "__main__":
+    # yt_dlp_download("https://www.youtube.com/watch?v=oEMy1cPYbQ4")
+    yt_dlp_download("https://www.youtube.com/watch?v=pcwlsVBPe-M") # Age-restricted
