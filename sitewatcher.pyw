@@ -111,9 +111,14 @@ def run(channel: str, save_dir:str):
     such as S:/media/Music Videos - Alternative/
     '''
     # Create a rotating file handler
-    handler = RotatingFileHandler(
-        f'pmvd-{channel}.log', maxBytes=40000, backupCount=5, encoding='utf-8', errors='replace'
-    )
+    try:
+        handler = RotatingFileHandler(
+            dir_path + f'\\pmvd-{channel}.log', maxBytes=40000, backupCount=5, encoding='utf-8', errors='replace'
+        )
+    except Exception as e:
+        print(f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}")
+        exit(1)
+
     handler.setLevel(logging.DEBUG)
 
     # Create a formatter and set it for the handler
@@ -134,7 +139,7 @@ def run(channel: str, save_dir:str):
     msg = f"Subject: {channel} Music Video Download Report\n\n"
 
     # Done with setting up logging. Now get the database of songs already downloaded
-    json_songs_filename = f'{channel}-songs.json'
+    json_songs_filename = dir_path + f'\\{channel}-songs.json'
     if not os.path.exists(json_songs_filename):
         try:
             logger.info(f"{json_songs_filename} did not exist. Copying default songs-orig.json instead")
@@ -143,14 +148,28 @@ def run(channel: str, save_dir:str):
             logger.error("Error opening the json song files {e}")
             logger.error("songs-orig.json")
             logger.error(json_songs_filename)
-            msg += f"Error opening the json song files {e}"
             exit(1)
     
     try:
         with open(json_songs_filename) as json_songs_file:
             json_songs = json.load(json_songs_file)
+    except FileNotFoundError:
+        print(f"Error: The file '{json_songs_filename}' was not found.")
+        logger.error("json file was not found: " + json_songs_filename)
+        logger.error("Aborting")
+        msg += f"json file was not found: {json_songs_filename}\n"
+        exit(1)
+    except json.JSONDecodeError:
+        print(f"Error: The file '{json_songs_filename}' is not a valid JSON.")    
+        logger.error(f"json file {json_songs_filename} is not a valid JSON file")
+        logger.error("Aborting")
+        msg += f"json file: {json_songs_filename} is not a valid JSON file\n"
+        exit(1)
     except Exception as e:
+        print(type(e))
+        print(f'There was an unexpected error: {e}')
         logger.error("Could not open json file: " + json_songs_filename)
+        logger.error(f'The error was {e}')
         logger.error("Aborting")
         msg += f"Could not open json file: {json_songs_filename}\n"
         sendNotificationEmail(logger, msg)
@@ -181,7 +200,7 @@ def run(channel: str, save_dir:str):
         songTitle = ""
 
         try:
-            songId = song_element['id']
+            songId = song_element['track']['id']
             logger.info(f'Got a songId: {songId}')
         except Exception as e:
             logger.error(f'Could not get a song id. Skipping this song. The error was {e}')
@@ -308,12 +327,10 @@ def run(channel: str, save_dir:str):
                 msg += f'Downloded {info_dict['title']}\n'
                 msg += f'Uploaded by {info_dict['uploader']}\n'
                 msg += f'{info_dict['requested_downloads'][0]['filepath']}\n'
-                msg += f'{videoUrl}\n'
                 logger.info(f'Searched for {search_terms}')
                 logger.info(f'Downloded {info_dict['title']}')
                 logger.info(f'Uploaded by {info_dict['uploader']}')
                 logger.info(f'{info_dict['requested_downloads'][0]['filepath']}')
-                logger.info(f'{videoUrl}')
             except Exception as e:
                 logger.error(f'Error downloading the video: {e}')
                 msg += f'ERROR ERROR ERROR downloading the video: {e}\n'
