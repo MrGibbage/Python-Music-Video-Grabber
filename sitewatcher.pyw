@@ -77,6 +77,7 @@ def sendNotificationEmail(logger, msg):
     gmail_address = os.getenv("GMAILADDRESS")
     # print(gmail_address)
     logger.info("Sending notification email now")
+    msg += 'Sending notification email now\r\n'
     # Send notificaiton email
     try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
@@ -89,6 +90,7 @@ def sendNotificationEmail(logger, msg):
         server.sendmail(gmail_address, gmail_address, f'There was an error sending the message: {err}')
         server.quit()
         logger.info(f"Error sending email {err=}, {type(err)=}")
+        msg += f"Error sending email {err=}, {type(err)=}\r\n"
 
 
 def get_song_release_date(sp, song_name, artist_name=None):
@@ -116,7 +118,9 @@ def run(channel: str, save_dir:str):
             dir_path + f'\\pmvd-{channel}.log', maxBytes=40000, backupCount=5, encoding='utf-8', errors='replace'
         )
     except Exception as e:
-        print(f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}")
+        # print(f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}")
+        logger.info(f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}")
+        msg += f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}\r\n"
         exit(1)
 
     handler.setLevel(logging.DEBUG)
@@ -143,9 +147,11 @@ def run(channel: str, save_dir:str):
     if not os.path.exists(json_songs_filename):
         try:
             logger.info(f"{json_songs_filename} did not exist. Copying default songs-orig.json instead")
+            msg += f"{json_songs_filename} did not exist. Copying default songs-orig.json instead\r\n"
             shutil.copy('songs-orig.json', json_songs_filename)
         except Exception as e:
             logger.error("Error opening the json song files {e}")
+            msg += "Error opening the json song files {e}\r\n"
             logger.error("songs-orig.json")
             logger.error(json_songs_filename)
             exit(1)
@@ -154,20 +160,20 @@ def run(channel: str, save_dir:str):
         with open(json_songs_filename) as json_songs_file:
             json_songs = json.load(json_songs_file)
     except FileNotFoundError:
-        print(f"Error: The file '{json_songs_filename}' was not found.")
+        # print(f"Error: The file '{json_songs_filename}' was not found.")
         logger.error("json file was not found: " + json_songs_filename)
         logger.error("Aborting")
         msg += f"json file was not found: {json_songs_filename}\n"
         exit(1)
     except json.JSONDecodeError:
-        print(f"Error: The file '{json_songs_filename}' is not a valid JSON.")    
+        # print(f"Error: The file '{json_songs_filename}' is not a valid JSON.")    
         logger.error(f"json file {json_songs_filename} is not a valid JSON file")
         logger.error("Aborting")
         msg += f"json file: {json_songs_filename} is not a valid JSON file\n"
         exit(1)
     except Exception as e:
-        print(type(e))
-        print(f'There was an unexpected error: {e}')
+        # print(type(e))
+        # print(f'There was an unexpected error: {e}')
         logger.error("Could not open json file: " + json_songs_filename)
         logger.error(f'The error was {e}')
         logger.error("Aborting")
@@ -175,16 +181,36 @@ def run(channel: str, save_dir:str):
         sendNotificationEmail(logger, msg)
         exit(1)
 
+    # Get the API version
+    # This code was last updated with 
+    # openapi version = 3.1.0
+    # info['version'] = 2.0.0
+    APIURL=f"https://xmplaylist.com/api/spec"
+    try:
+        api_info: Response = requests.get(APIURL)
+        openapi_ver = api_info.json()['openapi']
+        info_ver = api_info.json()['info']['version']
+        logger.info(f"Retrieved API data from {APIURL}. openapi_ver = {openapi_ver} (expected 3.1.0). info_ver = {info_ver} (expected 2.0.0)")
+        msg += f"Retrieved API data from {APIURL}. openapi_ver = {openapi_ver} (expected 3.1.0). info_ver = {info_ver} (expected 2.0.0\r\n"
+    except:
+        logger.error("Could not open " + APIURL)
+        logger.error("Aborting")
+        msg += "Could not open " + APIURL + "\r\n"
+        sendNotificationEmail(logger, msg)
+        exit(1)
+
 
     # Get the most recent songs played
-    URL=f"https://xmplaylist.com/api/station/{channel}"
+    URL=f"https://xmplaylist.com/api/station/{channel}/newest"
     try:
         recentSongs: Response = requests.get(URL)
         logger.info("Retrieved data from " + URL)
+        msg += "Retrieved data from " + URL + "\r\n"
+        # print(recentSongs.json())
     except:
         logger.error("Could not open " + URL)
         logger.error("Aborting")
-        msg += "Could not open " + URL
+        msg += "Could not open " + URL + "\r\n"
         sendNotificationEmail(logger, msg)
         exit(1)
     
@@ -192,18 +218,23 @@ def run(channel: str, save_dir:str):
 
     # We have the list all of the songs that were recently played, so loop
     # through the list and try to find the music videos for each one.
-    for idx, song_element in enumerate(recentSongs.json(), 1):
-        print(f'{idx=}, {song_element=}')
-        msg += "#" + str(idx) + ": "
+    for idx, song_element in enumerate(recentSongs.json()['results'], 1):
+        # print(f'{idx=}, {song_element=}')
         logger.info("Song number " + str(idx))
+        msg += "Song number " + str(idx) + ": "
+        print(f"Song number {str(idx)}")
         search_terms = ""
         songTitle = ""
 
         try:
+            # print(f'{song_element=}')
             songId = song_element['track']['id']
+            # songId = song_element['results']
             logger.info(f'Got a songId: {songId}')
+            msg += f'Got a songId: {songId}\r\n'
         except Exception as e:
             logger.error(f'Could not get a song id. Skipping this song. The error was {e}')
+            msg += f'Could not get a song id. Skipping this song. The error was {e}\r\n'
             continue
 
         # Check to see if we have already downloaded this song
@@ -217,6 +248,7 @@ def run(channel: str, save_dir:str):
             logger.info("Existing song file name: " + json_songs['songs'][songId]['video-filename'])
             # print(json_songs['songs'][songId]['song-title'])
             msg += existingSongTitle + " by " + existingSongArtist + " already in the database\r\n"
+            print(f'{existingSongTitle} by {existingSongArtist} already in the database. Skipping to next song.')
             logger.info("Nothing to do. Skipping to next song.")
             continue
 
@@ -225,10 +257,17 @@ def run(channel: str, save_dir:str):
         json_songs['songs'][songId] = {}
 
         # Get the song title
-        songTitle = song_element['track']['name']
+        try:
+            songTitle = song_element['track']['title']
+        except Exception as e:
+            logger.error(f'There was an error getting the songTitle. Skipping this song. The error was {e}')
+            msg += f'Could not get a song Title. Skipping this song. The error was {e}\r\n'
+            continue
+
         if (songTitle is not None):
             #   print("title: " + title_element.text)
             logger.info("New song title: " + songTitle)
+            print(f"New song title: {songTitle}")
             msg += "**NEW** " + songTitle + " by "
             search_terms += songTitle
             json_songs['songs'][songId]['song-title'] = songTitle
@@ -269,12 +308,15 @@ def run(channel: str, save_dir:str):
             logger.debug("Got the spotify auth manager. Now getting the Spotify instance.")
             sp = spotipy.Spotify(auth_manager=this_auth_manager)
             logger.debug("Got the Spotify instance.")
+            msg += "Got the Spotify instance.\r\n"
         except Exception as e:
             logger.info(f"Could not authenticate with Spotify. Will not use it for metadata. {e}")
+            msg += f"Could not authenticate with Spotify. Will not use it for metadata. {e}"
 
         if sp is not None:
             release_date = get_song_release_date(sp, songTitle, artistList.strip())
             logger.info(f"Got a release date {release_date}")
+            msg += f"Got a release date {release_date}\r\n"
             outtmpl = f'{save_dir}%(title)s [{release_date[:4]}].%(ext)s'
         else:
             outtmpl = f'{save_dir}%(title)s [%(release_year)s].%(ext)s'
@@ -287,9 +329,16 @@ def run(channel: str, save_dir:str):
         
         # Search youtube for the video. Feeling lucky that the first hit will be
         # the best video.
-        videosearch = VideosSearch(search_terms, limit=1)
-        videoUrl = videosearch.result()["result"][0]["link"] 
-        logger.info(videoUrl)
+        try:
+            videosearch = VideosSearch(search_terms, limit=1) # requires httpx == 0.27.2
+            videoUrl = videosearch.result()["result"][0]["link"] 
+            logger.info(videoUrl)
+            msg += videoUrl + "\r\n"
+        except Exception as e:
+            logger.error(f'There was an error downloading the video. The error was {e}. Skipping this song.')
+            msg += f'There was an error downloading the video. The error was {e}. Skipping this song.'
+            continue
+
         json_songs['songs'][songId]['video-url'] = videoUrl
         # print(videoUrl)
 
@@ -325,6 +374,7 @@ def run(channel: str, save_dir:str):
                 logger.info(f"* * * * File saved: {info_dict['requested_downloads'][0]['filepath']}")
                 msg += f'Searched for {search_terms}\n'
                 msg += f'Downloded {info_dict['title']}\n'
+                print(f'Downloded {info_dict['title']}')
                 msg += f'Uploaded by {info_dict['uploader']}\n'
                 msg += f'{info_dict['requested_downloads'][0]['filepath']}\n'
                 logger.info(f'Searched for {search_terms}')
@@ -334,6 +384,7 @@ def run(channel: str, save_dir:str):
             except Exception as e:
                 logger.error(f'Error downloading the video: {e}')
                 msg += f'ERROR ERROR ERROR downloading the video: {e}\n'
+                print(f'ERROR ERROR ERROR downloading the video: {e}')
                 json_songs['songs'][songId]['error-message'] = e
                 continue
 
@@ -352,7 +403,11 @@ def run(channel: str, save_dir:str):
 # run(channel='1stwave', save_dir='S:/media/Music Videos - First Wave/')
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--channel", help="The last part of the url from xmplaylist.com", default='1stwave')
-    parser.add_argument("--save_dir", help="Where do you want to save the music videos", default='S:/media/Music Videos - First Wave/')
+    # parser.add_argument("--channel", help="The last part of the url from xmplaylist.com", default='1stwave')
+    # parser.add_argument("--save_dir", help="Where do you want to save the music videos", default='S:/media/Music Videos - First Wave/')
+    parser.add_argument("--channel", help="The last part of the url from xmplaylist.com", default='altnation')
+    parser.add_argument("--save_dir", help="Where do you want to save the music videos", default='S:/media/Music Videos - Alternative/')
     args = parser.parse_args()
+    print(f'{args.channel=}')
+    print(f'{args.save_dir=}')
     run(channel=args.channel, save_dir=args.save_dir)
