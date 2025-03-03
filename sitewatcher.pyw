@@ -193,11 +193,10 @@ def run(channel: str, save_dir:str):
         logger.info(f"Retrieved API data from {APIURL}. openapi_ver = {openapi_ver} (expected 3.1.0). info_ver = {info_ver} (expected 2.0.0)")
         msg += f"Retrieved API data from {APIURL}. openapi_ver = {openapi_ver} (expected 3.1.0). info_ver = {info_ver} (expected 2.0.0\r\n"
     except:
-        logger.error("Could not open " + APIURL)
-        logger.error("Aborting")
-        msg += "Could not open " + APIURL + "\r\n"
-        sendNotificationEmail(logger, msg)
-        exit(1)
+        logger.error("Could not open APIURL to get version number: " + APIURL)
+        msg += "Could not open APIURL to get version number: " + APIURL + "\r\n"
+        # sendNotificationEmail(logger, msg)
+        # exit(1)
 
 
     # Get the most recent songs played
@@ -240,17 +239,22 @@ def run(channel: str, save_dir:str):
         # Check to see if we have already downloaded this song
         if songId in json_songs['songs'].keys():
             logger.info(songId + " is already added to database")
-            existingSongTitle = json_songs['songs'][songId]['song-title']
-            existingSongArtist = json_songs['songs'][songId]['song-artist']
-            # existingFileName = json_songs['songs'][songId]['video-filename']
-            logger.info("Existing song title: " + json_songs['songs'][songId]['song-title'])
-            logger.info("Existing song artist: " + json_songs['songs'][songId]['song-artist'])
-            logger.info("Existing song file name: " + json_songs['songs'][songId]['video-filename'])
-            # print(json_songs['songs'][songId]['song-title'])
-            msg += existingSongTitle + " by " + existingSongArtist + " already in the database\r\n"
-            print(f'{existingSongTitle} by {existingSongArtist} already in the database. Skipping to next song.')
-            logger.info("Nothing to do. Skipping to next song.")
-            continue
+            try:
+                existingSongTitle = json_songs['songs'][songId]['song-title']
+                existingSongArtist = json_songs['songs'][songId]['song-artist']
+                # existingFileName = json_songs['songs'][songId]['video-filename']
+                logger.info("Existing song title: " + json_songs['songs'][songId]['song-title'])
+                logger.info("Existing song artist: " + json_songs['songs'][songId]['song-artist'])
+                logger.info("Existing song file name: " + json_songs['songs'][songId]['video-filename'])
+                # print(json_songs['songs'][songId]['song-title'])
+                msg += existingSongTitle + " by " + existingSongArtist + " already in the database\r\n"
+                print(f'{existingSongTitle} by {existingSongArtist} already in the database. Skipping to next song.')
+                logger.info("Nothing to do. Skipping to next song.")
+                continue
+            except Exception as e:
+                logger.info(f"There was an error reading from the songs database. The songId is in the database, but the data could not be read.")
+                msg += f"There was an error reading from the songs database. The songId is in the database, but the data could not be read.\r\n"
+                continue
 
         # if we are here, then it must be a new song
         # print("Looks like this is a new song!")
