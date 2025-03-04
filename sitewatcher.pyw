@@ -32,6 +32,16 @@ import yt_dlp
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
+# pip install cloudscraper
+# needed for dealing with CloudFlare servers, to prevent failing 
+# javascript tests
+from cloudscraper import CloudScraper
+
+# pip install pytz
+# timezones
+import pytz
+
+
 import argparse
 
 # I added this before I switched to yt-dlp. I don't think I need it any more
@@ -68,8 +78,12 @@ song_title_class = "mt-2 text-lg font-semibold leading-5 text-gray-900 md:text-x
 # line 170
 artist_class = "mt-1 text-sm text-gray-900 md:text-base md:leading-6 lg:text-sm xl:text-base"
 
+EDGE_HEADER = {
+    # 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0'
+    'User-Agent': 'SkipMorrow/1.0'
+}
 
-
+LOCAL_TIMEZONE = pytz.timezone('America/New_York')
 
 def sendNotificationEmail(logger, msg):
     load_dotenv()
@@ -187,8 +201,14 @@ def run(channel: str, save_dir:str):
     # info['version'] = 2.0.0
     APIURL=f"https://xmplaylist.com/api/spec"
     try:
-        api_info: Response = requests.get(APIURL)
+        logger.info(f"running requests.get {APIURL}")
+        scraper: CloudScraper = CloudScraper()
+        api_info = scraper.get(url=APIURL)
+        # api_info: Response = requests.get(url=APIURL, headers=EDGE_HEADER)
+        logger.info(f"Getting OPENAPI version")
+        # print(api_info.text)
         openapi_ver = api_info.json()['openapi']
+        logger.info(f"Getting API version")
         info_ver = api_info.json()['info']['version']
         logger.info(f"Retrieved API data from {APIURL}. openapi_ver = {openapi_ver} (expected 3.1.0). info_ver = {info_ver} (expected 2.0.0)")
         msg += f"Retrieved API data from {APIURL}. openapi_ver = {openapi_ver} (expected 3.1.0). info_ver = {info_ver} (expected 2.0.0\r\n"
@@ -196,14 +216,19 @@ def run(channel: str, save_dir:str):
         logger.error("Could not open APIURL to get version number: " + APIURL)
         msg += "Could not open APIURL to get version number: " + APIURL + "\r\n"
         # sendNotificationEmail(logger, msg)
-        # exit(1)
+        exit(1)
 
 
     # Get the most recent songs played
-    URL=f"https://xmplaylist.com/api/station/{channel}/newest"
+    URL=f"https://xmplaylist.com/api/station/{channel}"
     try:
-        recentSongs: Response = requests.get(URL)
+        logger.info(f"Getting recent songs with requests.get {URL}")
+        scraper: CloudScraper = CloudScraper()
+        recentSongs = scraper.get(url=URL)
+        # recentSongs: Response = requests.get(url=URL, headers=EDGE_HEADER)
         logger.info("Retrieved data from " + URL)
+        # print("recentsongs")
+        # print(recentSongs.text)
         msg += "Retrieved data from " + URL + "\r\n"
         # print(recentSongs.json())
     except:
@@ -235,6 +260,19 @@ def run(channel: str, save_dir:str):
             logger.error(f'Could not get a song id. Skipping this song. The error was {e}')
             msg += f'Could not get a song id. Skipping this song. The error was {e}\r\n'
             continue
+
+        # Get the song timestamp
+        local_time: datetime = datetime.now
+        try:
+            zulu_timestamp = song_element['timestamp']
+            logger.debug(f"Song timestamp: {zulu_timestamp}")
+            datetime_obj:datetime = datetime.strptime(zulu_timestamp, "%Y-%m-%dT%H:%M:%S.%fZ")
+            local_time = datetime_obj.replace(tzinfo=pytz.utc).astimezone(LOCAL_TIMEZONE)
+            msg += f"Local timestamp: {local_time.isoformat()}\r\n"
+            logger.debug(f"Song local timestamp: {local_time.isoformat()}")
+        except Exception as e:
+            logger.error(f'There was an error getting the timestamp. Not a big deal at all: {e}')
+            msg += f'There was an error getting the timestamp. Not a big deal at all: {e}\r\n'
 
         # Check to see if we have already downloaded this song
         if songId in json_songs['songs'].keys():
@@ -283,7 +321,7 @@ def run(channel: str, save_dir:str):
 
         # get the list of artists
         artists = song_element['track']['artists']
-        print(f'{artists=}')
+        # print(f'{artists=}')
         if (artists is not None):
             search_terms += " "
             artistList = " ".join(artists)
@@ -297,7 +335,7 @@ def run(channel: str, save_dir:str):
             continue
         
         json_songs['songs'][songId]['song-artist'] = artistList.strip()
-
+        json_songs['songs'][songId]['timestamp'] = local_time.isoformat()
         outtmpl:str = ''
 
         # Now use spotify to get some more metadata

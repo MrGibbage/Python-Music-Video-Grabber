@@ -4,3 +4,5 @@ youtube-search-python
 yt-dlp
 spotipy
 httpx==0.27.2
+pytz
+cloudscraper
