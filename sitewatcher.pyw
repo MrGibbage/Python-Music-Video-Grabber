@@ -247,6 +247,9 @@ def run(channel: str, save_dir:str):
         logger.info("Song number " + str(idx))
         msg += "Song number " + str(idx) + ": "
         print(f"Song number {str(idx)}")
+        if idx > 18:
+            msg += "\r\n"
+            continue
         search_terms = ""
         songTitle = ""
 
@@ -432,10 +435,15 @@ def run(channel: str, save_dir:str):
 
 
     logger.info("Almost done. Writing out the json file now")
-    with open(json_songs_filename, 'w') as out_file:
-        json.dump(json_songs, out_file, indent=4)
+    try:
+        with open(json_songs_filename, 'w') as out_file:
+            json.dump(json_songs, out_file, indent=4)
     # print ("All done! Enjoy the videos")
+    except Exception as e:
+        logger.error(f'Error writing out the json file: {e}')
+        msg += f'Error writing out the json file: {e}\n'
 
+    logger.info("Done writing the json file. All that is left is to send the email.")
     sendNotificationEmail(logger, msg)
     logger.info('Finished')
 

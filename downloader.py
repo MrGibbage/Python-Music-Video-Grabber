@@ -1,12 +1,5 @@
 import os
 import os.path
-import ffmpeg
-from pytube import YouTube
-from pytube.innertube import _default_clients
-import datetime
-from slugify import slugify
-from asyncio import subprocess
-import subprocess
 # pip install yt-dlp
 import yt_dlp
 import pprint
