@@ -103,7 +103,7 @@ def sendNotificationEmail(logger, msg):
     except Exception as err:
         server.sendmail(gmail_address, gmail_address, f'There was an error sending the message: {err}')
         server.quit()
-        logger.info(f"Error sending email {err=}, {type(err)=}")
+        logger.error(f"Error sending email {err=}, {type(err)=}")
         msg += f"Error sending email {err=}, {type(err)=}\r\n"
 
 
@@ -133,7 +133,7 @@ def run(channel: str, save_dir:str):
         )
     except Exception as e:
         # print(f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}")
-        logger.info(f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}")
+        logger.error(f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}")
         msg += f"Error opening the log files from {dir_path + f'\\pmvd-{channel}.log'}\nThe error was {e}\r\n"
         exit(1)
 
@@ -293,7 +293,7 @@ def run(channel: str, save_dir:str):
                 logger.info("Nothing to do. Skipping to next song.")
                 continue
             except Exception as e:
-                logger.info(f"There was an error reading from the songs database. The songId is in the database, but the data could not be read.")
+                logger.error(f"There was an error reading from the songs database. The songId is in the database, but the data could not be read.")
                 msg += f"There was an error reading from the songs database. The songId is in the database, but the data could not be read.\r\n"
                 continue
 
@@ -355,7 +355,7 @@ def run(channel: str, save_dir:str):
             logger.debug("Got the Spotify instance.")
             msg += "Got the Spotify instance.\r\n"
         except Exception as e:
-            logger.info(f"Could not authenticate with Spotify. Will not use it for metadata. {e}")
+            logger.error(f"Could not authenticate with Spotify. Will not use it for metadata. {e}")
             msg += f"Could not authenticate with Spotify. Will not use it for metadata. {e}"
 
         if sp is not None:
@@ -409,6 +409,8 @@ def run(channel: str, save_dir:str):
                 logger.info(f'Downloading {videoUrl}')
                 msg += f'Downloading {videoUrl}\n'
                 info_dict = ydl.extract_info(videoUrl, download=True)
+                logger.info(f'Success. Downloaded {videoUrl}')
+                msg += f'Success. Downloaded {videoUrl}\n'
                 output_filename = ydl.prepare_filename(info_dict)
                 json_songs['songs'][songId]['output_filename'] = output_filename
                 json_songs['songs'][songId]['video-filename'] = info_dict['requested_downloads'][0]['filepath']
@@ -430,7 +432,7 @@ def run(channel: str, save_dir:str):
                 logger.error(f'Error downloading the video: {e}')
                 msg += f'ERROR ERROR ERROR downloading the video: {e}\n'
                 print(f'ERROR ERROR ERROR downloading the video: {e}')
-                json_songs['songs'][songId]['error-message'] = e
+                json_songs['songs'][songId]['error-message'] = str(e)
                 continue
 
 
