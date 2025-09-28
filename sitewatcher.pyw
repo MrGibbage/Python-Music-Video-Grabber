@@ -437,9 +437,26 @@ def run(channel: str, save_dir:str):
 
 
     logger.info("Almost done. Writing out the json file now")
+
+    # Remove any songs that contain an "error-message" before saving
+    try:
+        songs = json_songs.get('songs', {})
+        for song_id in list(songs.keys()):
+            entry = songs[song_id]
+            if isinstance(entry, dict) and "error-message" in entry:
+                logger.info(f"Removing song {song_id} from database because it has error-message")
+                del songs[song_id]
+        json_songs['songs'] = songs
+        # Alternative (non-destructive): 
+        # json_songs['songs'] = {k: v for k, v in json_songs.get('songs', {}).items()
+        #                        if not (isinstance(v, dict) and "error-message" in v)}
+    except Exception as e:
+        logger.error(f"Error cleaning json_songs before write: {e}")
+
     try:
         with open(json_songs_filename, 'w') as out_file:
             json.dump(json_songs, out_file, indent=4)
+
     # print ("All done! Enjoy the videos")
     except Exception as e:
         logger.error(f'Error writing out the json file: {e}')
