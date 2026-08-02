@@ -84,7 +84,9 @@ class Downloader:
             self._mark_published(track_id, candidate_id, final_path)
             self._trigger_personal_mtv_scan()
             logger.info(
-                "Published %s", final_path.name, extra={"event": "download_published", "track_id": track_id}
+                "Published %s",
+                final_path.name,
+                extra={"event": "download_published", "track_id": track_id},
             )
             return final_path
         finally:

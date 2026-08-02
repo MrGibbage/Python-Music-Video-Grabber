@@ -9,7 +9,6 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-
 ENV_FILE = Path("/etc/homelab/music-video-grabber.env")
 API_URL = "http://192.168.0.231:8288/api/v1/runs"
 

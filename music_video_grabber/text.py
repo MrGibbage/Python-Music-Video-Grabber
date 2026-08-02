@@ -3,7 +3,6 @@ from __future__ import annotations
 import re
 import unicodedata
 
-
 _NOISE = re.compile(
     r"\b(official|music|video|audio|visuali[sz]er|lyrics?|hd|4k|hq)\b",
     re.IGNORECASE,
