@@ -85,6 +85,20 @@ The NAS scan is authoritative for files currently present. The legacy JSON adds
 historical source IDs and prevents redownloading known songs even when older
 filenames cannot be parsed perfectly. Imports are idempotent.
 
+## Plex metadata snapshots (read-only)
+
+Set `MVG_PLEX_URL`, `MVG_PLEX_TOKEN`, and, if needed,
+`MVG_PLEX_LIBRARY_TITLE` in the host environment file. Then run:
+
+```bash
+music-video-grabber sync-plex-metadata
+```
+
+The command makes only `GET` requests to Plex and writes the discovered library
+and media metadata to this application's SQLite database. It does not alter
+Plex metadata, playlists, library settings, or the Plex database. Playlist
+creation and Plex metadata edits are intentionally not implemented yet.
+
 ## Deployment
 
 The production stack is designed for `/srv/music-video-grabber` on

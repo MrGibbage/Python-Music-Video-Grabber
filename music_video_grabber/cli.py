@@ -8,6 +8,7 @@ from .config import get_settings
 from .db import database_from_settings
 from .importer import import_legacy_json, import_media_directory
 from .logging_config import configure_logging
+from .plex import PlexReadOnlyClient
 from .worker import run_worker
 
 
@@ -35,6 +36,16 @@ def backup_database(destination: Path) -> None:
     print(destination)
 
 
+def sync_plex_metadata() -> None:
+    """Fetch Plex metadata with GET requests and persist it only in SQLite."""
+    settings = get_settings()
+    db = database_from_settings(settings)
+    db.initialize()
+    library, media = PlexReadOnlyClient(settings).snapshot_library()
+    result = db.save_plex_library_snapshot(library, media)
+    print(f"Plex metadata snapshot: {result}")
+
+
 def main() -> None:
     configure_logging()
     parser = argparse.ArgumentParser(prog="music-video-grabber")
@@ -45,6 +56,9 @@ def main() -> None:
     importer.add_argument("--legacy", type=Path)
     backup = subparsers.add_parser("backup-db", help="Create an online SQLite backup")
     backup.add_argument("destination", type=Path)
+    subparsers.add_parser(
+        "sync-plex-metadata", help="Read Plex metadata and persist a local SQLite snapshot"
+    )
     args = parser.parse_args()
 
     if args.command == "worker":
@@ -53,6 +67,8 @@ def main() -> None:
         import_catalog(args.legacy)
     elif args.command == "backup-db":
         backup_database(args.destination)
+    elif args.command == "sync-plex-metadata":
+        sync_plex_metadata()
 
 
 if __name__ == "__main__":
