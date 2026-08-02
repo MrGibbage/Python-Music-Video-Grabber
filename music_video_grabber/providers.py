@@ -91,8 +91,9 @@ class YouTubeClient:
             "extract_flat": True,
             "skip_download": True,
         }
-        if self.settings.youtube_cookie_file and self.settings.youtube_cookie_file.exists():
-            options["cookiefile"] = str(self.settings.youtube_cookie_file)
+        cookie = self.settings.youtube_cookie_file
+        if cookie and cookie.exists() and cookie.stat().st_size:
+            options["cookiefile"] = str(cookie)
         query = f"ytsearch{self.settings.max_results}:{artist} {title} official music video"
         with yt_dlp.YoutubeDL(options) as ydl:
             result = ydl.extract_info(query, download=False)
