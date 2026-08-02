@@ -14,6 +14,10 @@ The compose stack joins the existing `apprise-mailrise_default` network so it
 can send SMTP to `apprise-mailrise:8025`. Both containers log to Docker's normal
 JSON log stream for Promtail discovery; do not add another logging driver.
 
+The worker runs as UID 1000 with docker-server's Docker-group GID 988 solely so
+it can read the root-owned `0640` cookies file. It has no Docker socket mount,
+so group membership does not grant container-management access.
+
 ## First import
 
 ```bash

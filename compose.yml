@@ -45,7 +45,9 @@ services:
     read_only: true
     tmpfs:
       - /tmp:size=512m,mode=1777
-    user: "1000:1000"
+    # GID 988 is docker-server's docker group. It grants read access to the
+    # root:docker 0640 cookie secret; no Docker socket is mounted.
+    user: "1000:988"
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
     mem_limit: 2g
