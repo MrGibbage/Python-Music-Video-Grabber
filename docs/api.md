@@ -8,9 +8,10 @@ requires the token, which is kept in browser session storage.
 
 | Method | Path | Purpose |
 |---|---|---|
-| `POST` | `/api/v1/runs` | Queue the latest Alt Nation Top 18 |
+| `POST` | `/api/v1/runs` | Capture and process the current 18-play window |
 | `GET` | `/api/v1/runs` | List recent runs |
 | `GET` | `/api/v1/runs/{id}` | Show one run, its jobs, and events |
+| `GET` | `/api/v1/charts/latest` | Show the latest dated broadcast snapshot and ranks |
 | `GET` | `/api/v1/tracks` | Query the catalog and acquisition states |
 | `GET` | `/api/v1/tracks/{id}` | Show a track and all candidates |
 | `GET` | `/api/v1/review` | Show ambiguous tracks and scored candidates |

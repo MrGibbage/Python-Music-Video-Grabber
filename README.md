@@ -1,7 +1,8 @@
 # Music Video Grabber
 
 Music Video Grabber turns the weekly SiriusXM Alt Nation Top 18 into a managed
-music-video library. It retrieves the latest playlist, scores multiple YouTube
+music-video library. It captures the 18 most recent plays immediately after the
+countdown broadcast, scores multiple YouTube
 candidates, automatically downloads only high-confidence matches, and places
 ambiguous results in a human review queue.
 
@@ -11,13 +12,13 @@ reference; the supported application is now the `music_video_grabber` package.
 
 ## What the MVP does
 
-- Accepts an API request to process the latest 18 Alt Nation plays.
+- Captures and dates the exact 18-play broadcast snapshot used by each run.
 - Uses a durable SQLite job queue instead of holding work in an HTTP request.
 - Prevents duplicates using normalized artist/title keys, legacy JSON history,
   and a scan of the actual NAS library.
 - Scores several YouTube candidates and auto-approves only a high-scoring result
   with a safe lead over the runner-up.
-- Offers a web dashboard for runs, jobs, and candidate review.
+- Offers a web dashboard for the latest captured chart, runs, jobs, and review.
 - Downloads Plex-friendly MP4 files through yt-dlp and FFmpeg.
 - Validates audio/video streams before atomically publishing a file.
 - Triggers Personal MTV's existing scan endpoint after a successful publish.
@@ -25,7 +26,8 @@ reference; the supported application is now the `music_video_grabber` package.
 - Sends run summaries to Telegram through apprise-mailrise.
 
 There is deliberately no in-app scheduler. A host cron job calls the API after
-the weekly Top 18 broadcast.
+the weekly Top 18 broadcast. A manual capture at an arbitrary time represents
+ordinary recent plays, so the UI labels that distinction explicitly.
 
 ## Development
 

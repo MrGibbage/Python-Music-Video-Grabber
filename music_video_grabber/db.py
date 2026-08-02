@@ -89,6 +89,26 @@ CREATE TABLE IF NOT EXISTS events (
     message TEXT NOT NULL,
     created_at TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS charts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER NOT NULL UNIQUE REFERENCES runs(id) ON DELETE CASCADE,
+    station TEXT NOT NULL,
+    source TEXT NOT NULL,
+    as_of TEXT NOT NULL,
+    captured_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS chart_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    chart_id INTEGER NOT NULL REFERENCES charts(id) ON DELETE CASCADE,
+    rank INTEGER NOT NULL,
+    source_track_id TEXT,
+    title TEXT NOT NULL,
+    artist TEXT NOT NULL,
+    played_at TEXT,
+    UNIQUE(chart_id, rank)
+);
 """
 
 
@@ -130,6 +150,53 @@ class Database:
             run_id = int(cursor.lastrowid)
             self._enqueue(conn, "discover", {"station": station}, run_id=run_id)
             return run_id
+
+    def save_chart(
+        self,
+        *,
+        run_id: int,
+        station: str,
+        source: str,
+        as_of: str,
+        entries: list[dict[str, Any]],
+    ) -> int:
+        """Persist the exact ordered broadcast snapshot used by an acquisition run."""
+        with self.connect() as conn:
+            cursor = conn.execute(
+                """INSERT INTO charts(run_id, station, source, as_of, captured_at)
+                   VALUES (?, ?, ?, ?, ?)""",
+                (run_id, station, source, as_of, utcnow()),
+            )
+            chart_id = int(cursor.lastrowid)
+            conn.executemany(
+                """INSERT INTO chart_entries(
+                       chart_id, rank, source_track_id, title, artist, played_at
+                   ) VALUES (?, ?, ?, ?, ?, ?)""",
+                [
+                    (
+                        chart_id,
+                        entry["rank"],
+                        entry.get("source_track_id"),
+                        entry["title"],
+                        entry["artist"],
+                        entry.get("played_at"),
+                    )
+                    for entry in entries
+                ],
+            )
+        return chart_id
+
+    def latest_chart(self, station: str) -> dict[str, Any] | None:
+        chart = self.one(
+            "SELECT * FROM charts WHERE station=? ORDER BY captured_at DESC, id DESC LIMIT 1",
+            (station,),
+        )
+        if not chart:
+            return None
+        chart["entries"] = self.query(
+            "SELECT * FROM chart_entries WHERE chart_id=? ORDER BY rank", (chart["id"],)
+        )
+        return chart
 
     def enqueue(
         self, kind: str, payload: dict[str, Any], *, run_id: int | None = None
