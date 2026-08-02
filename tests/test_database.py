@@ -13,3 +13,38 @@ def test_job_claim_is_durable(tmp_path):
     assert db.claim_job() is None
     db.finish_job(job["id"])
     assert db.one("SELECT status FROM jobs WHERE id=?", (job["id"],))["status"] == "succeeded"
+
+
+def test_chart_snapshot_preserves_rank_and_as_of_date(tmp_path):
+    db = Database(tmp_path / "app.db")
+    db.initialize()
+    run_id = db.create_run("altnation")
+    db.save_chart(
+        run_id=run_id,
+        station="altnation",
+        source="xmplaylist_recent_plays",
+        as_of="2026-08-03T03:00:00+00:00",
+        entries=[
+            {
+                "rank": 1,
+                "source_track_id": "song-1",
+                "artist": "Artist One",
+                "title": "Song One",
+                "played_at": "2026-08-03T03:00:00+00:00",
+            },
+            {
+                "rank": 2,
+                "source_track_id": "song-2",
+                "artist": "Artist Two",
+                "title": "Song Two",
+                "played_at": "2026-08-03T02:56:00+00:00",
+            },
+        ],
+    )
+
+    chart = db.latest_chart("altnation")
+
+    assert chart is not None
+    assert chart["as_of"] == "2026-08-03T03:00:00+00:00"
+    assert [entry["rank"] for entry in chart["entries"]] == [1, 2]
+    assert chart["entries"][0]["title"] == "Song One"

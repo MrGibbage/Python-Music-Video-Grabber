@@ -56,13 +56,42 @@ class JobProcessor:
                 (utcnow(), run_id),
             )
         tracks = self.xm.latest(station, self.settings.top_tracks_limit)
+        if len(tracks) != self.settings.top_tracks_limit:
+            raise RuntimeError(
+                f"xmplaylist returned {len(tracks)} usable tracks; "
+                f"expected {self.settings.top_tracks_limit}"
+            )
         counters: Counter[str] = Counter()
+        track_lists: dict[str, list[str]] = {
+            "already_owned_tracks": [],
+            "auto_approved_tracks": [],
+            "review_tracks": [],
+        }
+        as_of = parse_played_at(tracks[0].played_at) if tracks else None
+        self.db.save_chart(
+            run_id=run_id,
+            station=station,
+            source="xmplaylist_recent_plays",
+            as_of=as_of or utcnow(),
+            entries=[
+                {
+                    "rank": rank,
+                    "source_track_id": track.source_track_id,
+                    "title": track.title,
+                    "artist": track.artist,
+                    "played_at": parse_played_at(track.played_at),
+                }
+                for rank, track in enumerate(tracks, start=1)
+            ],
+        )
 
         for station_track in tracks:
+            label = f"{station_track.artist} — {station_track.title}"
             key = canonical_track_key(station_track.artist, station_track.title)
             existing = self.db.one("SELECT * FROM tracks WHERE canonical_key=?", (key,))
             if existing and existing["status"] in {"imported", "published"}:
                 counters["already_owned"] += 1
+                track_lists["already_owned_tracks"].append(label)
                 self.db.event(
                     "duplicate_skipped",
                     f"Already owned: {station_track.artist} - {station_track.title}",
@@ -117,6 +146,7 @@ class JobProcessor:
                 candidate_id = scored[0][0]
                 self._queue_download(track_id, candidate_id, run_id)
                 counters["auto_approved"] += 1
+                track_lists["auto_approved_tracks"].append(label)
             else:
                 with self.db.connect() as conn:
                     conn.execute(
@@ -124,11 +154,14 @@ class JobProcessor:
                         (utcnow(), track_id),
                     )
                 counters["needs_review"] += 1
+                track_lists["review_tracks"].append(label)
 
+        summary = dict(counters)
+        summary.update(track_lists)
         with self.db.connect() as conn:
             conn.execute(
                 "UPDATE runs SET status='processing', summary_json=? WHERE id=?",
-                (json.dumps(dict(counters)), run_id),
+                (json.dumps(summary), run_id),
             )
         self.db.event(
             "discovery_complete",
@@ -251,6 +284,17 @@ class JobProcessor:
             )
         run = self.db.one("SELECT * FROM runs WHERE id=?", (run_id,)) or {}
         summary = json.loads(run.get("summary_json") or "{}")
+        downloaded = self.db.query(
+            """SELECT t.artist, t.title
+               FROM jobs j
+               JOIN tracks t ON t.id=json_extract(j.payload_json, '$.track_id')
+               WHERE j.run_id=? AND j.kind='download' AND j.status='succeeded'
+               ORDER BY j.id""",
+            (run_id,),
+        )
+        downloaded_lines = [
+            f"- {track['artist']} — {track['title']}" for track in downloaded
+        ] or ["- None"]
         self.notifier.send(
             f"Alt Nation music video run: {status}",
             "\n".join(
@@ -261,6 +305,9 @@ class JobProcessor:
                     f"Automatically approved: {summary.get('auto_approved', 0)}",
                     f"Needs review: {summary.get('needs_review', 0)}",
                     f"Failed jobs: {(failed or {}).get('count', 0)}",
+                    "",
+                    f"Downloaded ({len(downloaded)}):",
+                    *downloaded_lines,
                     "Review: https://grabber.pelorus.org/",
                 ]
             ),

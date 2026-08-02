@@ -121,6 +121,14 @@ async def get_run(run_id: int, db: Database = Depends(get_db)):
     return row
 
 
+@app.get("/api/v1/charts/latest", dependencies=[Depends(require_token)])
+async def latest_chart(db: Database = Depends(get_db)):
+    chart = db.latest_chart("altnation")
+    if not chart:
+        raise HTTPException(status_code=404, detail="No Alt Nation chart has been captured yet")
+    return chart
+
+
 @app.get("/api/v1/tracks", dependencies=[Depends(require_token)])
 async def list_tracks(
     track_status: str | None = None, limit: int = 100, db: Database = Depends(get_db)
