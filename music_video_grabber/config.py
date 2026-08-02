@@ -39,6 +39,12 @@ class Settings(BaseSettings):
     spotify_client_id: str = ""
     spotify_client_secret: str = ""
 
+    # Plex access is deliberately read-only in this phase. Keep the token in
+    # the host env file; it must never be committed or returned by the API.
+    plex_url: str = ""
+    plex_token: str = ""
+    plex_library_title: str = "Music Videos - Alternative"
+
     mailrise_host: str = ""
     mailrise_port: int = 8025
     notification_to: str = "telegram@mailrise.xyz"

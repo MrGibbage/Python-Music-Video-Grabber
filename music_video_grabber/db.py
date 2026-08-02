@@ -123,6 +123,30 @@ CREATE TABLE IF NOT EXISTS api_tokens (
 
 CREATE INDEX IF NOT EXISTS idx_api_tokens_active
 ON api_tokens(revoked_at, token_prefix);
+
+CREATE TABLE IF NOT EXISTS plex_libraries (
+    plex_section_key TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    library_type TEXT NOT NULL,
+    scanner TEXT,
+    locations_json TEXT NOT NULL DEFAULT '[]',
+    last_synced_at TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS plex_media (
+    plex_rating_key TEXT PRIMARY KEY,
+    plex_section_key TEXT NOT NULL REFERENCES plex_libraries(plex_section_key) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    originally_available_at TEXT,
+    year INTEGER,
+    media_path TEXT,
+    metadata_json TEXT NOT NULL DEFAULT '{}',
+    first_seen_at TEXT NOT NULL,
+    last_seen_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_plex_media_section_date
+ON plex_media(plex_section_key, originally_available_at);
 """
 
 
@@ -311,6 +335,61 @@ class Database:
         with self.connect() as conn:
             row = conn.execute(sql, params).fetchone()
             return dict(row) if row else None
+
+    def save_plex_library_snapshot(
+        self, library: dict[str, Any], media: list[dict[str, Any]]
+    ) -> dict[str, int]:
+        """Store a read-only Plex metadata snapshot locally.
+
+        This method only writes this application's SQLite database. Plex is
+        never contacted here, which keeps persistence separable from access.
+        """
+        now = utcnow()
+        with self.connect() as conn:
+            conn.execute(
+                """INSERT INTO plex_libraries(
+                       plex_section_key, title, library_type, scanner, locations_json,
+                       last_synced_at
+                   ) VALUES (?, ?, ?, ?, ?, ?)
+                   ON CONFLICT(plex_section_key) DO UPDATE SET
+                       title=excluded.title, library_type=excluded.library_type,
+                       scanner=excluded.scanner, locations_json=excluded.locations_json,
+                       last_synced_at=excluded.last_synced_at""",
+                (
+                    library["section_key"],
+                    library["title"],
+                    library["library_type"],
+                    library.get("scanner"),
+                    json.dumps(library.get("locations", [])),
+                    now,
+                ),
+            )
+            conn.executemany(
+                """INSERT INTO plex_media(
+                       plex_rating_key, plex_section_key, title, originally_available_at, year,
+                       media_path, metadata_json, first_seen_at, last_seen_at
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                   ON CONFLICT(plex_rating_key) DO UPDATE SET
+                       plex_section_key=excluded.plex_section_key, title=excluded.title,
+                       originally_available_at=excluded.originally_available_at, year=excluded.year,
+                       media_path=excluded.media_path, metadata_json=excluded.metadata_json,
+                       last_seen_at=excluded.last_seen_at""",
+                [
+                    (
+                        item["rating_key"],
+                        library["section_key"],
+                        item["title"],
+                        item.get("originally_available_at"),
+                        item.get("year"),
+                        item.get("media_path"),
+                        json.dumps(item.get("metadata", {}), sort_keys=True),
+                        now,
+                        now,
+                    )
+                    for item in media
+                ],
+            )
+        return {"libraries": 1, "media": len(media)}
 
 
 def database_from_settings(settings: Settings) -> Database:
