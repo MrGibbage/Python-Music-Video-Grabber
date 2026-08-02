@@ -1,0 +1,62 @@
+services:
+  music-video-grabber-api:
+    build: .
+    image: music-video-grabber:0.1.0
+    container_name: music-video-grabber-api
+    restart: unless-stopped
+    command: ["uvicorn", "music_video_grabber.main:app", "--host", "0.0.0.0", "--port", "8080"]
+    env_file:
+      - /etc/homelab/music-video-grabber.env
+    ports:
+      - "192.168.0.231:8288:8080"
+    volumes:
+      - ./data:/data
+      - /mnt/nas/media/Music Videos - Alternative:/media:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    user: "1000:1000"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+    memswap_limit: 512m
+    pids_limit: 100
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health/live', timeout=3)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - default
+
+  music-video-grabber-worker:
+    image: music-video-grabber:0.1.0
+    container_name: music-video-grabber-worker
+    restart: unless-stopped
+    command: ["music-video-grabber", "worker"]
+    env_file:
+      - /etc/homelab/music-video-grabber.env
+    volumes:
+      - ./data:/data
+      - /mnt/nas/media/Music Videos - Alternative:/media
+      - /etc/homelab/music-video-grabber.cookies.txt:/run/secrets/youtube-cookies.txt:ro
+      - ./altnation-songs.json:/import/altnation-songs.json:ro
+    read_only: true
+    tmpfs:
+      - /tmp:size=512m,mode=1777
+    user: "1000:1000"
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 2g
+    memswap_limit: 2g
+    pids_limit: 200
+    stop_grace_period: 2m
+    networks:
+      - default
+      - mailrise
+
+networks:
+  mailrise:
+    external: true
+    name: apprise-mailrise_default

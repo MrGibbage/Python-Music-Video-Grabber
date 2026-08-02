@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Music Video Grabber</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1020; --panel:#151d32; --muted:#91a0bd; --ink:#f5f7ff; --cyan:#42d7dc; --amber:#ffca62; --red:#ff7185; }
+    * { box-sizing:border-box; }
+    body { margin:0; font:15px/1.5 system-ui,sans-serif; color:var(--ink); background:radial-gradient(circle at 20% 0,#172b48 0,var(--bg) 42%); min-height:100vh; }
+    header,main { width:min(1180px,92vw); margin:auto; }
+    header { padding:42px 0 24px; display:flex; gap:20px; justify-content:space-between; align-items:end; }
+    h1 { margin:0; font-size:clamp(2rem,5vw,4rem); letter-spacing:-.06em; }
+    h2 { margin:0 0 12px; font-size:1rem; text-transform:uppercase; letter-spacing:.14em; color:var(--cyan); }
+    p { color:var(--muted); }
+    button,input { font:inherit; }
+    button { border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; background:var(--cyan); color:#071016; }
+    button.secondary { background:#27334f; color:var(--ink); }
+    button.reject { background:transparent; color:var(--red); border:1px solid #693347; }
+    input { color:var(--ink); background:#0b1120; border:1px solid #35415d; border-radius:10px; padding:10px 12px; width:min(360px,60vw); }
+    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:18px; padding-bottom:50px; }
+    .panel { grid-column:span 12; background:color-mix(in srgb,var(--panel) 92%,transparent); border:1px solid #283651; border-radius:18px; padding:20px; box-shadow:0 18px 50px #0005; }
+    .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+    .stat { background:#0e1628; border-radius:12px; padding:14px; }
+    .stat strong { display:block; font-size:1.7rem; }
+    .review { display:grid; gap:14px; }
+    .track { border-top:1px solid #2a3650; padding-top:14px; }
+    .candidate { display:grid; grid-template-columns:80px 1fr auto; gap:12px; align-items:center; padding:10px 0; }
+    .score { color:var(--amber); font-size:1.35rem; font-weight:800; }
+    .muted,.reasons { color:var(--muted); font-size:.88rem; }
+    .actions { display:flex; gap:8px; }
+    table { width:100%; border-collapse:collapse; }
+    th,td { text-align:left; padding:10px 6px; border-bottom:1px solid #27334a; }
+    th { color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; }
+    .error { color:var(--red); }
+    @media(min-width:850px) { .runs { grid-column:span 7; } .jobs { grid-column:span 5; } }
+    @media(max-width:650px) { header { align-items:start; flex-direction:column; } .stats { grid-template-columns:repeat(2,1fr); } .candidate { grid-template-columns:60px 1fr; } .candidate .actions { grid-column:2; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div><h1>Music Video<br>Grabber</h1><p>Alt Nation Top 18 acquisition control room.</p></div>
+    <div><input id="token" type="password" placeholder="API token"><button onclick="saveToken()">Connect</button></div>
+  </header>
+  <main class="grid">
+    <section class="panel">
+      <h2>Overview</h2>
+      <div class="stats">
+        <div class="stat"><strong id="owned">—</strong><span class="muted">Owned</span></div>
+        <div class="stat"><strong id="reviewCount">—</strong><span class="muted">Needs review</span></div>
+        <div class="stat"><strong id="queued">—</strong><span class="muted">Queued</span></div>
+        <div class="stat"><strong id="failed">—</strong><span class="muted">Failed</span></div>
+      </div>
+      <p><button onclick="startRun()">Fetch the latest Top 18</button> <span id="message"></span></p>
+    </section>
+    <section class="panel">
+      <h2>Review queue</h2>
+      <div id="review" class="review"><p>Connect with your API token to load candidates.</p></div>
+    </section>
+    <section class="panel runs"><h2>Recent runs</h2><div id="runs"></div></section>
+    <section class="panel jobs"><h2>Recent jobs</h2><div id="jobs"></div></section>
+  </main>
+<script>
+const tokenInput=document.querySelector('#token'); tokenInput.value=sessionStorage.getItem('mvg-token')||'';
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path,options={}) { const token=sessionStorage.getItem('mvg-token')||''; const response=await fetch(path,{...options,headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`,...options.headers}}); if(!response.ok) throw new Error((await response.json()).detail||response.statusText); return response.json(); }
+function saveToken(){sessionStorage.setItem('mvg-token',tokenInput.value); refresh();}
+async function startRun(){try{const run=await api('/api/v1/runs',{method:'POST',body:JSON.stringify({station:'altnation'})}); message.textContent=`Run ${run.id} queued`; refresh();}catch(e){message.textContent=e.message;message.className='error';}}
+async function decide(track,candidate,action){await api(`/api/v1/tracks/${track}/${action}`,{method:'POST',body:JSON.stringify({candidate_id:candidate})});refresh();}
+function table(rows,cols){if(!rows.length)return '<p>No records yet.</p>';return `<table><thead><tr>${cols.map(c=>`<th>${esc(c[0])}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(c[1](r))}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
+async function refresh(){try{const [tracks,review,runs,jobs]=await Promise.all([api('/api/v1/tracks?limit=500'),api('/api/v1/review'),api('/api/v1/runs'),api('/api/v1/jobs?limit=12')]);owned.textContent=tracks.filter(t=>['imported','published'].includes(t.status)).length;reviewCount.textContent=review.length;queued.textContent=jobs.filter(j=>['queued','running'].includes(j.status)).length;failed.textContent=jobs.filter(j=>j.status==='failed').length;document.querySelector('#review').innerHTML=review.length?review.map(t=>`<article class="track"><strong>${esc(t.artist)} — ${esc(t.title)}</strong>${t.candidates.map(c=>`<div class="candidate"><div class="score">${c.score}</div><div><a href="${esc(c.url)}" target="_blank" rel="noreferrer">${esc(c.title)}</a><div class="muted">${esc(c.uploader)}</div><div class="reasons">${esc(c.reasons.join(' · '))}</div></div><div class="actions"><button onclick="decide(${t.id},${c.id},'approve')">Approve</button><button class="reject" onclick="decide(${t.id},${c.id},'reject')">Reject</button></div></div>`).join('')}</article>`).join(''):'<p>Nothing needs review.</p>';document.querySelector('#runs').innerHTML=table(runs,[['Run',r=>r.id],['Status',r=>r.status],['Requested',r=>r.requested_at]]);document.querySelector('#jobs').innerHTML=table(jobs,[['Job',r=>`#${r.id} ${r.kind}`],['Status',r=>r.status],['Attempts',r=>r.attempts]]);message.textContent='';}catch(e){message.textContent=e.message;message.className='error';}}
+if(tokenInput.value)refresh(); setInterval(()=>{if(sessionStorage.getItem('mvg-token'))refresh()},15000);
+</script>
+</body></html>

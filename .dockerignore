@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!pyproject.toml
+!README.md
+!music_video_grabber/
+!music_video_grabber/**

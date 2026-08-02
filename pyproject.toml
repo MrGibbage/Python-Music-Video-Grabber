@@ -1,0 +1,45 @@
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[project]
+name = "music-video-grabber"
+version = "0.1.0"
+description = "API-driven music video acquisition service for the weekly Alt Nation Top 18"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "cloudscraper>=1.2.71,<2",
+  "fastapi>=0.115,<1",
+  "httpx>=0.27,<1",
+  "jinja2>=3.1,<4",
+  "pydantic-settings>=2.7,<3",
+  "uvicorn[standard]>=0.34,<1",
+  "yt-dlp>=2025.1.15",
+  "yt-dlp-ejs>=0.3",
+  "deno>=2.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<7",
+  "ruff>=0.9,<1",
+]
+
+[project.scripts]
+music-video-grabber = "music_video_grabber.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["music_video_grabber"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
