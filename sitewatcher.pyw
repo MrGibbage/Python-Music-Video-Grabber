@@ -11,6 +11,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os.path
 import os, sys
+import importlib.metadata as importlib_metadata
 import smtplib
 import shutil
 from datetime import datetime
@@ -85,6 +86,55 @@ EDGE_HEADER = {
 
 LOCAL_TIMEZONE = pytz.timezone('America/New_York')
 
+def _parse_requirements(requirements_path: str):
+    """Parse requirement lines and return (package_name, raw_line)."""
+    packages = []
+    if not os.path.exists(requirements_path):
+        return packages
+    with open(requirements_path) as req_file:
+        for line in req_file:
+            raw = line.strip()
+            if not raw or raw.startswith('#'):
+                continue
+            token = raw.split(';')[0].strip()
+            name = token
+            for sep in ['==', '>=', '<=', '~=', '>', '<']:
+                if sep in token:
+                    name = token.split(sep)[0].strip()
+                    break
+            packages.append((name, raw))
+    return packages
+
+
+def _get_installed_version(package_name: str):
+    try:
+        return importlib_metadata.version(package_name)
+    except importlib_metadata.PackageNotFoundError:
+        return None
+    except Exception as exc:  # defensive: keep logging alive
+        return f"error:{exc}"
+
+
+def _get_latest_version(package_name: str):
+    url = f"https://pypi.org/pypi/{package_name}/json"
+    try:
+        resp = requests.get(url, timeout=5)
+        if resp.status_code == 200:
+            return resp.json().get('info', {}).get('version')
+        return f"status:{resp.status_code}"
+    except Exception as exc:
+        return f"error:{exc}"
+
+
+def collect_dependency_versions(requirements_path: str):
+    """Return list of (name, requirement_line, installed_version, latest_version)."""
+    results = []
+    for pkg_name, raw_line in _parse_requirements(requirements_path):
+        installed = _get_installed_version(pkg_name)
+        latest = _get_latest_version(pkg_name)
+        results.append((pkg_name, raw_line, installed, latest))
+    return results
+
 def sendNotificationEmail(logger, msg):
     load_dotenv()
     gmail_pass = os.getenv("GMAILPASS")
@@ -155,6 +205,20 @@ def run(channel: str, save_dir:str):
 
 
     msg = f"Subject: {channel} Music Video Download Report\n\n"
+
+    req_path = os.path.join(dir_path, 'requirements.txt')
+    deps = collect_dependency_versions(req_path)
+    if deps:
+        logger.info("Dependency versions (installed -> latest)")
+        msg += "Dependency versions (installed -> latest):\r\n"
+        for name, raw, installed, latest in deps:
+            installed_disp = installed if installed else "not installed"
+            latest_disp = latest if latest else "unknown"
+            logger.info(f"dep {name}: installed={installed_disp} latest={latest_disp} raw={raw}")
+            msg += f"  {name} [{raw}] installed={installed_disp} latest={latest_disp}\r\n"
+    else:
+        logger.warning("No requirements.txt found; skipping dependency version report")
+        msg += "No requirements.txt found; skipping dependency version report\r\n"
 
     # Done with setting up logging. Now get the database of songs already downloaded
     json_songs_filename = dir_path + f'\\{channel}-songs.json'

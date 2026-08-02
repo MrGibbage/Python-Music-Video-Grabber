@@ -11,3 +11,15 @@ videos/
 /cookies.txt
 /www.youtube.com_cookies.txt
 *.log*
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.db
+*.db-shm
+*.db-wal
+/data/
+/staging/
+/secrets/
+*.cookies.txt
