@@ -238,7 +238,12 @@ class JobProcessor:
                    (SELECT requested_at FROM runs WHERE id=?)""",
             (run_id,),
         )
-        status = "failed" if failed and failed["count"] else "needs_review" if review and review["count"] else "succeeded"
+        if failed and failed["count"]:
+            status = "failed"
+        elif review and review["count"]:
+            status = "needs_review"
+        else:
+            status = "succeeded"
         with self.db.connect() as conn:
             conn.execute(
                 "UPDATE runs SET status=?, finished_at=? WHERE id=?",

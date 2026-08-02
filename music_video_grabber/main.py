@@ -93,7 +93,8 @@ async def create_run(payload: RunRequest, db: Database = Depends(get_db)):
     if payload.station != "altnation":
         raise HTTPException(status_code=422, detail="The MVP supports only altnation")
     active = db.one(
-        "SELECT id FROM runs WHERE status IN ('queued','running','processing') ORDER BY id DESC LIMIT 1"
+        """SELECT id FROM runs WHERE status IN ('queued','running','processing')
+           ORDER BY id DESC LIMIT 1"""
     )
     if active:
         raise HTTPException(status_code=409, detail=f"Run {active['id']} is already active")
