@@ -175,6 +175,21 @@ async def get_run(run_id: int, db: Database = Depends(get_db)):
     row["summary"] = json.loads(row.pop("summary_json") or "{}")
     row["jobs"] = db.query("SELECT * FROM jobs WHERE run_id=? ORDER BY id", (run_id,))
     row["events"] = db.query("SELECT * FROM events WHERE run_id=? ORDER BY id", (run_id,))
+    review_labels = set(row["summary"].get("review_tracks", []))
+    chart = db.chart_for_run(run_id)
+    row["review_resolution"] = []
+    if chart and review_labels:
+        for entry in chart["entries"]:
+            label = f"{entry['artist']} — {entry['title']}"
+            if label not in review_labels or not entry["source_track_id"]:
+                continue
+            track = db.one(
+                """SELECT artist, title, status, media_path, updated_at FROM tracks
+                   WHERE station=? AND source_track_id=?""",
+                (chart["station"], entry["source_track_id"]),
+            )
+            if track:
+                row["review_resolution"].append(track)
     return row
 
 
