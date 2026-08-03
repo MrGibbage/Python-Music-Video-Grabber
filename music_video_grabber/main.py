@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -40,6 +41,14 @@ app = FastAPI(
     lifespan=lifespan,
 )
 templates = Jinja2Templates(directory=str(Path(__file__).with_name("templates")))
+
+
+@app.middleware("http")
+async def disable_dashboard_caching(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path == "/" or request.url.path.startswith("/api/"):
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 def get_db(settings: Settings = Depends(get_settings)) -> Database:
@@ -175,6 +184,12 @@ async def get_run(run_id: int, db: Database = Depends(get_db)):
     row["summary"] = json.loads(row.pop("summary_json") or "{}")
     row["jobs"] = db.query("SELECT * FROM jobs WHERE run_id=? ORDER BY id", (run_id,))
     row["events"] = db.query("SELECT * FROM events WHERE run_id=? ORDER BY id", (run_id,))
+    row["automatic_downloads"] = db.query(
+        """SELECT t.id, t.artist, t.title, t.media_path
+           FROM events e JOIN tracks t ON t.id=e.track_id
+           WHERE e.run_id=? AND e.event='download_complete' ORDER BY e.id""",
+        (run_id,),
+    )
     review_labels = set(row["summary"].get("review_tracks", []))
     chart = db.chart_for_run(run_id)
     row["review_resolution"] = []
@@ -184,7 +199,7 @@ async def get_run(run_id: int, db: Database = Depends(get_db)):
             if label not in review_labels or not entry["source_track_id"]:
                 continue
             track = db.one(
-                """SELECT artist, title, status, media_path, updated_at FROM tracks
+                """SELECT id, artist, title, status, media_path, updated_at FROM tracks
                    WHERE station=? AND source_track_id=?""",
                 (chart["station"], entry["source_track_id"]),
             )
@@ -226,6 +241,66 @@ async def get_track(track_id: int, db: Database = Depends(get_db)):
         candidate["reasons"] = json.loads(candidate.pop("reasons_json") or "[]")
     track["candidates"] = candidates
     return track
+
+
+@app.get("/api/v1/tracks/{track_id}/media-info", dependencies=[Depends(require_scope("read"))])
+async def media_info(
+    track_id: int, settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    track = db.one("SELECT media_path FROM tracks WHERE id=? AND status='published'", (track_id,))
+    if not track or not track["media_path"]:
+        raise HTTPException(status_code=404, detail="Published media was not found for this track")
+    filename = Path(track["media_path"])
+    if filename.name != track["media_path"]:
+        raise HTTPException(status_code=400, detail="Invalid stored media path")
+    media = settings.media_dir / filename
+    if not media.is_file():
+        raise HTTPException(status_code=404, detail="Published media file is unavailable")
+    try:
+        result = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_streams", "-show_format", "-of", "json", str(media)],
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=15,
+        )
+        probe = json.loads(result.stdout)
+    except (subprocess.SubprocessError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=502, detail="Could not inspect published media") from exc
+    format_info = probe.get("format", {})
+    streams = probe.get("streams", [])
+    video = next((stream for stream in streams if stream.get("codec_type") == "video"), {})
+    audio = next((stream for stream in streams if stream.get("codec_type") == "audio"), {})
+    return {
+        "filename": filename.name,
+        "size_bytes": media.stat().st_size,
+        "duration_seconds": float(format_info.get("duration") or 0),
+        "container": format_info.get("format_long_name") or format_info.get("format_name"),
+        "overall_bitrate": int(format_info.get("bit_rate") or 0),
+        "video": {
+            key: video.get(key)
+            for key in (
+                "codec_name",
+                "profile",
+                "width",
+                "height",
+                "pix_fmt",
+                "avg_frame_rate",
+                "bit_rate",
+            )
+        },
+        "audio": {
+            key: audio.get(key)
+            for key in (
+                "codec_name",
+                "profile",
+                "channels",
+                "channel_layout",
+                "sample_rate",
+                "bit_rate",
+            )
+        },
+    }
 
 
 @app.get("/api/v1/review", dependencies=[Depends(require_scope("read"))])
