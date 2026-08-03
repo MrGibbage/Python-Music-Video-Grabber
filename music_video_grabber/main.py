@@ -218,8 +218,8 @@ async def review_queue(db: Database = Depends(get_db)):
     tracks = db.query("SELECT * FROM tracks WHERE status='review' ORDER BY updated_at DESC")
     for track in tracks:
         candidates = db.query(
-            """SELECT * FROM candidates WHERE track_id=? AND rejected=0
-               ORDER BY score DESC, id LIMIT 10""",
+            """SELECT * FROM candidates WHERE track_id=?
+               ORDER BY rejected ASC, score DESC, id LIMIT 10""",
             (track["id"],),
         )
         for candidate in candidates:
@@ -258,6 +258,23 @@ async def reject_candidate(
     except LookupError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return {"status": "rejected"}
+
+
+@app.post(
+    "/api/v1/tracks/{track_id}/undo-reject",
+    dependencies=[Depends(require_scope("review:write"))],
+)
+async def undo_reject_candidate(
+    track_id: int,
+    decision: CandidateDecision,
+    settings: Settings = Depends(get_settings),
+    db: Database = Depends(get_db),
+):
+    try:
+        JobProcessor(settings, db).undo_reject(track_id, decision.candidate_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return {"status": "restored"}
 
 
 @app.get("/api/v1/jobs", dependencies=[Depends(require_scope("read"))])

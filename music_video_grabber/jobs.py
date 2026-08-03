@@ -250,7 +250,8 @@ class JobProcessor:
     def approve(self, track_id: int, candidate_id: int) -> int:
         track = self.db.one("SELECT id FROM tracks WHERE id=?", (track_id,))
         candidate = self.db.one(
-            "SELECT id FROM candidates WHERE id=? AND track_id=?", (candidate_id, track_id)
+            "SELECT id FROM candidates WHERE id=? AND track_id=? AND rejected=0",
+            (candidate_id, track_id),
         )
         if not track or not candidate:
             raise LookupError("Track or candidate not found")
@@ -264,6 +265,15 @@ class JobProcessor:
             )
             if result.rowcount != 1:
                 raise LookupError("Track or candidate not found")
+
+    def undo_reject(self, track_id: int, candidate_id: int) -> None:
+        with self.db.connect() as conn:
+            result = conn.execute(
+                "UPDATE candidates SET rejected=0 WHERE id=? AND track_id=? AND rejected=1",
+                (candidate_id, track_id),
+            )
+            if result.rowcount != 1:
+                raise LookupError("Rejected candidate not found")
 
     def maybe_finalize_run(self, run_id: int | None) -> None:
         if run_id is None:
