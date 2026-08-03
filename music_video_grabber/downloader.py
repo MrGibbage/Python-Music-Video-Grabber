@@ -14,6 +14,7 @@ import yt_dlp
 
 from .config import Settings
 from .db import Database, utcnow
+from .providers import writable_cookie_copy
 from .text import safe_filename
 
 logger = logging.getLogger(__name__)
@@ -62,13 +63,12 @@ class Downloader:
             "retries": 5,
             "fragment_retries": 5,
         }
-        cookie = self.settings.youtube_cookie_file
-        if cookie and cookie.exists() and cookie.stat().st_size:
-            options["cookiefile"] = str(cookie)
-
         try:
-            with yt_dlp.YoutubeDL(options) as ydl:
-                info = ydl.extract_info(row["url"], download=True)
+            with writable_cookie_copy(self.settings.youtube_cookie_file, job_staging) as cookie:
+                if cookie:
+                    options["cookiefile"] = str(cookie)
+                with yt_dlp.YoutubeDL(options) as ydl:
+                    info = ydl.extract_info(row["url"], download=True)
             candidates = sorted(job_staging.glob("download.*"))
             media = next((path for path in candidates if path.suffix.lower() == ".mp4"), None)
             if media is None:

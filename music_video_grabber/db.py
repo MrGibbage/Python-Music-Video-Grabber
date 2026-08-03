@@ -198,6 +198,15 @@ class Database:
         )
         return chart
 
+    def chart_for_run(self, run_id: int) -> dict[str, Any] | None:
+        chart = self.one("SELECT * FROM charts WHERE run_id=?", (run_id,))
+        if not chart:
+            return None
+        chart["entries"] = self.query(
+            "SELECT * FROM chart_entries WHERE chart_id=? ORDER BY rank", (chart["id"],)
+        )
+        return chart
+
     def enqueue(
         self, kind: str, payload: dict[str, Any], *, run_id: int | None = None
     ) -> int:

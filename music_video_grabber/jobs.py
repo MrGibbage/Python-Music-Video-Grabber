@@ -10,7 +10,7 @@ from .db import Database, utcnow
 from .downloader import Downloader
 from .importer import import_legacy_json, import_media_directory
 from .notifications import Notifier
-from .providers import SpotifyClient, XmPlaylistClient, YouTubeClient, parse_played_at
+from .providers import SpotifyClient, StationTrack, XmPlaylistClient, YouTubeClient, parse_played_at
 from .scoring import score_candidate, should_auto_approve
 from .text import canonical_track_key
 
@@ -21,7 +21,7 @@ class JobProcessor:
     def __init__(self, settings: Settings, db: Database):
         self.settings = settings
         self.db = db
-        self.xm = XmPlaylistClient()
+        self.xm = XmPlaylistClient(settings.xmplaylist_fixture_path)
         self.spotify = SpotifyClient(settings)
         self.youtube = YouTubeClient(settings)
         self.downloader = Downloader(settings, db)
@@ -55,11 +55,41 @@ class JobProcessor:
                 "UPDATE runs SET status='running', started_at=? WHERE id=?",
                 (utcnow(), run_id),
             )
-        tracks = self.xm.latest(station, self.settings.top_tracks_limit)
-        if len(tracks) != self.settings.top_tracks_limit:
-            raise RuntimeError(
-                f"xmplaylist returned {len(tracks)} usable tracks; "
-                f"expected {self.settings.top_tracks_limit}"
+        chart = self.db.chart_for_run(run_id)
+        if chart:
+            tracks = [
+                StationTrack(
+                    source_track_id=entry["source_track_id"] or "",
+                    title=entry["title"],
+                    artist=entry["artist"],
+                    played_at=entry["played_at"],
+                )
+                for entry in chart["entries"]
+            ]
+            logger.info("Reusing persisted chart snapshot", extra={"event": "chart_reused"})
+        else:
+            tracks = self.xm.latest(station, self.settings.top_tracks_limit)
+            if len(tracks) != self.settings.top_tracks_limit:
+                raise RuntimeError(
+                    f"xmplaylist returned {len(tracks)} usable tracks; "
+                    f"expected {self.settings.top_tracks_limit}"
+                )
+            as_of = parse_played_at(tracks[0].played_at) if tracks else None
+            self.db.save_chart(
+                run_id=run_id,
+                station=station,
+                source="xmplaylist_recent_plays",
+                as_of=as_of or utcnow(),
+                entries=[
+                    {
+                        "rank": rank,
+                        "source_track_id": track.source_track_id,
+                        "title": track.title,
+                        "artist": track.artist,
+                        "played_at": parse_played_at(track.played_at),
+                    }
+                    for rank, track in enumerate(tracks, start=1)
+                ],
             )
         counters: Counter[str] = Counter()
         track_lists: dict[str, list[str]] = {
@@ -67,23 +97,6 @@ class JobProcessor:
             "auto_approved_tracks": [],
             "review_tracks": [],
         }
-        as_of = parse_played_at(tracks[0].played_at) if tracks else None
-        self.db.save_chart(
-            run_id=run_id,
-            station=station,
-            source="xmplaylist_recent_plays",
-            as_of=as_of or utcnow(),
-            entries=[
-                {
-                    "rank": rank,
-                    "source_track_id": track.source_track_id,
-                    "title": track.title,
-                    "artist": track.artist,
-                    "played_at": parse_played_at(track.played_at),
-                }
-                for rank, track in enumerate(tracks, start=1)
-            ],
-        )
 
         for station_track in tracks:
             label = f"{station_track.artist} — {station_track.title}"
