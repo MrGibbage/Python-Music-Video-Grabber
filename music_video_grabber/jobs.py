@@ -308,7 +308,7 @@ class JobProcessor:
         downloaded_lines = [
             f"- {track['artist']} — {track['title']}" for track in downloaded
         ] or ["- None"]
-        self.notifier.send(
+        notification_sent = self.notifier.send(
             f"Alt Nation music video run: {status}",
             "\n".join(
                 [
@@ -324,4 +324,12 @@ class JobProcessor:
                     "Review: https://grabber.pelorus.org/",
                 ]
             ),
+        )
+        self.db.event(
+            "notification_sent" if notification_sent else "notification_not_sent",
+            "Telegram notification accepted by Mailrise"
+            if notification_sent
+            else "Notification was disabled or could not be accepted by Mailrise",
+            level="info" if notification_sent else "warning",
+            run_id=run_id,
         )
