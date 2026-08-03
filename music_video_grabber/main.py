@@ -1,16 +1,23 @@
 from __future__ import annotations
 
 import json
-import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request, status
-from fastapi.responses import HTMLResponse
+from fastapi import Depends, FastAPI, Form, Header, HTTPException, Request, status
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
 from . import __version__
+from .auth import (
+    ALL_SCOPES,
+    SESSION_COOKIE,
+    authorize,
+    dashboard_authenticated,
+    issue_api_token,
+    make_session,
+)
 from .config import Settings, get_settings
 from .db import Database, database_from_settings, utcnow
 from .jobs import JobProcessor
@@ -39,21 +46,31 @@ def get_db(settings: Settings = Depends(get_settings)) -> Database:
     return database_from_settings(settings)
 
 
-def require_token(
-    authorization: str | None = Header(default=None),
+def require_scope(scope: str):
+    def dependency(
+        request: Request,
+        authorization: str | None = Header(default=None),
+        settings: Settings = Depends(get_settings),
+        db: Database = Depends(get_db),
+    ) -> None:
+        authorize(request, authorization, settings, db, scope)
+
+    return dependency
+
+
+def require_dashboard(
+    request: Request,
     settings: Settings = Depends(get_settings),
 ) -> None:
-    if not settings.api_token:
-        if settings.environment.lower() == "production":
-            raise HTTPException(status_code=503, detail="API token is not configured")
-        return
-    expected = f"Bearer {settings.api_token}"
-    if not authorization or not secrets.compare_digest(authorization, expected):
+    if not dashboard_authenticated(request, settings):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or missing bearer token",
-            headers={"WWW-Authenticate": "Bearer"},
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Dashboard sign-in required"
         )
+
+
+def verify_dashboard_configuration(settings: Settings) -> None:
+    if not settings.dashboard_password or not settings.dashboard_session_secret:
+        raise HTTPException(status_code=503, detail="Dashboard sign-in is not configured")
 
 
 class RunRequest(BaseModel):
@@ -64,9 +81,49 @@ class CandidateDecision(BaseModel):
     candidate_id: int
 
 
+class ApiTokenRequest(BaseModel):
+    name: str
+    scopes: set[str] = {"read"}
+
+
 @app.get("/", response_class=HTMLResponse)
-async def dashboard(request: Request):
+async def dashboard(request: Request, settings: Settings = Depends(get_settings)):
+    if not dashboard_authenticated(request, settings):
+        return templates.TemplateResponse(request=request, name="login.html")
     return templates.TemplateResponse(request=request, name="index.html")
+
+
+@app.post("/auth/login")
+async def login(
+    request: Request, password: str = Form(), settings: Settings = Depends(get_settings)
+):
+    verify_dashboard_configuration(settings)
+    import hmac
+
+    if not hmac.compare_digest(password, settings.dashboard_password):
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+            context={"error": "Incorrect password"},
+            status_code=401,
+        )
+    response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    response.set_cookie(
+        SESSION_COOKIE,
+        make_session(settings),
+        max_age=settings.dashboard_session_ttl_hours * 3600,
+        httponly=True,
+        secure=True,
+        samesite="lax",
+    )
+    return response
+
+
+@app.post("/auth/logout")
+async def logout():
+    response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    response.delete_cookie(SESSION_COOKIE, httponly=True, secure=True, samesite="lax")
+    return response
 
 
 @app.get("/health/live")
@@ -88,7 +145,7 @@ async def ready(
     return {"status": "ready", "media_directory": str(settings.media_dir)}
 
 
-@app.post("/api/v1/runs", dependencies=[Depends(require_token)], status_code=202)
+@app.post("/api/v1/runs", dependencies=[Depends(require_scope("runs:write"))], status_code=202)
 async def create_run(payload: RunRequest, db: Database = Depends(get_db)):
     if payload.station != "altnation":
         raise HTTPException(status_code=422, detail="The MVP supports only altnation")
@@ -102,7 +159,7 @@ async def create_run(payload: RunRequest, db: Database = Depends(get_db)):
     return {"id": run_id, "status": "queued"}
 
 
-@app.get("/api/v1/runs", dependencies=[Depends(require_token)])
+@app.get("/api/v1/runs", dependencies=[Depends(require_scope("read"))])
 async def list_runs(db: Database = Depends(get_db)):
     rows = db.query("SELECT * FROM runs ORDER BY id DESC LIMIT 50")
     for row in rows:
@@ -110,7 +167,7 @@ async def list_runs(db: Database = Depends(get_db)):
     return rows
 
 
-@app.get("/api/v1/runs/{run_id}", dependencies=[Depends(require_token)])
+@app.get("/api/v1/runs/{run_id}", dependencies=[Depends(require_scope("read"))])
 async def get_run(run_id: int, db: Database = Depends(get_db)):
     row = db.one("SELECT * FROM runs WHERE id=?", (run_id,))
     if not row:
@@ -121,7 +178,7 @@ async def get_run(run_id: int, db: Database = Depends(get_db)):
     return row
 
 
-@app.get("/api/v1/charts/latest", dependencies=[Depends(require_token)])
+@app.get("/api/v1/charts/latest", dependencies=[Depends(require_scope("read"))])
 async def latest_chart(db: Database = Depends(get_db)):
     chart = db.latest_chart("altnation")
     if not chart:
@@ -129,7 +186,7 @@ async def latest_chart(db: Database = Depends(get_db)):
     return chart
 
 
-@app.get("/api/v1/tracks", dependencies=[Depends(require_token)])
+@app.get("/api/v1/tracks", dependencies=[Depends(require_scope("read"))])
 async def list_tracks(
     track_status: str | None = None, limit: int = 100, db: Database = Depends(get_db)
 ):
@@ -142,7 +199,7 @@ async def list_tracks(
     return db.query("SELECT * FROM tracks ORDER BY updated_at DESC LIMIT ?", (limit,))
 
 
-@app.get("/api/v1/tracks/{track_id}", dependencies=[Depends(require_token)])
+@app.get("/api/v1/tracks/{track_id}", dependencies=[Depends(require_scope("read"))])
 async def get_track(track_id: int, db: Database = Depends(get_db)):
     track = db.one("SELECT * FROM tracks WHERE id=?", (track_id,))
     if not track:
@@ -156,7 +213,7 @@ async def get_track(track_id: int, db: Database = Depends(get_db)):
     return track
 
 
-@app.get("/api/v1/review", dependencies=[Depends(require_token)])
+@app.get("/api/v1/review", dependencies=[Depends(require_scope("read"))])
 async def review_queue(db: Database = Depends(get_db)):
     tracks = db.query("SELECT * FROM tracks WHERE status='review' ORDER BY updated_at DESC")
     for track in tracks:
@@ -173,7 +230,7 @@ async def review_queue(db: Database = Depends(get_db)):
 
 @app.post(
     "/api/v1/tracks/{track_id}/approve",
-    dependencies=[Depends(require_token)],
+    dependencies=[Depends(require_scope("review:write"))],
     status_code=202,
 )
 async def approve_candidate(
@@ -189,7 +246,7 @@ async def approve_candidate(
     return {"job_id": job_id, "status": "queued"}
 
 
-@app.post("/api/v1/tracks/{track_id}/reject", dependencies=[Depends(require_token)])
+@app.post("/api/v1/tracks/{track_id}/reject", dependencies=[Depends(require_scope("review:write"))])
 async def reject_candidate(
     track_id: int,
     decision: CandidateDecision,
@@ -203,12 +260,16 @@ async def reject_candidate(
     return {"status": "rejected"}
 
 
-@app.get("/api/v1/jobs", dependencies=[Depends(require_token)])
+@app.get("/api/v1/jobs", dependencies=[Depends(require_scope("read"))])
 async def list_jobs(limit: int = 100, db: Database = Depends(get_db)):
     return db.query("SELECT * FROM jobs ORDER BY id DESC LIMIT ?", (min(max(limit, 1), 500),))
 
 
-@app.post("/api/v1/jobs/{job_id}/retry", dependencies=[Depends(require_token)], status_code=202)
+@app.post(
+    "/api/v1/jobs/{job_id}/retry",
+    dependencies=[Depends(require_scope("ops:write"))],
+    status_code=202,
+)
 async def retry_job(job_id: int, db: Database = Depends(get_db)):
     with db.connect() as conn:
         result = conn.execute(
@@ -221,7 +282,7 @@ async def retry_job(job_id: int, db: Database = Depends(get_db)):
     return {"id": job_id, "status": "queued"}
 
 
-@app.post("/api/v1/jobs/{job_id}/cancel", dependencies=[Depends(require_token)])
+@app.post("/api/v1/jobs/{job_id}/cancel", dependencies=[Depends(require_scope("ops:write"))])
 async def cancel_job(job_id: int, db: Database = Depends(get_db)):
     with db.connect() as conn:
         result = conn.execute(
@@ -233,7 +294,11 @@ async def cancel_job(job_id: int, db: Database = Depends(get_db)):
     return {"id": job_id, "status": "cancelled"}
 
 
-@app.post("/api/v1/catalog/import", dependencies=[Depends(require_token)], status_code=202)
+@app.post(
+    "/api/v1/catalog/import",
+    dependencies=[Depends(require_scope("ops:write"))],
+    status_code=202,
+)
 async def queue_catalog_import(db: Database = Depends(get_db)):
     active = db.one(
         "SELECT id FROM jobs WHERE kind='catalog_import' AND status IN ('queued','running') LIMIT 1"
@@ -244,6 +309,42 @@ async def queue_catalog_import(db: Database = Depends(get_db)):
     return {"job_id": job_id, "status": "queued"}
 
 
-@app.get("/api/v1/events", dependencies=[Depends(require_token)])
+@app.get("/api/v1/events", dependencies=[Depends(require_scope("read"))])
 async def list_events(limit: int = 100, db: Database = Depends(get_db)):
     return db.query("SELECT * FROM events ORDER BY id DESC LIMIT ?", (min(max(limit, 1), 500),))
+
+
+@app.get("/api/v1/tokens", dependencies=[Depends(require_scope("admin:tokens"))])
+async def list_api_tokens(db: Database = Depends(get_db)):
+    rows = db.query(
+        """SELECT id, name, token_prefix, scopes_json, created_at, last_used_at, revoked_at
+           FROM api_tokens ORDER BY id DESC"""
+    )
+    for row in rows:
+        row["scopes"] = json.loads(row.pop("scopes_json"))
+    return rows
+
+
+@app.post(
+    "/api/v1/tokens", dependencies=[Depends(require_scope("admin:tokens"))], status_code=201
+)
+async def create_api_token(payload: ApiTokenRequest, db: Database = Depends(get_db)):
+    name = payload.name.strip()
+    if not 1 <= len(name) <= 80:
+        raise HTTPException(status_code=422, detail="Token name must be 1–80 characters")
+    if not payload.scopes or not payload.scopes <= ALL_SCOPES:
+        raise HTTPException(status_code=422, detail="One or more token scopes are invalid")
+    token, secret = issue_api_token(db, name, payload.scopes)
+    return {"token": token, "secret": secret}
+
+
+@app.delete("/api/v1/tokens/{token_id}", dependencies=[Depends(require_scope("admin:tokens"))])
+async def revoke_api_token(token_id: int, db: Database = Depends(get_db)):
+    with db.connect() as conn:
+        result = conn.execute(
+            "UPDATE api_tokens SET revoked_at=? WHERE id=? AND revoked_at IS NULL",
+            (utcnow(), token_id),
+        )
+    if result.rowcount != 1:
+        raise HTTPException(status_code=404, detail="Active API token not found")
+    return {"id": token_id, "status": "revoked"}

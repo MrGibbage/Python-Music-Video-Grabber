@@ -1,8 +1,16 @@
 # API
 
-All `/api/v1` endpoints require `Authorization: Bearer <token>`. Health checks
-and the dashboard shell are intentionally unauthenticated; dashboard data still
-requires the token, which is kept in browser session storage.
+The dashboard requires a password login. It uses a signed, `HttpOnly`, `Secure`,
+same-site session cookie; the browser never receives the configured service
+token. Health checks remain unauthenticated.
+
+External clients use `Authorization: Bearer <token>`. The configured
+`MVG_API_TOKEN` remains the service/automation token. Dashboard administrators
+can also create named, scoped personal tokens in Settings; token secrets are
+shown only once and the database stores only their SHA-256 hashes.
+
+Available personal-token scopes are `read`, `runs:write`, `review:write`,
+`ops:write`, and `admin:tokens`.
 
 ## Main endpoints
 
