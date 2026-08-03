@@ -16,7 +16,7 @@ Set these root-readable values in `/etc/homelab/music-video-grabber.env` before
 deploying the dashboard-authentication release:
 
 ```dotenv
-MVG_DASHBOARD_PASSWORD=<a unique dashboard password>
+MVG_APP_PASSWORD=<a unique dashboard password>
 MVG_DASHBOARD_SESSION_SECRET=<at least 32 random bytes, encoded as text>
 ```
 
@@ -30,6 +30,9 @@ openssl rand -base64 48
 The dashboard is served only over HTTPS. Its cookie is `HttpOnly`, `Secure`,
 and `SameSite=Lax`. The existing `MVG_API_TOKEN` remains for the cron trigger
 and machine-to-machine API access; do not use it as the dashboard password.
+If `MVG_DASHBOARD_SESSION_SECRET` is omitted, the application safely derives
+the cookie signature from the existing private service token; setting a distinct
+value is preferred for separation of duties.
 
 The compose stack joins the existing `apprise-mailrise_default` network so it
 can send SMTP to `apprise-mailrise:8025`. Both containers log to Docker's normal

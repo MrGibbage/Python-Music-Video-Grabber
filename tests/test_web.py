@@ -20,7 +20,7 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
         environment="test",
         database_path=tmp_path / "mvg.db",
         media_dir=tmp_path,
-        dashboard_password="test-password",
+        app_password="test-password",
         dashboard_session_secret="test-session-secret",
         api_token="legacy-service-token",
     )
