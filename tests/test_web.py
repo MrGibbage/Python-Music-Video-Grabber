@@ -3,7 +3,7 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from music_video_grabber.config import Settings, get_settings
-from music_video_grabber.db import Database
+from music_video_grabber.db import Database, utcnow
 from music_video_grabber.main import app
 
 
@@ -37,6 +37,30 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             assert "HttpOnly" in login.headers["set-cookie"]
             assert "Secure" in login.headers["set-cookie"]
             assert "Recent runs" in client.get("/").text
+
+            with Database(settings.database_path).connect() as conn:
+                track_id = conn.execute(
+                    """INSERT INTO tracks(
+                           station, canonical_key, title, artist, status, created_at, updated_at
+                       ) VALUES ('altnation', 'test artist test song', 'Test Song', 'Test Artist',
+                                 'review', ?, ?)""",
+                    (utcnow(), utcnow()),
+                ).lastrowid
+                candidate_id = conn.execute(
+                    """INSERT INTO candidates(track_id, video_id, url, title, score, created_at)
+                       VALUES (?, 'test-video', 'https://example.invalid',
+                               'Test video', 90, ?)""",
+                    (track_id, utcnow()),
+                ).lastrowid
+            assert client.post(
+                f"/api/v1/tracks/{track_id}/reject", json={"candidate_id": candidate_id}
+            ).status_code == 200
+            review = client.get("/api/v1/review").json()
+            assert review[0]["candidates"][0]["rejected"] == 1
+            assert client.post(
+                f"/api/v1/tracks/{track_id}/undo-reject", json={"candidate_id": candidate_id}
+            ).status_code == 200
+            assert client.get("/api/v1/review").json()[0]["candidates"][0]["rejected"] == 0
 
             created = client.post(
                 "/api/v1/tokens", json={"name": "read client", "scopes": ["read"]}
