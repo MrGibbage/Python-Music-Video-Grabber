@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     app_name: str = "Music Video Grabber"
     environment: str = "production"
     api_token: str = ""
-    dashboard_password: str = ""
+    app_password: str = ""
     dashboard_session_secret: str = ""
     dashboard_session_ttl_hours: int = Field(default=24, ge=1, le=24 * 31)
     database_path: Path = Path("data/music-video-grabber.db")
@@ -47,6 +47,11 @@ class Settings(BaseSettings):
 
     worker_poll_seconds: float = Field(default=2.0, ge=0.2, le=60)
     worker_max_attempts: int = Field(default=3, ge=1, le=10)
+
+    @property
+    def session_signing_secret(self) -> str:
+        """Prefer a distinct dashboard secret; otherwise use the private service secret."""
+        return self.dashboard_session_secret or self.api_token
 
 
 @lru_cache

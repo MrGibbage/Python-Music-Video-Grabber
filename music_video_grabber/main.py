@@ -69,7 +69,7 @@ def require_dashboard(
 
 
 def verify_dashboard_configuration(settings: Settings) -> None:
-    if not settings.dashboard_password or not settings.dashboard_session_secret:
+    if not settings.app_password or not settings.session_signing_secret:
         raise HTTPException(status_code=503, detail="Dashboard sign-in is not configured")
 
 
@@ -100,7 +100,7 @@ async def login(
     verify_dashboard_configuration(settings)
     import hmac
 
-    if not hmac.compare_digest(password, settings.dashboard_password):
+    if not hmac.compare_digest(password, settings.app_password):
         return templates.TemplateResponse(
             request=request,
             name="login.html",

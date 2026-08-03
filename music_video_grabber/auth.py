@@ -27,17 +27,17 @@ def _digest(value: str) -> str:
 
 
 def make_session(settings: Settings) -> str:
-    if not settings.dashboard_session_secret:
-        raise ValueError("MVG_DASHBOARD_SESSION_SECRET is not configured")
+    if not settings.session_signing_secret:
+        raise ValueError("No dashboard session-signing secret is configured")
     issued = str(int(time.time()))
     signature = hmac.new(
-        settings.dashboard_session_secret.encode(), issued.encode(), hashlib.sha256
+        settings.session_signing_secret.encode(), issued.encode(), hashlib.sha256
     ).hexdigest()
     return f"{issued}.{signature}"
 
 
 def valid_session(value: str | None, settings: Settings) -> bool:
-    if not value or not settings.dashboard_session_secret:
+    if not value or not settings.session_signing_secret:
         return False
     try:
         issued, signature = value.split(".", 1)
@@ -47,7 +47,7 @@ def valid_session(value: str | None, settings: Settings) -> bool:
     if age < 0 or age > settings.dashboard_session_ttl_hours * 3600:
         return False
     expected = hmac.new(
-        settings.dashboard_session_secret.encode(), issued.encode(), hashlib.sha256
+        settings.session_signing_secret.encode(), issued.encode(), hashlib.sha256
     ).hexdigest()
     return hmac.compare_digest(signature, expected)
 
