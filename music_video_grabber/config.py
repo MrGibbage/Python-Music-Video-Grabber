@@ -26,6 +26,7 @@ class Settings(BaseSettings):
 
     station: str = "altnation"
     station_display_name: str = "Alt Nation"
+    xmplaylist_fixture_path: Path | None = None
     top_tracks_limit: int = Field(default=18, ge=1, le=100)
     max_results: int = Field(default=8, ge=1, le=25)
     auto_approve_score: float = Field(default=88, ge=0, le=100)

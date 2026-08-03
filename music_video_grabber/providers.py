@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import json
 import logging
+import shutil
+import tempfile
+from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 import cloudscraper
@@ -26,11 +31,18 @@ class StationTrack:
 class XmPlaylistClient:
     base_url = "https://xmplaylist.com/api"
 
+    def __init__(self, fixture_path: Path | None = None):
+        self.fixture_path = fixture_path
+
     def latest(self, station: str, limit: int) -> list[StationTrack]:
-        scraper = cloudscraper.create_scraper()
-        response = scraper.get(f"{self.base_url}/station/{station}", timeout=30)
-        response.raise_for_status()
-        results = response.json().get("results", [])
+        if self.fixture_path:
+            results = json.loads(self.fixture_path.read_text(encoding="utf-8")).get("results", [])
+            logger.info("Using xmplaylist fixture", extra={"event": "xmplaylist_fixture"})
+        else:
+            scraper = cloudscraper.create_scraper()
+            response = scraper.get(f"{self.base_url}/station/{station}", timeout=30)
+            response.raise_for_status()
+            results = response.json().get("results", [])
         tracks: list[StationTrack] = []
         for item in results[:limit]:
             track = item.get("track") or {}
@@ -91,12 +103,17 @@ class YouTubeClient:
             "extract_flat": True,
             "skip_download": True,
         }
-        cookie = self.settings.youtube_cookie_file
-        if cookie and cookie.exists() and cookie.stat().st_size:
-            options["cookiefile"] = str(cookie)
         query = f"ytsearch{self.settings.max_results}:{artist} {title} official music video"
-        with yt_dlp.YoutubeDL(options) as ydl:
-            result = ydl.extract_info(query, download=False)
+        with (
+            tempfile.TemporaryDirectory(prefix="mvg-youtube-cookies-") as temporary_directory,
+            writable_cookie_copy(
+                self.settings.youtube_cookie_file, Path(temporary_directory)
+            ) as cookie,
+        ):
+            if cookie:
+                options["cookiefile"] = str(cookie)
+            with yt_dlp.YoutubeDL(options) as ydl:
+                result = ydl.extract_info(query, download=False)
         candidates = []
         for entry in (result or {}).get("entries") or []:
             video_id = str(entry.get("id") or "")
@@ -113,6 +130,21 @@ class YouTubeClient:
                 )
             )
         return candidates
+
+
+@contextmanager
+def writable_cookie_copy(source: Path | None, directory: Path):
+    """Give yt-dlp a disposable cookie jar without mutating the mounted secret."""
+    if not source or not source.exists() or not source.stat().st_size:
+        yield None
+        return
+    destination = directory / "youtube-cookies.txt"
+    shutil.copyfile(source, destination)
+    destination.chmod(0o600)
+    try:
+        yield destination
+    finally:
+        destination.unlink(missing_ok=True)
 
 
 def parse_played_at(value: str | None) -> str | None:

@@ -42,6 +42,7 @@ services:
       - /mnt/nas/media/Music Videos - Alternative:/media
       - /etc/homelab/music-video-grabber.cookies.txt:/run/secrets/youtube-cookies.txt:ro
       - ./altnation-songs.json:/import/altnation-songs.json:ro
+      - ./fixtures:/fixtures:ro
     read_only: true
     tmpfs:
       - /tmp:size=512m,mode=1777

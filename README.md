@@ -62,6 +62,17 @@ curl -X POST https://grabber.pelorus.org/api/v1/runs \
 The endpoint returns `202 Accepted`; use the returned run ID to inspect status.
 Interactive OpenAPI documentation is available at `/docs`.
 
+## Repeatable discovery testing
+
+Set `MVG_XMPLAYLIST_FIXTURE_PATH` to an xmplaylist response-shaped JSON file to
+run discovery from a saved 18-track capture instead of requesting xmplaylist.
+The production compose stack mounts `./fixtures` read-only at `/fixtures`; the
+captured Run 1 fixture is `/fixtures/xmplaylist-run-1.json`.
+
+Leave the setting empty for ordinary live runs. A fixture still performs real
+Spotify/YouTube lookups and downloads after the normal duplicate checks, so use
+it only when intentionally exercising the acquisition workflow.
+
 ## Importing the existing library
 
 Run this before the first acquisition:
