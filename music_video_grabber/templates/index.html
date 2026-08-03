@@ -17,7 +17,7 @@
     button { border:0; border-radius:10px; padding:10px 14px; font-weight:700; cursor:pointer; background:var(--cyan); color:#071016; }
     button.secondary { background:#27334f; color:var(--ink); }
     button.reject { background:transparent; color:var(--red); border:1px solid #693347; }
-    input { color:var(--ink); background:#0b1120; border:1px solid #35415d; border-radius:10px; padding:10px 12px; width:min(360px,60vw); }
+    input,select { color:var(--ink); background:#0b1120; border:1px solid #35415d; border-radius:10px; padding:10px 12px; font:inherit; }
     .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:18px; padding-bottom:50px; }
     .panel { grid-column:span 12; background:color-mix(in srgb,var(--panel) 92%,transparent); border:1px solid #283651; border-radius:18px; padding:20px; box-shadow:0 18px 50px #0005; }
     .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
@@ -33,6 +33,8 @@
     th,td { text-align:left; padding:10px 6px; border-bottom:1px solid #27334a; }
     th { color:var(--muted); font-size:.75rem; text-transform:uppercase; letter-spacing:.1em; }
     .error { color:var(--red); }
+    dialog { width:min(650px,92vw); color:var(--ink); background:var(--panel); border:1px solid #35415d; border-radius:18px; padding:24px; box-shadow:0 18px 50px #0008; }
+    dialog::backdrop { background:#0009; } .token-form { display:grid; grid-template-columns:1fr auto; gap:10px; } .token-form label { display:grid; gap:5px; } .token-form button { align-self:end; } .token-value { overflow-wrap:anywhere; padding:12px; background:#0b1120; border-radius:10px; } .token-row { display:flex; justify-content:space-between; gap:10px; align-items:center; border-top:1px solid #2a3650; padding:10px 0; }
     @media(min-width:850px) { .runs { grid-column:span 7; } .jobs { grid-column:span 5; } }
     @media(max-width:650px) { header { align-items:start; flex-direction:column; } .stats { grid-template-columns:repeat(2,1fr); } .candidate { grid-template-columns:60px 1fr; } .candidate .actions { grid-column:2; } }
   </style>
@@ -40,7 +42,7 @@
 <body>
   <header>
     <div><h1>Music Video<br>Grabber</h1><p>Alt Nation Top 18 acquisition control room.</p></div>
-    <div><input id="token" type="password" placeholder="API token"><button onclick="saveToken()">Connect</button></div>
+    <div><button class="secondary" onclick="openSettings()">Settings</button> <form action="/auth/logout" method="post" style="display:inline"><button class="secondary" type="submit">Sign out</button></form></div>
   </header>
   <main class="grid">
     <section class="panel">
@@ -65,15 +67,25 @@
     <section class="panel runs"><h2>Recent runs</h2><div id="runs"></div></section>
     <section class="panel jobs"><h2>Recent jobs</h2><div id="jobs"></div></section>
   </main>
+  <dialog id="settings">
+    <form method="dialog" style="float:right"><button class="secondary">Close</button></form>
+    <h2>API tokens</h2>
+    <p>Create separate tokens for scripts or external apps. A token is shown once; copy it then. Revoking a token immediately prevents further API use.</p>
+    <div class="token-form"><label>Name<input id="tokenName" maxlength="80" placeholder="e.g. MacBook curl" required></label><label>Scope<select id="tokenScope"><option value="read">Read only</option><option value="runs:write">Run trigger</option><option value="review:write">Review decisions</option><option value="ops:write">Operations</option><option value="admin:tokens">Token administration</option></select></label><button onclick="createToken()" type="button">Create token</button></div>
+    <div id="newToken"></div>
+    <div id="tokenList"><p class="muted">Loading tokens…</p></div>
+  </dialog>
 <script>
-const tokenInput=document.querySelector('#token'); tokenInput.value=sessionStorage.getItem('mvg-token')||'';
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-async function api(path,options={}) { const token=sessionStorage.getItem('mvg-token')||''; const response=await fetch(path,{...options,headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`,...options.headers}}); if(!response.ok) throw new Error((await response.json()).detail||response.statusText); return response.json(); }
-function saveToken(){sessionStorage.setItem('mvg-token',tokenInput.value); refresh();}
+async function api(path,options={}) { const response=await fetch(path,{...options,headers:{'Content-Type':'application/json',...options.headers}}); if(response.status===401){window.location='/';throw new Error('Session expired');} if(!response.ok) throw new Error((await response.json()).detail||response.statusText); return response.json(); }
 async function startRun(){try{const run=await api('/api/v1/runs',{method:'POST',body:JSON.stringify({station:'altnation'})}); message.textContent=`Run ${run.id} queued`; refresh();}catch(e){message.textContent=e.message;message.className='error';}}
 async function decide(track,candidate,action){await api(`/api/v1/tracks/${track}/${action}`,{method:'POST',body:JSON.stringify({candidate_id:candidate})});refresh();}
+async function openSettings(){document.querySelector('#settings').showModal();await refreshTokens();}
+async function refreshTokens(){const tokens=await api('/api/v1/tokens');document.querySelector('#tokenList').innerHTML=tokens.length?tokens.map(t=>`<div class="token-row"><div><strong>${esc(t.name)}</strong><div class="muted">${esc(t.prefix)}… · ${esc(t.scopes.join(', '))}${t.revoked_at?' · revoked':''}</div></div>${t.revoked_at?'':`<button class="reject" onclick="revokeToken(${t.id})">Revoke</button>`}</div>`).join(''):'<p>No personal API tokens yet.</p>';}
+async function createToken(){try{const name=document.querySelector('#tokenName').value;const scope=document.querySelector('#tokenScope').value;const result=await api('/api/v1/tokens',{method:'POST',body:JSON.stringify({name,scopes:[scope]})});document.querySelector('#newToken').innerHTML=`<p><strong>Copy this token now. It will not be shown again.</strong></p><p class="token-value">${esc(result.secret)}</p>`;document.querySelector('#tokenName').value='';await refreshTokens();}catch(e){document.querySelector('#newToken').innerHTML=`<p class="error">${esc(e.message)}</p>`;}}
+async function revokeToken(id){if(confirm('Revoke this token? This cannot be undone.')){await api(`/api/v1/tokens/${id}`,{method:'DELETE'});await refreshTokens();}}
 function table(rows,cols){if(!rows.length)return '<p>No records yet.</p>';return `<table><thead><tr>${cols.map(c=>`<th>${esc(c[0])}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(c[1](r))}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
 async function refresh(){try{const [tracks,review,runs,jobs,chart]=await Promise.all([api('/api/v1/tracks?limit=500'),api('/api/v1/review'),api('/api/v1/runs'),api('/api/v1/jobs?limit=12'),api('/api/v1/charts/latest').catch(()=>null)]);owned.textContent=tracks.filter(t=>['imported','published'].includes(t.status)).length;reviewCount.textContent=review.length;queued.textContent=jobs.filter(j=>['queued','running'].includes(j.status)).length;failed.textContent=jobs.filter(j=>j.status==='failed').length;document.querySelector('#chart').innerHTML=chart?`<p>As of <strong>${esc(new Date(chart.as_of).toLocaleString())}</strong> · captured ${esc(new Date(chart.captured_at).toLocaleString())} · source: ${esc(chart.source)}</p><p class="muted">Ranks are inferred from reverse playback order at the end of the broadcast.</p>${table(chart.entries,[['Rank',r=>`#${r.rank}`],['Artist',r=>r.artist],['Song',r=>r.title]])}`:'<p>No broadcast snapshot has been captured yet.</p>';document.querySelector('#review').innerHTML=review.length?review.map(t=>`<article class="track"><strong>${esc(t.artist)} — ${esc(t.title)}</strong>${t.candidates.map(c=>`<div class="candidate"><div class="score">${c.score}</div><div><a href="${esc(c.url)}" target="_blank" rel="noreferrer">${esc(c.title)}</a><div class="muted">${esc(c.uploader)}</div><div class="reasons">${esc(c.reasons.join(' · '))}</div></div><div class="actions"><button onclick="decide(${t.id},${c.id},'approve')">Approve</button><button class="reject" onclick="decide(${t.id},${c.id},'reject')">Reject</button></div></div>`).join('')}</article>`).join(''):'<p>Nothing needs review.</p>';document.querySelector('#runs').innerHTML=table(runs,[['Run',r=>r.id],['Status',r=>r.status],['Requested',r=>r.requested_at]]);document.querySelector('#jobs').innerHTML=table(jobs,[['Job',r=>`#${r.id} ${r.kind}`],['Status',r=>r.status],['Attempts',r=>r.attempts]]);message.textContent='';message.className='';}catch(e){message.textContent=e.message;message.className='error';}}
-if(tokenInput.value)refresh(); setInterval(()=>{if(sessionStorage.getItem('mvg-token'))refresh()},15000);
+refresh(); setInterval(refresh,15000);
 </script>
 </body></html>

@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     app_name: str = "Music Video Grabber"
     environment: str = "production"
     api_token: str = ""
+    dashboard_password: str = ""
+    dashboard_session_secret: str = ""
+    dashboard_session_ttl_hours: int = Field(default=24, ge=1, le=24 * 31)
     database_path: Path = Path("data/music-video-grabber.db")
     media_dir: Path = Path("videos")
     staging_dir: Path = Path("staging")

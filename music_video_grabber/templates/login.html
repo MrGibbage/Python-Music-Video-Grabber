@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · Music Video Grabber</title>
+  <style>
+    :root { color-scheme:dark; --bg:#0b1020; --panel:#151d32; --ink:#f5f7ff; --muted:#91a0bd; --cyan:#42d7dc; --red:#ff7185; }
+    * { box-sizing:border-box; } body { margin:0; min-height:100vh; display:grid; place-items:center; font:16px/1.5 system-ui,sans-serif; background:radial-gradient(circle at 20% 0,#172b48 0,var(--bg) 42%); color:var(--ink); }
+    main { width:min(420px,92vw); padding:30px; background:var(--panel); border:1px solid #283651; border-radius:18px; box-shadow:0 18px 50px #0005; } h1 { margin:0; letter-spacing:-.04em; } p { color:var(--muted); } label { display:grid; gap:7px; font-weight:700; } input { color:var(--ink); background:#0b1120; border:1px solid #35415d; border-radius:10px; padding:11px 12px; font:inherit; } button { margin-top:18px; width:100%; border:0; border-radius:10px; padding:11px 14px; font:inherit; font-weight:700; cursor:pointer; background:var(--cyan); color:#071016; } .error { color:var(--red); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Music Video Grabber</h1>
+    <p>Sign in to view runs, review candidates, and manage API access.</p>
+    {% if error %}<p class="error">{{ error }}</p>{% endif %}
+    <form action="/auth/login" method="post">
+      <label>Dashboard password <input name="password" type="password" autocomplete="current-password" autofocus required></label>
+      <button type="submit">Sign in</button>
+    </form>
+  </main>
+</body>
+</html>

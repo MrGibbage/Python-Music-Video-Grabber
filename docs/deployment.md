@@ -10,6 +10,27 @@
 /mnt/nas/media/Music Videos - Alternative/    Published media
 ```
 
+## Dashboard sign-in
+
+Set these root-readable values in `/etc/homelab/music-video-grabber.env` before
+deploying the dashboard-authentication release:
+
+```dotenv
+MVG_DASHBOARD_PASSWORD=<a unique dashboard password>
+MVG_DASHBOARD_SESSION_SECRET=<at least 32 random bytes, encoded as text>
+```
+
+Generate the session secret locally on docker-server and keep it in the root
+configuration file, never in Git or chat:
+
+```bash
+openssl rand -base64 48
+```
+
+The dashboard is served only over HTTPS. Its cookie is `HttpOnly`, `Secure`,
+and `SameSite=Lax`. The existing `MVG_API_TOKEN` remains for the cron trigger
+and machine-to-machine API access; do not use it as the dashboard password.
+
 The compose stack joins the existing `apprise-mailrise_default` network so it
 can send SMTP to `apprise-mailrise:8025`. Both containers log to Docker's normal
 JSON log stream for Promtail discovery; do not add another logging driver.

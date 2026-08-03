@@ -109,6 +109,20 @@ CREATE TABLE IF NOT EXISTS chart_entries (
     played_at TEXT,
     UNIQUE(chart_id, rank)
 );
+
+CREATE TABLE IF NOT EXISTS api_tokens (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    token_prefix TEXT NOT NULL UNIQUE,
+    token_hash TEXT NOT NULL UNIQUE,
+    scopes_json TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    last_used_at TEXT,
+    revoked_at TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_api_tokens_active
+ON api_tokens(revoked_at, token_prefix);
 """
 
 
