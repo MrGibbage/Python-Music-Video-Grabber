@@ -13,6 +13,7 @@ def test_dashboard_renders() -> None:
 
     assert response.status_code == 200
     assert "Music Video Grabber" in response.text
+    assert "youtube-nocookie.com/embed" in response.text
 
 
 def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
