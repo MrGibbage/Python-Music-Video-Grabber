@@ -88,14 +88,14 @@
   <dialog id="settings">
     <form method="dialog" style="float:right"><button class="secondary">Close</button></form>
     <h2>Plex playlists</h2>
-    <p>Choose which playlist types a future refresh may manage. Changes here are saved only in Music Video Grabber; they do not contact Plex.</p>
+    <p>Choose which playlist types an explicitly approved playlist refresh may manage. Changes here are saved only in Music Video Grabber; they do not contact Plex.</p>
     <div class="playlist-preferences">
       <label><input id="includeTop18" type="checkbox"> Alt Nation — Latest Top 18</label>
       <label><input id="includeNew" type="checkbox"> Music Videos — New (Last 2 Years)</label>
       <label><input id="includeOlder" type="checkbox"> Music Videos — Older (2+ Years)</label>
       <label><input id="removeUnplanned" type="checkbox"> Remove videos not selected by the refresh plan</label>
     </div>
-    <p class="muted">By default, manually added Plex videos are preserved. Enabling removal will be a separately confirmed action when refresh writes are added.</p>
+    <p class="muted">By default, manually added Plex videos are preserved. Enabling removal affects only a separately confirmed refresh after its read-only plan has been reviewed.</p>
     <p><button onclick="savePlaylistPreferences()" type="button">Save playlist preferences</button> <span id="playlistPreferencesMessage" class="muted"></span></p>
     <h2>API tokens</h2>
     <p>Create separate tokens for scripts or external apps. A token is shown once; copy it then. Revoking a token immediately prevents further API use.</p>
