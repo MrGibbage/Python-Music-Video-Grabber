@@ -1,4 +1,5 @@
 from pathlib import Path
+from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
@@ -140,5 +141,88 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
                 json={"station": "hits/1", "song_count": 2},
             )
             assert invalid_station.status_code == 422
+    finally:
+        app.dependency_overrides.clear()
+
+
+def test_plex_status_allows_partial_comparison_and_snapshot_refresh(tmp_path: Path) -> None:
+    settings = Settings(
+        environment="test",
+        database_path=tmp_path / "mvg.db",
+        media_dir=tmp_path,
+        api_token="legacy-service-token",
+        plex_url="http://plex.example:32400",
+        plex_token="test-token",
+        plex_library_title="Alternative",
+    )
+    db = Database(settings.database_path)
+    db.initialize()
+    library = {"section_key": "3", "title": "Alternative", "library_type": "movie"}
+    db.save_plex_library_snapshot(
+        library,
+        [
+            {
+                "rating_key": "new",
+                "title": "Artist - Song",
+                "originally_available_at": "2026-01-01",
+                "media_path": "/media/Artist - Song.mp4",
+            },
+            {
+                "rating_key": "old",
+                "title": "Other - Tune",
+                "originally_available_at": None,
+                "media_path": "/media/Other - Tune.mp4",
+            },
+        ],
+    )
+    with db.connect() as conn:
+        run_id = conn.execute(
+            "INSERT INTO runs(station, requested_at) VALUES ('altnation', ?)", (utcnow(),)
+        ).lastrowid
+        chart_id = conn.execute(
+            """INSERT INTO charts(run_id, station, source, as_of, captured_at)
+               VALUES (?, 'altnation', 'test', ?, ?)""",
+            (run_id, utcnow(), utcnow()),
+        ).lastrowid
+        conn.execute(
+            """INSERT INTO chart_entries(chart_id, rank, artist, title)
+               VALUES (?, 1, 'Missing', 'Video')""",
+            (chart_id,),
+        )
+
+    class FakePlaylistClient:
+        received_titles: list[str] = []
+
+        def __init__(self, *_args):
+            pass
+
+        def playlist_refresh_plan(self, plans):
+            self.__class__.received_titles = [plan.title for plan in plans]
+            return [{"title": plan.title, "current_count": 0} for plan in plans]
+
+    class FakeReadOnlyClient:
+        def __init__(self, *_args):
+            pass
+
+        def snapshot_library(self):
+            return library, [{"rating_key": "fresh", "title": "Fresh"}]
+
+    app.dependency_overrides[get_settings] = lambda: settings
+    headers = {"Authorization": "Bearer legacy-service-token"}
+    try:
+        with TestClient(app) as client:
+            with patch("music_video_grabber.main.PlexPlaylistClient", FakePlaylistClient):
+                live = client.get("/api/v1/plex-status/live", headers=headers)
+            assert live.status_code == 200
+            assert live.json()["refresh"][0]["status"] == "unresolved"
+            assert FakePlaylistClient.received_titles == [
+                "Music Videos — New (Last 2 Years)",
+                "Music Videos — Older (2+ Years)",
+            ]
+            with patch("music_video_grabber.main.PlexReadOnlyClient", FakeReadOnlyClient):
+                refreshed = client.post("/api/v1/plex-status/snapshot", headers=headers)
+            assert refreshed.status_code == 200
+            assert refreshed.json() == {"read_only": True, "snapshot": {"libraries": 1, "media": 1}}
+            assert db.one("SELECT plex_rating_key FROM plex_media WHERE plex_rating_key='fresh'")
     finally:
         app.dependency_overrides.clear()
