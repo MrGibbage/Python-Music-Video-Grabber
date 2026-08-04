@@ -70,6 +70,46 @@ acquisition state, review work, published files, rate-limit health, and Plex
 playlist plans. Splitting this into separate front ends would make the workflow
 harder to understand.
 
+### Conversational collection agent
+
+The dashboard should also offer an optional chat window where an owner can use
+their own LLM provider and credentials to describe a collection in ordinary
+language. The agent is a planning interface over the collection-recipe model,
+not an autonomous downloader.
+
+For example:
+
+> I would like the 100 best and most classic rock videos of the 1980s and
+> 1990s. Save them under `Top 100 Classic Rock`. Exclude Beastie Boys.
+
+The agent should turn that request into a draft recipe and explain its
+interpretation: years 1980–1999, a target of 100 unique canonical recordings,
+the proposed source adapters and ranking criteria, output subdirectory, and an
+explicit artist exclusion. It should ask focused follow-up questions only when
+the answer materially changes the plan (for example, whether "classic rock"
+includes metal, whether live videos are acceptable, or which chart/editorial
+sources should carry the most weight).
+
+Before anything enters the acquisition queue, the UI presents a reviewable
+plan containing:
+
+- the versioned recipe and its normalized include/exclude rules;
+- proposed sources and their provenance;
+- the candidate track list, count, and ordering rationale;
+- the exact output location relative to the configured media root; and
+- expected rate-limit pacing and the estimated campaign duration.
+
+The owner must explicitly approve that plan. Subsequent matching, download,
+and Plex publishing safeguards still apply exactly as they do to a non-chat
+collection.
+
+LLM-provider configuration is deliberately bring-your-own-provider: provider
+endpoint, model, and API credential are entered in Settings, never committed,
+never returned by the API, and never written to chat/transcript logs. Provider
+access should be revocable and scoped to planning calls. The agent receives
+only the minimum catalog/source data needed to plan a collection; it cannot
+call download, filesystem, or Plex-write tools directly.
+
 ## Collection recipes
 
 A collection is a saved, versioned recipe rather than a hard-coded genre. A
@@ -96,6 +136,9 @@ Examples:
 
 - Every import starts with a dry-run count and a sample of prospective tracks.
 - AI prompts produce a reviewable proposed list, never immediate downloads.
+- Conversational agents may draft recipes and source queries, but cannot bypass
+  explicit plan approval, acquisition rate limits, media-root boundaries, or
+  Plex safeguards.
 - Canonical deduplication happens before candidate search.
 - A global token-bucket/concurrency policy limits YouTube search, metadata, and
   download operations across every collection.
