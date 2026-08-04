@@ -40,6 +40,10 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             assert "Recent runs" in dashboard
             assert "youtube-nocookie.com/embed" in dashboard
             assert "if(!previewOpen)refresh();" in dashboard
+            plex_status = client.get("/api/v1/plex-status")
+            assert plex_status.status_code == 200
+            assert plex_status.json()["snapshot"] is None
+            assert plex_status.json()["configured"] is False
 
             with Database(settings.database_path).connect() as conn:
                 track_id = conn.execute(
