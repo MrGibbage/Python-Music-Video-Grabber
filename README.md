@@ -239,4 +239,5 @@ For end-to-end testing, use a separate SQLite database and empty media output.
   and can suppress rediscovery.
 
 More detail: [architecture](docs/architecture.md),
-[deployment](docs/deployment.md), and [API](docs/api.md).
+[deployment](docs/deployment.md), [API](docs/api.md), and the
+[follow-on configurable library-builder project](docs/follow-on-classic-library.md).
