@@ -132,8 +132,25 @@ stack mounts `fixtures/` read-only at `/fixtures`; the bundled capture is
 `/fixtures/xmplaylist-run-1.json`.
 
 A fixture still performs normal Spotify/YouTube lookups, duplicate checks, and
-downloads. Use an isolated database and empty media directory for end-to-end
-download testing.
+downloads. Use the isolated test stack for end-to-end download testing:
+
+```bash
+cd /srv/music-video-grabber
+docker compose -p music-video-grabber-test -f compose.yml -f compose.test.yml up -d --build
+```
+
+It creates only `test-data/music-video-grabber-test.db` and files below
+`test-videos/`; neither path is mounted into Plex. The test dashboard is at
+`http://192.168.0.231:8289`. Plex access, Telegram notifications, and the
+Personal MTV scan callback are disabled. Use a small window such as one or two
+recent plays, then stop the stack with:
+
+```bash
+docker compose -p music-video-grabber-test -f compose.yml -f compose.test.yml down
+```
+
+Do not run catalog import in this stack: the point is to retain an empty
+database and force a realistic new acquisition.
 
 ## Plex: snapshots, playlists, and refresh safety
 

@@ -246,6 +246,22 @@ async def latest_chart(
     return chart
 
 
+@app.get("/api/v1/stations/recent", dependencies=[Depends(require_scope("read"))])
+async def recent_stations(limit: int = 12, db: Database = Depends(get_db)):
+    """Return station IDs already used by MVG, newest first.
+
+    xmplaylist remains the authority on whether a new free-form identifier is
+    valid.  Remembering successful local requests avoids maintaining a fragile
+    copied station directory.
+    """
+    return db.query(
+        """SELECT station, MAX(requested_at) AS last_requested_at, COUNT(*) AS run_count
+           FROM runs GROUP BY station
+           ORDER BY last_requested_at DESC LIMIT ?""",
+        (min(max(limit, 1), 50),),
+    )
+
+
 @app.get("/api/v1/tracks", dependencies=[Depends(require_scope("read"))])
 async def list_tracks(
     track_status: str | None = None, limit: int = 100, db: Database = Depends(get_db)

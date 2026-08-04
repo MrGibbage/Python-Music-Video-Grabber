@@ -172,6 +172,7 @@ class JobProcessor:
 
         summary = dict(counters)
         summary.update(track_lists)
+        summary["song_count"] = song_count
         with self.db.connect() as conn:
             conn.execute(
                 "UPDATE runs SET status='processing', summary_json=? WHERE id=?",
@@ -320,10 +321,12 @@ class JobProcessor:
             f"- {track['artist']} — {track['title']}" for track in downloaded
         ] or ["- None"]
         notification_sent = self.notifier.send(
-            f"{run['station']} music video run: {status}",
+            f"{run['station']} · {summary.get('song_count', 'recent')} plays: {status}",
             "\n".join(
                 [
                     f"Run: {run_id}",
+                    f"Station: {run['station']}",
+                    f"Requested recent plays: {summary.get('song_count', 'unknown')}",
                     f"Status: {status}",
                     f"Already owned: {summary.get('already_owned', 0)}",
                     f"Automatically approved: {summary.get('auto_approved', 0)}",

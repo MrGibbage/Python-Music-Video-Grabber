@@ -1,0 +1,41 @@
+# Isolated end-to-end testing stack. Invoke with:
+# docker compose -p music-video-grabber-test -f compose.yml -f compose.test.yml up -d --build
+#
+# It uses a separate SQLite bind mount and a separate media directory outside
+# the Plex library. It publishes the dashboard only on port 8289 and disables
+# Plex and notification side effects. The worker still uses the configured YouTube
+# cookie file, so it can exercise real downloads into ./test-videos.
+services:
+  music-video-grabber-api:
+    container_name: music-video-grabber-test-api
+    volumes:
+      - ./test-data:/data
+      - ./test-videos:/media:ro
+    ports: !reset
+      - "192.168.0.231:8289:8080"
+    environment:
+      MVG_ENVIRONMENT: test
+      MVG_DATABASE_PATH: /data/music-video-grabber-test.db
+      MVG_MEDIA_DIR: /media
+      MVG_STAGING_DIR: /media/.music-video-grabber-staging
+      MVG_PLEX_URL: ""
+      MVG_PLEX_TOKEN: ""
+      MVG_MAILRISE_HOST: ""
+      MVG_PERSONAL_MTV_SCAN_URL: ""
+
+  music-video-grabber-worker:
+    container_name: music-video-grabber-test-worker
+    volumes:
+      - ./test-data:/data
+      - ./test-videos:/media
+      - /etc/homelab/music-video-grabber.cookies.txt:/run/secrets/youtube-cookies.txt:ro
+      - ./fixtures:/fixtures:ro
+    environment:
+      MVG_ENVIRONMENT: test
+      MVG_DATABASE_PATH: /data/music-video-grabber-test.db
+      MVG_MEDIA_DIR: /media
+      MVG_STAGING_DIR: /media/.music-video-grabber-staging
+      MVG_PLEX_URL: ""
+      MVG_PLEX_TOKEN: ""
+      MVG_MAILRISE_HOST: ""
+      MVG_PERSONAL_MTV_SCAN_URL: ""
