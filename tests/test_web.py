@@ -120,5 +120,25 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             assert client.delete(f"/api/v1/tokens/{token_id}").status_code == 200
             client.post("/auth/logout", follow_redirects=False)
             assert client.get("/api/v1/runs", headers=headers).status_code == 401
+
+            run_response = client.post(
+                "/api/v1/runs",
+                headers={"Authorization": "Bearer legacy-service-token"},
+                json={"station": "SiriusXMHits1", "song_count": 2},
+            )
+            assert run_response.status_code == 202
+            assert run_response.json()["station"] == "siriusxmhits1"
+            assert run_response.json()["song_count"] == 2
+            latest_chart = client.get(
+                "/api/v1/charts/latest?station=siriusxmhits1",
+                headers={"Authorization": "Bearer legacy-service-token"},
+            )
+            assert latest_chart.status_code == 404
+            invalid_station = client.post(
+                "/api/v1/runs",
+                headers={"Authorization": "Bearer legacy-service-token"},
+                json={"station": "hits/1", "song_count": 2},
+            )
+            assert invalid_station.status_code == 422
     finally:
         app.dependency_overrides.clear()

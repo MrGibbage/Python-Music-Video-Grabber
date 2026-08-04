@@ -49,6 +49,7 @@ class JobProcessor:
 
     def _discover(self, job: dict[str, Any]) -> None:
         station = job["payload"].get("station", self.settings.station)
+        song_count = int(job["payload"].get("song_count", self.settings.top_tracks_limit))
         run_id = job["run_id"]
         with self.db.connect() as conn:
             conn.execute(
@@ -68,11 +69,11 @@ class JobProcessor:
             ]
             logger.info("Reusing persisted chart snapshot", extra={"event": "chart_reused"})
         else:
-            tracks = self.xm.latest(station, self.settings.top_tracks_limit)
-            if len(tracks) != self.settings.top_tracks_limit:
+            tracks = self.xm.latest(station, song_count)
+            if len(tracks) != song_count:
                 raise RuntimeError(
                     f"xmplaylist returned {len(tracks)} usable tracks; "
-                    f"expected {self.settings.top_tracks_limit}"
+                    f"expected {song_count}"
                 )
             as_of = parse_played_at(tracks[0].played_at) if tracks else None
             self.db.save_chart(
@@ -319,7 +320,7 @@ class JobProcessor:
             f"- {track['artist']} — {track['title']}" for track in downloaded
         ] or ["- None"]
         notification_sent = self.notifier.send(
-            f"Alt Nation music video run: {status}",
+            f"{run['station']} music video run: {status}",
             "\n".join(
                 [
                     f"Run: {run_id}",

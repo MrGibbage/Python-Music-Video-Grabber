@@ -39,17 +39,17 @@ Tracks marked `imported` or `published` are never queued again automatically.
 
 ## Chart capture
 
-xmplaylist exposes recent play history, not an official chart object. The
-scheduled run is deliberately aligned just after the Alt18 broadcast and saves
-the newest 18 plays as an immutable snapshot. Because the countdown airs from
-18 to 1, reverse playback order supplies the displayed rank. The UI shows both
-the newest play timestamp ("as of") and the capture time.
+xmplaylist exposes recent play history, not an official chart object. Each run
+saves the requested station and newest requested number of plays as an immutable
+snapshot. A run aligned just after the Alt18 broadcast is a special case:
+because that countdown airs from 18 to 1, reverse playback order supplies the
+displayed rank. The UI shows both the newest play timestamp ("as of") and the
+capture time.
 
-This inference is only valid when capture timing matches the show. Manual runs
-at other times remain possible, but the UI describes them as recent-play
-captures. The chart records include a source field so a future verified search
-or manually supplied fallback can coexist without pretending it came from
-xmplaylist.
+This inference is only valid when capture timing matches the show. Other
+stations and manually timed runs are ordinary recent-play captures. The chart
+records include a source field so a future verified search or manually supplied
+fallback can coexist without pretending it came from xmplaylist.
 
 ## Failure model
 

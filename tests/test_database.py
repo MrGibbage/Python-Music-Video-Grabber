@@ -1,3 +1,5 @@
+import json
+
 from music_video_grabber.db import Database
 
 
@@ -13,6 +15,18 @@ def test_job_claim_is_durable(tmp_path):
     assert db.claim_job() is None
     db.finish_job(job["id"])
     assert db.one("SELECT status FROM jobs WHERE id=?", (job["id"],))["status"] == "succeeded"
+
+
+def test_run_keeps_station_and_requested_song_count_in_discover_job(tmp_path):
+    db = Database(tmp_path / "app.db")
+    db.initialize()
+
+    run_id = db.create_run("siriusxmhits1", song_count=2)
+    run = db.one("SELECT station FROM runs WHERE id=?", (run_id,))
+    job = db.one("SELECT payload_json FROM jobs WHERE run_id=?", (run_id,))
+
+    assert run == {"station": "siriusxmhits1"}
+    assert json.loads(job["payload_json"]) == {"station": "siriusxmhits1", "song_count": 2}
 
 
 def test_chart_snapshot_preserves_rank_and_as_of_date(tmp_path):
