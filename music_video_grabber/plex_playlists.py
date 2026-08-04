@@ -173,6 +173,39 @@ class PlexPlaylistClient:
             raise RuntimeError("Plex created a playlist but did not return its rating key")
         return rating_key
 
+    def _machine_id(self) -> str:
+        identity = self.client.get(f"{self.base_url}/", headers=self.headers)
+        identity.raise_for_status()
+        machine_id = ElementTree.fromstring(identity.content).get("machineIdentifier")
+        if not machine_id:
+            raise RuntimeError("Plex did not return a machine identifier")
+        return machine_id
+
+    def _library_uri(self, rating_keys: tuple[str, ...]) -> str:
+        return (
+            f"server://{self._machine_id()}/com.plexapp.plugins.library/library/metadata/"
+            + ",".join(rating_keys)
+        )
+
+    def add_video_items(self, playlist_rating_key: str, rating_keys: tuple[str, ...]) -> None:
+        """Append library videos to one existing Plex playlist."""
+        if not rating_keys:
+            return
+        response = self.client.put(
+            f"{self.base_url}/playlists/{quote(playlist_rating_key, safe='')}/items",
+            params={"uri": self._library_uri(rating_keys)},
+            headers=self.headers,
+        )
+        response.raise_for_status()
+
+    def clear_playlist_items(self, playlist_rating_key: str) -> None:
+        """Remove all items from one playlist, leaving the playlist itself intact."""
+        response = self.client.delete(
+            f"{self.base_url}/playlists/{quote(playlist_rating_key, safe='')}/items",
+            headers=self.headers,
+        )
+        response.raise_for_status()
+
     def playlist_item_keys(self, rating_key: str) -> tuple[str, ...]:
         """Return playlist membership using a GET-only request."""
         response = self.client.get(
@@ -206,6 +239,50 @@ class PlexPlaylistClient:
                 }
             )
         return result
+
+    def apply_playlist_refresh(
+        self,
+        plans: list[PlaylistPlan],
+        *,
+        remove_unplanned_items: bool,
+    ) -> dict[str, Any]:
+        """Apply a preconfigured refresh and restore original membership on error.
+
+        With removals disabled, this only appends missing videos.  With removals
+        enabled, it clears and rebuilds the selected playlist so its target
+        order is exact.  The original membership is returned for a durable
+        manifest before any request changes Plex.
+        """
+        existing = self.existing_playlists()
+        missing = [plan.title for plan in plans if plan.title not in existing]
+        if missing:
+            raise RuntimeError(f"Cannot refresh missing Plex playlists: {', '.join(missing)}")
+        original = {plan.title: self.playlist_item_keys(existing[plan.title]) for plan in plans}
+        changed: list[PlaylistPlan] = []
+        try:
+            for plan in plans:
+                playlist_key = existing[plan.title]
+                current = original[plan.title]
+                current_set = set(current)
+                has_removals = any(key not in set(plan.rating_keys) for key in current)
+                additions = tuple(key for key in plan.rating_keys if key not in current_set)
+                if remove_unplanned_items and has_removals:
+                    self.clear_playlist_items(playlist_key)
+                    changed.append(plan)
+                    self.add_video_items(playlist_key, plan.rating_keys)
+                elif additions:
+                    changed.append(plan)
+                    self.add_video_items(playlist_key, additions)
+            return {
+                "original_membership": original,
+                "changed_titles": [plan.title for plan in changed],
+            }
+        except Exception:
+            for plan in reversed(changed):
+                playlist_key = existing[plan.title]
+                self.clear_playlist_items(playlist_key)
+                self.add_video_items(playlist_key, original[plan.title])
+            raise
 
     def delete_playlist(self, rating_key: str) -> None:
         response = self.client.delete(

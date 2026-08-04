@@ -96,8 +96,8 @@ def sync_plex_playlists(*, apply: bool) -> None:
     print(json.dumps({"created": created}, indent=2))
 
 
-def plan_plex_playlist_refresh() -> None:
-    """Report membership differences for existing Plex playlists; never write."""
+def _selected_plex_playlist_plans() -> tuple:
+    """Build selected plans from MVG's local snapshot without contacting Plex."""
     settings = get_settings()
     db = database_from_settings(settings)
     db.initialize()
@@ -115,7 +115,7 @@ def plan_plex_playlist_refresh() -> None:
         cutoff=cutoff,
     )
     if unresolved:
-        raise RuntimeError("Refusing a refresh plan while Top 18 membership is unresolved")
+        raise RuntimeError("Refusing Plex writes while Top 18 membership is unresolved")
     preferences = db.plex_playlist_preferences()
     plans = [
         plan
@@ -130,14 +130,60 @@ def plan_plex_playlist_refresh() -> None:
         )
         if enabled
     ]
+    return settings, db, plans, preferences, cutoff.isoformat()
+
+
+def plan_plex_playlist_refresh() -> None:
+    """Report membership differences for existing Plex playlists; never write."""
+    settings, _db, plans, preferences, cutoff = _selected_plex_playlist_plans()
     client = PlexPlaylistClient(settings.plex_url, settings.plex_token)
     print(
         json.dumps(
             {
-                "cutoff": cutoff.isoformat(),
+                "cutoff": cutoff,
                 "write_mode": False,
                 "preferences": preferences,
                 "refresh": client.playlist_refresh_plan(plans),
+            },
+            indent=2,
+        )
+    )
+
+
+def apply_plex_playlist_refresh() -> None:
+    """Refresh selected playlists after writing a local rollback manifest."""
+    settings, _db, plans, preferences, cutoff = _selected_plex_playlist_plans()
+    client = PlexPlaylistClient(settings.plex_url, settings.plex_token)
+    preview = client.playlist_refresh_plan(plans)
+    missing = [entry["title"] for entry in preview if entry["missing_playlist"]]
+    if missing:
+        raise RuntimeError(f"Cannot refresh missing Plex playlists: {', '.join(missing)}")
+    manifest = {
+        "created_at": datetime.now(ZoneInfo("UTC")).isoformat(),
+        "cutoff": cutoff,
+        "preferences": preferences,
+        "preview": preview,
+        "original_membership": {
+            entry["title"]: list(client.playlist_item_keys(entry["playlist_rating_key"]))
+            for entry in preview
+        },
+    }
+    stamp = datetime.now(ZoneInfo("UTC")).strftime("%Y%m%dT%H%M%SZ")
+    manifest_path = (
+        settings.database_path.parent / "backups" / f"plex-playlist-refresh-{stamp}.json"
+    )
+    manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    result = client.apply_playlist_refresh(
+        plans,
+        remove_unplanned_items=preferences["remove_unplanned_items"],
+    )
+    print(
+        json.dumps(
+            {
+                "manifest": str(manifest_path),
+                "changed_titles": result["changed_titles"],
+                "remove_unplanned_items": preferences["remove_unplanned_items"],
             },
             indent=2,
         )
@@ -167,6 +213,11 @@ def main() -> None:
         "plan-plex-playlist-refresh",
         help="Compare Plex playlist membership with the local snapshot (GET-only)",
     )
+    apply_refresh = subparsers.add_parser(
+        "apply-plex-playlist-refresh",
+        help="Refresh selected existing Plex playlists after writing a rollback manifest",
+    )
+    apply_refresh.add_argument("--apply", action="store_true", help="Required acknowledgement")
     args = parser.parse_args()
 
     if args.command == "worker":
@@ -181,6 +232,10 @@ def main() -> None:
         sync_plex_playlists(apply=args.apply)
     elif args.command == "plan-plex-playlist-refresh":
         plan_plex_playlist_refresh()
+    elif args.command == "apply-plex-playlist-refresh":
+        if not args.apply:
+            raise SystemExit("Refusing Plex write: re-run with --apply after reviewing the plan")
+        apply_plex_playlist_refresh()
 
 
 if __name__ == "__main__":
