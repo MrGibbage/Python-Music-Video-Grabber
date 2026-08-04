@@ -95,6 +95,13 @@ class ApiTokenRequest(BaseModel):
     scopes: set[str] = {"read"}
 
 
+class PlexPlaylistPreferencesRequest(BaseModel):
+    include_top_18: bool = True
+    include_new: bool = True
+    include_older: bool = True
+    remove_unplanned_items: bool = False
+
+
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request, settings: Settings = Depends(get_settings)):
     if not dashboard_authenticated(request, settings):
@@ -141,9 +148,7 @@ async def live():
 
 
 @app.get("/health/ready")
-async def ready(
-    settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
-):
+async def ready(settings: Settings = Depends(get_settings), db: Database = Depends(get_db)):
     try:
         db.one("SELECT 1 AS ok")
         media = settings.media_dir.exists() and settings.media_dir.is_dir()
@@ -432,9 +437,7 @@ async def list_api_tokens(db: Database = Depends(get_db)):
     return rows
 
 
-@app.post(
-    "/api/v1/tokens", dependencies=[Depends(require_scope("admin:tokens"))], status_code=201
-)
+@app.post("/api/v1/tokens", dependencies=[Depends(require_scope("admin:tokens"))], status_code=201)
 async def create_api_token(payload: ApiTokenRequest, db: Database = Depends(get_db)):
     name = payload.name.strip()
     if not 1 <= len(name) <= 80:
@@ -455,3 +458,18 @@ async def revoke_api_token(token_id: int, db: Database = Depends(get_db)):
     if result.rowcount != 1:
         raise HTTPException(status_code=404, detail="Active API token not found")
     return {"id": token_id, "status": "revoked"}
+
+
+@app.get("/api/v1/plex-playlist-preferences", dependencies=[Depends(require_scope("admin:tokens"))])
+async def get_plex_playlist_preferences(db: Database = Depends(get_db)):
+    return db.plex_playlist_preferences()
+
+
+@app.put("/api/v1/plex-playlist-preferences", dependencies=[Depends(require_scope("admin:tokens"))])
+async def update_plex_playlist_preferences(
+    payload: PlexPlaylistPreferencesRequest,
+    db: Database = Depends(get_db),
+):
+    if not (payload.include_top_18 or payload.include_new or payload.include_older):
+        raise HTTPException(status_code=422, detail="Select at least one playlist type")
+    return db.save_plex_playlist_preferences(payload.model_dump())

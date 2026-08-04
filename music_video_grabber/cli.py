@@ -116,12 +116,27 @@ def plan_plex_playlist_refresh() -> None:
     )
     if unresolved:
         raise RuntimeError("Refusing a refresh plan while Top 18 membership is unresolved")
+    preferences = db.plex_playlist_preferences()
+    plans = [
+        plan
+        for plan, enabled in zip(
+            plans,
+            (
+                preferences["include_top_18"],
+                preferences["include_new"],
+                preferences["include_older"],
+            ),
+            strict=True,
+        )
+        if enabled
+    ]
     client = PlexPlaylistClient(settings.plex_url, settings.plex_token)
     print(
         json.dumps(
             {
                 "cutoff": cutoff.isoformat(),
                 "write_mode": False,
+                "preferences": preferences,
                 "refresh": client.playlist_refresh_plan(plans),
             },
             indent=2,
