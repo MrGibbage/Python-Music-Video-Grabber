@@ -389,6 +389,23 @@ class Database:
                     for item in media
                 ],
             )
+            # A Plex scan is authoritative for the section being refreshed.
+            # Remove entries that disappeared from Plex so later playlist plans
+            # cannot refer to stale rating keys.  This changes only MVG's local
+            # SQLite snapshot; it never sends a request to Plex.
+            rating_keys = [item["rating_key"] for item in media]
+            if rating_keys:
+                placeholders = ", ".join("?" for _ in rating_keys)
+                conn.execute(
+                    f"DELETE FROM plex_media WHERE plex_section_key=? "
+                    f"AND plex_rating_key NOT IN ({placeholders})",
+                    (library["section_key"], *rating_keys),
+                )
+            else:
+                conn.execute(
+                    "DELETE FROM plex_media WHERE plex_section_key=?",
+                    (library["section_key"],),
+                )
         return {"libraries": 1, "media": len(media)}
 
 
