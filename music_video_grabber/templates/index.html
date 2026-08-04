@@ -35,7 +35,7 @@
     .error { color:var(--red); } .rejected-candidate { opacity:.62; } .rejected-label { color:var(--red); font-weight:700; }
     .media-info { position:relative; display:inline-block; margin-left:4px; } .info-button { width:16px; min-width:16px; height:16px; padding:0; border-radius:50%; font-size:.65rem; line-height:16px; } .info-popover { display:none; position:absolute; z-index:2; left:0; top:calc(100% + 5px); width:310px; padding:10px; color:var(--ink); background:#0b1120; border:1px solid #35415d; border-radius:10px; box-shadow:0 12px 30px #0008; font-size:.78rem; line-height:1.45; } .media-info:hover .info-popover,.media-info:focus-within .info-popover { display:block; } .info-popover strong { color:var(--cyan); }
     dialog { width:min(650px,92vw); color:var(--ink); background:var(--panel); border:1px solid #35415d; border-radius:18px; padding:24px; box-shadow:0 18px 50px #0008; }
-    dialog::backdrop { background:#0009; } .token-form { display:grid; grid-template-columns:1fr auto; gap:10px; } .token-form label { display:grid; gap:5px; } .token-form button { align-self:end; } .token-value { overflow-wrap:anywhere; padding:12px; background:#0b1120; border-radius:10px; } .token-row { display:flex; justify-content:space-between; gap:10px; align-items:center; border-top:1px solid #2a3650; padding:10px 0; }
+    dialog::backdrop { background:#0009; } .playlist-preferences { display:grid; gap:8px; margin:12px 0; } .playlist-preferences label { color:var(--ink); } .token-form { display:grid; grid-template-columns:1fr auto; gap:10px; } .token-form label { display:grid; gap:5px; } .token-form button { align-self:end; } .token-value { overflow-wrap:anywhere; padding:12px; background:#0b1120; border-radius:10px; } .token-row { display:flex; justify-content:space-between; gap:10px; align-items:center; border-top:1px solid #2a3650; padding:10px 0; }
     @media(min-width:850px) { .runs { grid-column:span 7; } .jobs { grid-column:span 5; } }
     @media(max-width:650px) { header { align-items:start; flex-direction:column; } .stats { grid-template-columns:repeat(2,1fr); } .candidate { grid-template-columns:60px 1fr; } .candidate .actions { grid-column:2; } }
   </style>
@@ -75,6 +75,16 @@
   </main>
   <dialog id="settings">
     <form method="dialog" style="float:right"><button class="secondary">Close</button></form>
+    <h2>Plex playlists</h2>
+    <p>Choose which playlist types a future refresh may manage. Changes here are saved only in Music Video Grabber; they do not contact Plex.</p>
+    <div class="playlist-preferences">
+      <label><input id="includeTop18" type="checkbox"> Alt Nation — Latest Top 18</label>
+      <label><input id="includeNew" type="checkbox"> Music Videos — New (Last 2 Years)</label>
+      <label><input id="includeOlder" type="checkbox"> Music Videos — Older (2+ Years)</label>
+      <label><input id="removeUnplanned" type="checkbox"> Remove videos not selected by the refresh plan</label>
+    </div>
+    <p class="muted">By default, manually added Plex videos are preserved. Enabling removal will be a separately confirmed action when refresh writes are added.</p>
+    <p><button onclick="savePlaylistPreferences()" type="button">Save playlist preferences</button> <span id="playlistPreferencesMessage" class="muted"></span></p>
     <h2>API tokens</h2>
     <p>Create separate tokens for scripts or external apps. A token is shown once; copy it then. Revoking a token immediately prevents further API use.</p>
     <div class="token-form"><label>Name<input id="tokenName" maxlength="80" placeholder="e.g. MacBook curl" required></label><label>Scope<select id="tokenScope"><option value="read">Read only</option><option value="runs:write">Run trigger</option><option value="review:write">Review decisions</option><option value="ops:write">Operations</option><option value="admin:tokens">Token administration</option></select></label><button onclick="createToken()" type="button">Create token</button></div>
@@ -86,7 +96,9 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 async function api(path,options={}) { const response=await fetch(path,{...options,headers:{'Content-Type':'application/json',...options.headers}}); if(response.status===401){window.location='/';throw new Error('Session expired');} if(!response.ok) throw new Error((await response.json()).detail||response.statusText); return response.json(); }
 async function startRun(){try{const run=await api('/api/v1/runs',{method:'POST',body:JSON.stringify({station:'altnation'})}); message.textContent=`Run ${run.id} queued`; refresh();}catch(e){message.textContent=e.message;message.className='error';}}
 async function decide(track,candidate,action){const path=action==='undo'?'undo-reject':action;await api(`/api/v1/tracks/${track}/${path}`,{method:'POST',body:JSON.stringify({candidate_id:candidate})});refresh();}
-async function openSettings(){document.querySelector('#settings').showModal();await refreshTokens();}
+async function openSettings(){document.querySelector('#settings').showModal();await Promise.all([refreshTokens(),refreshPlaylistPreferences()]);}
+async function refreshPlaylistPreferences(){const p=await api('/api/v1/plex-playlist-preferences');document.querySelector('#includeTop18').checked=p.include_top_18;document.querySelector('#includeNew').checked=p.include_new;document.querySelector('#includeOlder').checked=p.include_older;document.querySelector('#removeUnplanned').checked=p.remove_unplanned_items;}
+async function savePlaylistPreferences(){const note=document.querySelector('#playlistPreferencesMessage');try{const payload={include_top_18:document.querySelector('#includeTop18').checked,include_new:document.querySelector('#includeNew').checked,include_older:document.querySelector('#includeOlder').checked,remove_unplanned_items:document.querySelector('#removeUnplanned').checked};await api('/api/v1/plex-playlist-preferences',{method:'PUT',body:JSON.stringify(payload)});note.textContent='Saved locally. Plex was not changed.';}catch(e){note.textContent=e.message;note.className='error';}}
 async function refreshTokens(){const tokens=await api('/api/v1/tokens');document.querySelector('#tokenList').innerHTML=tokens.length?tokens.map(t=>`<div class="token-row"><div><strong>${esc(t.name)}</strong><div class="muted">${esc(t.prefix)}… · ${esc(t.scopes.join(', '))}${t.revoked_at?' · revoked':''}</div></div>${t.revoked_at?'':`<button class="reject" onclick="revokeToken(${t.id})">Revoke</button>`}</div>`).join(''):'<p>No personal API tokens yet.</p>';}
 async function createToken(){try{const name=document.querySelector('#tokenName').value;const scope=document.querySelector('#tokenScope').value;const result=await api('/api/v1/tokens',{method:'POST',body:JSON.stringify({name,scopes:[scope]})});document.querySelector('#newToken').innerHTML=`<p><strong>Copy this token now. It will not be shown again.</strong></p><p class="token-value">${esc(result.secret)}</p>`;document.querySelector('#tokenName').value='';await refreshTokens();}catch(e){document.querySelector('#newToken').innerHTML=`<p class="error">${esc(e.message)}</p>`;}}
 async function revokeToken(id){if(confirm('Revoke this token? This cannot be undone.')){await api(`/api/v1/tokens/${id}`,{method:'DELETE'});await refreshTokens();}}

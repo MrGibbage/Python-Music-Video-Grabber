@@ -52,15 +52,47 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
                                'Test video', 90, ?)""",
                     (track_id, utcnow()),
                 ).lastrowid
-            assert client.post(
-                f"/api/v1/tracks/{track_id}/reject", json={"candidate_id": candidate_id}
-            ).status_code == 200
+            assert (
+                client.post(
+                    f"/api/v1/tracks/{track_id}/reject", json={"candidate_id": candidate_id}
+                ).status_code
+                == 200
+            )
             review = client.get("/api/v1/review").json()
             assert review[0]["candidates"][0]["rejected"] == 1
-            assert client.post(
-                f"/api/v1/tracks/{track_id}/undo-reject", json={"candidate_id": candidate_id}
-            ).status_code == 200
+            assert (
+                client.post(
+                    f"/api/v1/tracks/{track_id}/undo-reject", json={"candidate_id": candidate_id}
+                ).status_code
+                == 200
+            )
             assert client.get("/api/v1/review").json()[0]["candidates"][0]["rejected"] == 0
+
+            preferences = client.get("/api/v1/plex-playlist-preferences")
+            assert preferences.status_code == 200
+            assert preferences.json()["remove_unplanned_items"] is False
+            saved_preferences = client.put(
+                "/api/v1/plex-playlist-preferences",
+                json={
+                    "include_top_18": True,
+                    "include_new": False,
+                    "include_older": True,
+                    "remove_unplanned_items": True,
+                },
+            )
+            assert saved_preferences.status_code == 200
+            assert saved_preferences.json()["include_new"] is False
+            assert saved_preferences.json()["remove_unplanned_items"] is True
+            invalid_preferences = client.put(
+                "/api/v1/plex-playlist-preferences",
+                json={
+                    "include_top_18": False,
+                    "include_new": False,
+                    "include_older": False,
+                    "remove_unplanned_items": False,
+                },
+            )
+            assert invalid_preferences.status_code == 422
 
             created = client.post(
                 "/api/v1/tokens", json={"name": "read client", "scopes": ["read"]}
@@ -74,9 +106,7 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             assert client.get("/api/v1/runs").status_code == 401
             headers = {"Authorization": f"Bearer {secret}"}
             assert client.get("/api/v1/runs", headers=headers).status_code == 200
-            response = client.post(
-                "/api/v1/runs", headers=headers, json={"station": "altnation"}
-            )
+            response = client.post("/api/v1/runs", headers=headers, json={"station": "altnation"})
             assert response.status_code == 401
 
             client.post("/auth/login", data={"password": "test-password"}, follow_redirects=False)

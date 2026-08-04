@@ -124,6 +124,16 @@ CREATE TABLE IF NOT EXISTS api_tokens (
 CREATE INDEX IF NOT EXISTS idx_api_tokens_active
 ON api_tokens(revoked_at, token_prefix);
 
+CREATE TABLE IF NOT EXISTS plex_playlist_preferences (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    include_top_18 INTEGER NOT NULL DEFAULT 1 CHECK (include_top_18 IN (0, 1)),
+    include_new INTEGER NOT NULL DEFAULT 1 CHECK (include_new IN (0, 1)),
+    include_older INTEGER NOT NULL DEFAULT 1 CHECK (include_older IN (0, 1)),
+    remove_unplanned_items INTEGER NOT NULL DEFAULT 0
+        CHECK (remove_unplanned_items IN (0, 1)),
+    updated_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS plex_libraries (
     plex_section_key TEXT PRIMARY KEY,
     title TEXT NOT NULL,
@@ -245,9 +255,7 @@ class Database:
         )
         return chart
 
-    def enqueue(
-        self, kind: str, payload: dict[str, Any], *, run_id: int | None = None
-    ) -> int:
+    def enqueue(self, kind: str, payload: dict[str, Any], *, run_id: int | None = None) -> int:
         with self.connect() as conn:
             return self._enqueue(conn, kind, payload, run_id=run_id)
 
@@ -335,6 +343,49 @@ class Database:
         with self.connect() as conn:
             row = conn.execute(sql, params).fetchone()
             return dict(row) if row else None
+
+    def plex_playlist_preferences(self) -> dict[str, Any]:
+        """Return locally persisted playlist refresh preferences, with safe defaults."""
+        row = self.one("SELECT * FROM plex_playlist_preferences WHERE id=1")
+        if row is None:
+            return {
+                "include_top_18": True,
+                "include_new": True,
+                "include_older": True,
+                "remove_unplanned_items": False,
+                "updated_at": None,
+            }
+        return {
+            "include_top_18": bool(row["include_top_18"]),
+            "include_new": bool(row["include_new"]),
+            "include_older": bool(row["include_older"]),
+            "remove_unplanned_items": bool(row["remove_unplanned_items"]),
+            "updated_at": row["updated_at"],
+        }
+
+    def save_plex_playlist_preferences(self, preferences: dict[str, bool]) -> dict[str, Any]:
+        now = utcnow()
+        with self.connect() as conn:
+            conn.execute(
+                """INSERT INTO plex_playlist_preferences(
+                       id, include_top_18, include_new, include_older,
+                       remove_unplanned_items, updated_at
+                   ) VALUES (1, ?, ?, ?, ?, ?)
+                   ON CONFLICT(id) DO UPDATE SET
+                       include_top_18=excluded.include_top_18,
+                       include_new=excluded.include_new,
+                       include_older=excluded.include_older,
+                       remove_unplanned_items=excluded.remove_unplanned_items,
+                       updated_at=excluded.updated_at""",
+                (
+                    preferences["include_top_18"],
+                    preferences["include_new"],
+                    preferences["include_older"],
+                    preferences["remove_unplanned_items"],
+                    now,
+                ),
+            )
+        return self.plex_playlist_preferences()
 
     def save_plex_library_snapshot(
         self, library: dict[str, Any], media: list[dict[str, Any]]
