@@ -13,7 +13,6 @@ def test_dashboard_renders() -> None:
 
     assert response.status_code == 200
     assert "Music Video Grabber" in response.text
-    assert "youtube-nocookie.com/embed" in response.text
 
 
 def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
@@ -37,7 +36,9 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             assert login.status_code == 303
             assert "HttpOnly" in login.headers["set-cookie"]
             assert "Secure" in login.headers["set-cookie"]
-            assert "Recent runs" in client.get("/").text
+            dashboard = client.get("/").text
+            assert "Recent runs" in dashboard
+            assert "youtube-nocookie.com/embed" in dashboard
 
             with Database(settings.database_path).connect() as conn:
                 track_id = conn.execute(
