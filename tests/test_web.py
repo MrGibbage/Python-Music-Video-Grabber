@@ -39,6 +39,7 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             dashboard = client.get("/").text
             assert "Recent runs" in dashboard
             assert "youtube-nocookie.com/embed" in dashboard
+            assert "if(!previewOpen)refresh();" in dashboard
 
             with Database(settings.database_path).connect() as conn:
                 track_id = conn.execute(
