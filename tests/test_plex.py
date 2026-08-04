@@ -130,3 +130,46 @@ def test_playlist_client_creates_and_deletes_only_the_expected_endpoints():
     assert client.create_video_playlist(PlaylistPlan("Example", ("1", "2"))) == "99"
     client.delete_playlist("99")
     assert [request.method for request in calls] == ["GET", "POST", "DELETE"]
+
+
+def test_playlist_refresh_plan_is_get_only_and_reports_membership_differences():
+    calls: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        if request.url.path == "/playlists":
+            return httpx.Response(
+                200,
+                content=(
+                    b'<MediaContainer><Playlist title="Example" ratingKey="99"/>'
+                    b"</MediaContainer>"
+                ),
+            )
+        if request.url.path == "/playlists/99/items":
+            return httpx.Response(
+                200,
+                content=(
+                    b'<MediaContainer><Video ratingKey="1"/><Video ratingKey="old"/>'
+                    b"</MediaContainer>"
+                ),
+            )
+        raise AssertionError(f"unexpected request: {request.method} {request.url}")
+
+    client = PlexPlaylistClient(
+        "http://plex.example:32400",
+        "test-token",
+        httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    result = client.playlist_refresh_plan([PlaylistPlan("Example", ("1", "2"))])
+    assert result == [
+        {
+            "title": "Example",
+            "playlist_rating_key": "99",
+            "current_count": 2,
+            "target_count": 2,
+            "add_rating_keys": ["2"],
+            "remove_rating_keys": ["old"],
+            "missing_playlist": False,
+        }
+    ]
+    assert [request.method for request in calls] == ["GET", "GET"]

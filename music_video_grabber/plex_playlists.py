@@ -173,6 +173,40 @@ class PlexPlaylistClient:
             raise RuntimeError("Plex created a playlist but did not return its rating key")
         return rating_key
 
+    def playlist_item_keys(self, rating_key: str) -> tuple[str, ...]:
+        """Return playlist membership using a GET-only request."""
+        response = self.client.get(
+            f"{self.base_url}/playlists/{quote(rating_key, safe='')}/items",
+            headers=self.headers,
+        )
+        response.raise_for_status()
+        root = ElementTree.fromstring(response.content)
+        return tuple(
+            item.get("ratingKey", "") for item in root.findall("Video") if item.get("ratingKey")
+        )
+
+    def playlist_refresh_plan(self, plans: list[PlaylistPlan]) -> list[dict[str, Any]]:
+        """Compare target membership with Plex, without changing Plex."""
+        existing = self.existing_playlists()
+        result: list[dict[str, Any]] = []
+        for plan in plans:
+            rating_key = existing.get(plan.title)
+            current = self.playlist_item_keys(rating_key) if rating_key else ()
+            wanted = set(plan.rating_keys)
+            actual = set(current)
+            result.append(
+                {
+                    "title": plan.title,
+                    "playlist_rating_key": rating_key,
+                    "current_count": len(current),
+                    "target_count": len(plan.rating_keys),
+                    "add_rating_keys": [key for key in plan.rating_keys if key not in actual],
+                    "remove_rating_keys": [key for key in current if key not in wanted],
+                    "missing_playlist": rating_key is None,
+                }
+            )
+        return result
+
     def delete_playlist(self, rating_key: str) -> None:
         response = self.client.delete(
             f"{self.base_url}/playlists/{quote(rating_key, safe='')}", headers=self.headers
