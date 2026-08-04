@@ -31,11 +31,13 @@ Available personal-token scopes are `read`, `runs:write`, `review:write`,
 | `POST` | `/api/v1/tracks/{id}/reject` | Reject one candidate |
 | `GET` | `/api/v1/jobs` | Show durable worker jobs |
 | `POST` | `/api/v1/jobs/{id}/retry` | Retry a failed job |
+| `POST` | `/api/v1/jobs/{id}/acknowledge` | Keep a failed job in audit history but remove it from open-failure counts |
 | `POST` | `/api/v1/jobs/{id}/cancel` | Cancel a queued job |
 | `POST` | `/api/v1/catalog/import` | Queue an idempotent NAS/history import |
 | `GET` | `/api/v1/events` | Show operational events |
 | `GET` | `/health/live` | Process liveness |
 | `GET` | `/health/ready` | Database and NAS readiness |
+| `GET` | `/api/v1/operations/status` | Local SQLite, backup, media-storage, and job-status summary |
 
 The generated schema at `/openapi.json` is the canonical request/response
 reference.

@@ -148,6 +148,30 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
                 json={"station": "hits/1", "song_count": 2},
             )
             assert invalid_station.status_code == 422
+
+            failed_job = Database(settings.database_path).enqueue("discover", {"station": "test"})
+            with Database(settings.database_path).connect() as conn:
+                conn.execute(
+                    "UPDATE jobs SET status='failed', error='historical test failure' WHERE id=?",
+                    (failed_job,),
+                )
+            operations = client.get(
+                "/api/v1/operations/status",
+                headers={"Authorization": "Bearer legacy-service-token"},
+            )
+            assert operations.status_code == 200
+            assert operations.json()["database"]["size_bytes"] > 0
+            assert operations.json()["media"]["available"] is True
+            assert operations.json()["jobs"]["failed"] == 1
+            acknowledged = client.post(
+                f"/api/v1/jobs/{failed_job}/acknowledge",
+                headers={"Authorization": "Bearer legacy-service-token"},
+            )
+            assert acknowledged.json() == {"id": failed_job, "status": "acknowledged"}
+            assert client.post(
+                f"/api/v1/jobs/{failed_job}/acknowledge",
+                headers={"Authorization": "Bearer legacy-service-token"},
+            ).status_code == 409
     finally:
         app.dependency_overrides.clear()
 

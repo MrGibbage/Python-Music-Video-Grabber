@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -170,6 +171,53 @@ async def ready(settings: Settings = Depends(get_settings), db: Database = Depen
     if not media:
         raise HTTPException(status_code=503, detail="Media directory is unavailable")
     return {"status": "ready", "media_directory": str(settings.media_dir)}
+
+
+@app.get("/api/v1/operations/status", dependencies=[Depends(require_scope("read"))])
+async def operations_status(
+    settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    """Return local operational health without contacting Plex or other services."""
+    try:
+        db.one("SELECT 1 AS ok")
+        database_size = settings.database_path.stat().st_size
+        media_usage = shutil.disk_usage(settings.media_dir)
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503, detail=f"Local operational check failed: {exc}"
+        ) from exc
+    backup_dir = settings.database_path.parent / "backups"
+    backups = (
+        [path for path in backup_dir.glob("*.db") if path.is_file()]
+        if backup_dir.exists()
+        else []
+    )
+    latest_backup = max(backups, key=lambda path: path.stat().st_mtime, default=None)
+    job_counts = {
+        row["status"]: row["count"]
+        for row in db.query("SELECT status, COUNT(*) AS count FROM jobs GROUP BY status")
+    }
+    return {
+        "database": {
+            "filename": settings.database_path.name,
+            "size_bytes": database_size,
+            "latest_backup": (
+                {
+                    "filename": latest_backup.name,
+                    "size_bytes": latest_backup.stat().st_size,
+                    "created_at": datetime.fromtimestamp(latest_backup.stat().st_mtime).isoformat(),
+                }
+                if latest_backup
+                else None
+            ),
+        },
+        "media": {
+            "available": True,
+            "free_bytes": media_usage.free,
+            "total_bytes": media_usage.total,
+        },
+        "jobs": job_counts,
+    }
 
 
 @app.post("/api/v1/runs", dependencies=[Depends(require_scope("runs:write"))], status_code=202)
@@ -433,6 +481,24 @@ async def retry_job(job_id: int, db: Database = Depends(get_db)):
     if result.rowcount != 1:
         raise HTTPException(status_code=409, detail="Only failed jobs can be retried")
     return {"id": job_id, "status": "queued"}
+
+
+@app.post("/api/v1/jobs/{job_id}/acknowledge", dependencies=[Depends(require_scope("ops:write"))])
+async def acknowledge_failed_job(job_id: int, db: Database = Depends(get_db)):
+    """Retain a failed job for audit history without keeping it operationally open."""
+    with db.connect() as conn:
+        row = conn.execute(
+            "SELECT run_id FROM jobs WHERE id=? AND status='failed'", (job_id,)
+        ).fetchone()
+        if row is None:
+            raise HTTPException(status_code=409, detail="Only failed jobs can be acknowledged")
+        conn.execute("UPDATE jobs SET status='acknowledged' WHERE id=?", (job_id,))
+    db.event(
+        "job_acknowledged",
+        f"Historical failed job {job_id} acknowledged without retrying it",
+        run_id=row["run_id"],
+    )
+    return {"id": job_id, "status": "acknowledged"}
 
 
 @app.post("/api/v1/jobs/{job_id}/cancel", dependencies=[Depends(require_scope("ops:write"))])
