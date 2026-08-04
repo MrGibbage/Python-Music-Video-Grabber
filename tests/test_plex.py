@@ -141,8 +141,7 @@ def test_playlist_refresh_plan_is_get_only_and_reports_membership_differences():
             return httpx.Response(
                 200,
                 content=(
-                    b'<MediaContainer><Playlist title="Example" ratingKey="99"/>'
-                    b"</MediaContainer>"
+                    b'<MediaContainer><Playlist title="Example" ratingKey="99"/></MediaContainer>'
                 ),
             )
         if request.url.path == "/playlists/99/items":
@@ -173,3 +172,79 @@ def test_playlist_refresh_plan_is_get_only_and_reports_membership_differences():
         }
     ]
     assert [request.method for request in calls] == ["GET", "GET"]
+
+
+def test_playlist_refresh_apply_only_appends_when_manual_items_are_preserved():
+    calls: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        if request.method == "GET" and request.url.path == "/playlists":
+            return httpx.Response(
+                200,
+                content=(
+                    b'<MediaContainer><Playlist title="Example" ratingKey="99"/></MediaContainer>'
+                ),
+            )
+        if request.method == "GET" and request.url.path == "/playlists/99/items":
+            return httpx.Response(
+                200, content=b'<MediaContainer><Video ratingKey="1"/></MediaContainer>'
+            )
+        if request.method == "GET" and request.url.path == "/":
+            return httpx.Response(200, content=b'<MediaContainer machineIdentifier="machine"/>')
+        if request.method == "PUT" and request.url.path == "/playlists/99/items":
+            assert request.url.params["uri"].endswith("/2")
+            return httpx.Response(200, content=b"<MediaContainer/>")
+        raise AssertionError(f"unexpected request: {request.method} {request.url}")
+
+    client = PlexPlaylistClient(
+        "http://plex.example:32400",
+        "test-token",
+        httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    result = client.apply_playlist_refresh(
+        [PlaylistPlan("Example", ("1", "2"))],
+        remove_unplanned_items=False,
+    )
+    assert result["changed_titles"] == ["Example"]
+    assert [request.method for request in calls] == ["GET", "GET", "GET", "PUT"]
+
+
+def test_playlist_refresh_apply_rebuilds_when_removal_is_enabled():
+    calls: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        if request.method == "GET" and request.url.path == "/playlists":
+            return httpx.Response(
+                200,
+                content=(
+                    b'<MediaContainer><Playlist title="Example" ratingKey="99"/></MediaContainer>'
+                ),
+            )
+        if request.method == "GET" and request.url.path == "/playlists/99/items":
+            return httpx.Response(
+                200,
+                content=(
+                    b'<MediaContainer><Video ratingKey="1"/><Video ratingKey="manual"/>'
+                    b"</MediaContainer>"
+                ),
+            )
+        if request.method == "DELETE" and request.url.path == "/playlists/99/items":
+            return httpx.Response(200, content=b"")
+        if request.method == "GET" and request.url.path == "/":
+            return httpx.Response(200, content=b'<MediaContainer machineIdentifier="machine"/>')
+        if request.method == "PUT" and request.url.path == "/playlists/99/items":
+            return httpx.Response(200, content=b"<MediaContainer/>")
+        raise AssertionError(f"unexpected request: {request.method} {request.url}")
+
+    client = PlexPlaylistClient(
+        "http://plex.example:32400",
+        "test-token",
+        httpx.Client(transport=httpx.MockTransport(handler)),
+    )
+    client.apply_playlist_refresh(
+        [PlaylistPlan("Example", ("1", "2"))],
+        remove_unplanned_items=True,
+    )
+    assert [request.method for request in calls] == ["GET", "GET", "DELETE", "GET", "PUT"]
