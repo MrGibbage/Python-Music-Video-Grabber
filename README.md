@@ -1,116 +1,242 @@
 # Music Video Grabber
 
-Music Video Grabber turns the weekly SiriusXM Alt Nation Top 18 into a managed
-music-video library. It captures the 18 most recent plays immediately after the
-countdown broadcast, scores multiple YouTube
-candidates, automatically downloads only high-confidence matches, and places
-ambiguous results in a human review queue.
+Music Video Grabber (MVG) turns SiriusXM Alt Nation recent-play data into a
+managed music-video library. It captures a dated 18-song window, scores YouTube
+candidates, downloads only confident matches, and keeps ambiguous choices in a
+small human review queue.
 
-This repository started as a Windows scheduled script. The original scripts and
-JSON history remain in the repository as migration inputs and historical
-reference; the supported application is now the `music_video_grabber` package.
+It is built for a real media library rather than a throwaway downloader:
 
-## What the MVP does
+- durable SQLite runs, jobs, candidates, and event history;
+- duplicate prevention from the NAS and legacy download history;
+- atomic MP4 publication after audio/video validation;
+- a password-protected dashboard, review queue, and scoped personal API tokens;
+- Telegram run summaries through Apprise Mailrise; and
+- optional Plex-aware playlists with read-only snapshots and guarded refresh.
 
-- Captures and dates the exact 18-play broadcast snapshot used by each run.
-- Uses a durable SQLite job queue instead of holding work in an HTTP request.
-- Prevents duplicates using normalized artist/title keys, legacy JSON history,
-  and a scan of the actual NAS library.
-- Scores several YouTube candidates and auto-approves only a high-scoring result
-  with a safe lead over the runner-up.
-- Offers a web dashboard for the latest captured chart, runs, jobs, and review.
-- Downloads Plex-friendly MP4 files through yt-dlp and FFmpeg.
-- Validates audio/video streams before atomically publishing a file.
-- Triggers Personal MTV's existing scan endpoint after a successful publish.
-- Emits JSON logs to stdout for Docker/Promtail/Loki.
-- Sends run summaries to Telegram through apprise-mailrise.
+The legacy Windows scripts and `altnation-songs.json` remain as migration and
+history inputs. The supported service is the `music_video_grabber` package and
+its Docker Compose stack.
 
-There is deliberately no in-app scheduler. A host cron job calls the API after
-the weekly Top 18 broadcast. A manual capture at an arbitrary time represents
-ordinary recent plays, so the UI labels that distinction explicitly.
+## How it works
 
-## Development
+```text
+xmplaylist recent plays -> dated 18-track snapshot -> candidate scoring
+                                                        |          |
+                                                auto-approved   review queue
+                                                        |
+                                               yt-dlp + validation
+                                                        |
+                                                atomic NAS publish
+```
 
-Python 3.12 or newer is required.
+When MVG runs immediately after the weekly Alt18 broadcast, it reverses the
+most recent 18 plays to infer ranks 1–18. A manual run at another time is still
+useful, but represents ordinary recent plays rather than the countdown.
+
+Automatic approval requires a high score *and* a safe lead over the runner-up.
+Every other choice remains inspectable in the dashboard with scoring reasons.
+
+## Dashboard
+
+The dashboard shows the latest capture, run result, downloads, review queue,
+recent jobs, and Settings. Settings includes scoped personal API tokens and
+Plex playlist preferences. The browser uses an `HttpOnly`, `Secure`,
+`SameSite=Lax` session cookie and never receives the service API token.
+
+## Production deployment
+
+```text
+/srv/music-video-grabber/                       Git checkout and Compose project
+/srv/music-video-grabber/data/                  SQLite state and application backups
+/etc/homelab/music-video-grabber.env            Secrets and service configuration
+/etc/homelab/music-video-grabber.cookies.txt    YouTube cookies (optional)
+/mnt/nas/media/Music Videos - Alternative/      Published MP4 library
+```
+
+From the production checkout:
+
+```bash
+cd /srv/music-video-grabber
+docker compose build
+docker compose up -d
+docker compose ps
+```
+
+The API container is read-only against the media library. The worker is the
+only service that can publish media.
+
+### Configuration
+
+Copy non-secret defaults from [`.env.example`](.env.example) to the protected
+host configuration file. At minimum configure:
+
+```dotenv
+MVG_API_TOKEN=<long random service token>
+MVG_APP_PASSWORD=<dashboard password>
+MVG_DASHBOARD_SESSION_SECRET=<at least 32 random bytes, encoded as text>
+MVG_DATABASE_PATH=/data/music-video-grabber.db
+MVG_MEDIA_DIR=/media
+```
+
+Generate the session secret locally, never in source control or chat:
+
+```bash
+openssl rand -base64 48
+```
+
+`MVG_API_TOKEN` is for cron and machine-to-machine use. Dashboard administrators
+can create named, scoped personal tokens in Settings; only their hashes are kept.
+
+## Triggering a capture
+
+MVG intentionally has no in-app scheduler. A host cron job should call the API
+after the weekly broadcast and load its token from the protected environment.
+
+```bash
+curl --fail-with-body -X POST https://grabber.pelorus.org/api/v1/runs \
+  -H "Authorization: Bearer $MVG_API_TOKEN" \
+  -H 'Content-Type: application/json' \
+  --data '{"station":"altnation"}'
+```
+
+The endpoint returns `202 Accepted`; the worker processes durable jobs in the
+background. See `/docs` or [docs/api.md](docs/api.md) for the API.
+
+## First import and backups
+
+Before enabling scheduled acquisition, import the NAS directory and legacy
+history. This is idempotent.
+
+```bash
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber import-catalog --legacy /import/altnation-songs.json
+```
+
+Create an online SQLite backup—not a raw database/WAL file copy—with:
+
+```bash
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber backup-db /data/backups/music-video-grabber.db
+```
+
+## Repeatable discovery testing
+
+Set `MVG_XMPLAYLIST_FIXTURE_PATH` to a captured xmplaylist response-shaped JSON
+file to repeat discovery without waiting for a broadcast. The production Compose
+stack mounts `fixtures/` read-only at `/fixtures`; the bundled capture is
+`/fixtures/xmplaylist-run-1.json`.
+
+A fixture still performs normal Spotify/YouTube lookups, duplicate checks, and
+downloads. Use an isolated database and empty media directory for end-to-end
+download testing.
+
+## Plex: snapshots, playlists, and refresh safety
+
+Keep Plex values only in the protected host environment file:
+
+```dotenv
+MVG_PLEX_URL=http://<plex-server>:32400
+MVG_PLEX_TOKEN=<long-lived Plex token>
+MVG_PLEX_LIBRARY_TITLE=Music Videos - Alternative
+```
+
+Never commit or display the Plex token.
+
+### Read-only snapshot
+
+```bash
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber sync-plex-metadata
+```
+
+This uses only Plex `GET` requests and stores the selected library metadata in
+MVG’s SQLite database. It does not change Plex metadata, library settings,
+playlists, or Plex’s database.
+
+### Static playlists
+
+MVG manages these static video playlists:
+
+- `Alt Nation — Latest Top 18`
+- `Music Videos — New (Last 2 Years)`
+- `Music Videos — Older (2+ Years)`
+
+First print the exact plan (read-only):
+
+```bash
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber sync-plex-playlists
+```
+
+The explicit apply form creates only missing target playlists and refuses to
+alter an existing playlist:
+
+```bash
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber sync-plex-playlists --apply
+```
+
+### Safe playlist refresh
+
+Before every refresh, update the local snapshot and inspect differences:
+
+```bash
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber sync-plex-metadata
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber plan-plex-playlist-refresh
+```
+
+The plan is GET-only. Dashboard Settings selects which playlist types a refresh
+may manage. By default, a refresh preserves videos manually added in Plex and
+only appends missing planned items.
+
+The explicit apply writes a JSON rollback manifest under `data/backups/` first:
+
+```bash
+docker compose run --rm --no-deps music-video-grabber-worker \
+  music-video-grabber apply-plex-playlist-refresh --apply
+```
+
+If refresh fails, MVG restores the original playlist membership from that
+manifest. If the “Remove videos not selected by the refresh plan” setting is
+enabled, MVG rebuilds the selected playlist to the exact planned order. That
+intentionally removes manual additions, so always review a dry-run first.
+
+Plex metadata, library settings, media files, and Plex’s database are never
+changed by this workflow. Playlist writes are limited to the selected existing
+MVG playlists.
+
+## Local development
+
+Python 3.12+ is required.
 
 ```bash
 python -m venv .venv
-.venv/Scripts/pip install -e ".[dev]"
-.venv/Scripts/pytest
-.venv/Scripts/ruff check .
+. .venv/bin/activate                  # Windows: .venv\Scripts\Activate.ps1
+pip install -e '.[dev]'
+pytest -q
+ruff check music_video_grabber tests
 ```
 
-Start the API and worker in separate terminals:
+Run the worker and API in separate terminals:
 
 ```bash
 music-video-grabber worker
 uvicorn music_video_grabber.main:app --reload --port 8080
 ```
 
-For local development, set `MVG_ENVIRONMENT=development`. Production refuses
-authenticated API requests when `MVG_API_TOKEN` is empty.
+For end-to-end testing, use a separate SQLite database and empty media output.
 
-## Triggering a run
+## Operating principles
 
-```bash
-curl -X POST https://grabber.pelorus.org/api/v1/runs \
-  -H "Authorization: Bearer $MVG_API_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"station":"altnation"}'
-```
+- Download and retain only media you are authorized to store.
+- Keep secrets, cookies, and Plex tokens outside Git and chat.
+- Make an online SQLite backup before material database operations.
+- Treat Plex playlist writes as deliberate, reviewed operations.
+- Do not run catalog import casually: it changes MVG’s local ownership catalog
+  and can suppress rediscovery.
 
-The endpoint returns `202 Accepted`; use the returned run ID to inspect status.
-Interactive OpenAPI documentation is available at `/docs`.
-
-## Repeatable discovery testing
-
-Set `MVG_XMPLAYLIST_FIXTURE_PATH` to an xmplaylist response-shaped JSON file to
-run discovery from a saved 18-track capture instead of requesting xmplaylist.
-The production compose stack mounts `./fixtures` read-only at `/fixtures`; the
-captured Run 1 fixture is `/fixtures/xmplaylist-run-1.json`.
-
-Leave the setting empty for ordinary live runs. A fixture still performs real
-Spotify/YouTube lookups and downloads after the normal duplicate checks, so use
-it only when intentionally exercising the acquisition workflow.
-
-## Importing the existing library
-
-Run this before the first acquisition:
-
-```bash
-music-video-grabber import-catalog --legacy /import/altnation-songs.json
-```
-
-The NAS scan is authoritative for files currently present. The legacy JSON adds
-historical source IDs and prevents redownloading known songs even when older
-filenames cannot be parsed perfectly. Imports are idempotent.
-
-## Plex metadata snapshots (read-only)
-
-Set `MVG_PLEX_URL`, `MVG_PLEX_TOKEN`, and, if needed,
-`MVG_PLEX_LIBRARY_TITLE` in the host environment file. Then run:
-
-```bash
-music-video-grabber sync-plex-metadata
-```
-
-The command makes only `GET` requests to Plex and writes the discovered library
-and media metadata to this application's SQLite database. It does not alter
-Plex metadata, playlists, library settings, or the Plex database. Playlist
-creation and Plex metadata edits are intentionally not implemented yet.
-
-## Deployment
-
-The production stack is designed for `/srv/music-video-grabber` on
-`docker-server`. Secrets belong in `/etc/homelab/music-video-grabber.env`, and
-the YouTube cookies file belongs at
-`/etc/homelab/music-video-grabber.cookies.txt`. Neither is committed.
-
-See [Architecture](docs/architecture.md), [API](docs/api.md), and
-[Deployment](docs/deployment.md) for more detail.
-
-## Safety and usage
-
-Only download media you are authorized to store. YouTube access and formats can
-change without warning; a failed job remains visible and retryable rather than
-being silently discarded.
+More detail: [architecture](docs/architecture.md),
+[deployment](docs/deployment.md), and [API](docs/api.md).
