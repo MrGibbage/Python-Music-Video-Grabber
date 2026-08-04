@@ -96,6 +96,39 @@ def sync_plex_playlists(*, apply: bool) -> None:
     print(json.dumps({"created": created}, indent=2))
 
 
+def plan_plex_playlist_refresh() -> None:
+    """Report membership differences for existing Plex playlists; never write."""
+    settings = get_settings()
+    db = database_from_settings(settings)
+    db.initialize()
+    library = db.one(
+        "SELECT plex_section_key FROM plex_libraries WHERE title=?",
+        (settings.plex_library_title,),
+    )
+    if library is None:
+        raise RuntimeError("No local Plex snapshot exists; run sync-plex-metadata first")
+    today = datetime.now(ZoneInfo("America/New_York")).date()
+    cutoff = today.replace(year=today.year - 2)
+    plans, unresolved = build_playlist_plans(
+        db,
+        section_key=library["plex_section_key"],
+        cutoff=cutoff,
+    )
+    if unresolved:
+        raise RuntimeError("Refusing a refresh plan while Top 18 membership is unresolved")
+    client = PlexPlaylistClient(settings.plex_url, settings.plex_token)
+    print(
+        json.dumps(
+            {
+                "cutoff": cutoff.isoformat(),
+                "write_mode": False,
+                "refresh": client.playlist_refresh_plan(plans),
+            },
+            indent=2,
+        )
+    )
+
+
 def main() -> None:
     configure_logging()
     parser = argparse.ArgumentParser(prog="music-video-grabber")
@@ -115,6 +148,10 @@ def main() -> None:
     playlist.add_argument(
         "--apply", action="store_true", help="Create playlists after safety checks"
     )
+    subparsers.add_parser(
+        "plan-plex-playlist-refresh",
+        help="Compare Plex playlist membership with the local snapshot (GET-only)",
+    )
     args = parser.parse_args()
 
     if args.command == "worker":
@@ -127,6 +164,8 @@ def main() -> None:
         sync_plex_metadata()
     elif args.command == "sync-plex-playlists":
         sync_plex_playlists(apply=args.apply)
+    elif args.command == "plan-plex-playlist-refresh":
+        plan_plex_playlist_refresh()
 
 
 if __name__ == "__main__":
