@@ -71,3 +71,36 @@ def test_retry_reuses_persisted_chart_without_refetching(tmp_path):
     with pytest.raises(RuntimeError, match="temporary YouTube failure"):
         processor._discover(retry)
     assert db.chart_for_run(run_id) is not None
+
+
+def test_discovery_uses_song_count_stored_with_run(tmp_path):
+    db = Database(tmp_path / "app.db")
+    db.initialize()
+    run_id = db.create_run("siriusxmhits1", song_count=2)
+    processor = JobProcessor(Settings(top_tracks_limit=18), db)
+    tracks = [
+        StationTrack("song-1", "Song One", "Artist One", "2026-08-03T03:00:00+00:00"),
+        StationTrack("song-2", "Song Two", "Artist Two", "2026-08-03T02:56:00+00:00"),
+    ]
+
+    class Xm:
+        requested: tuple[str, int] | None = None
+
+        def latest(self, station, limit):
+            self.requested = (station, limit)
+            return tracks
+
+    class FailingYouTube:
+        def search(self, title, artist):
+            raise RuntimeError("stop after confirming requested count")
+
+    xm = Xm()
+    processor.xm = xm
+    processor.youtube = FailingYouTube()
+    job = db.claim_job()
+    assert job is not None
+    with pytest.raises(RuntimeError, match="stop after confirming requested count"):
+        processor._discover(job)
+
+    assert xm.requested == ("siriusxmhits1", 2)
+    assert db.chart_for_run(run_id) is not None

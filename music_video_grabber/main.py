@@ -7,10 +7,10 @@ from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from fastapi import Depends, FastAPI, Form, Header, HTTPException, Request, status
+from fastapi import Depends, FastAPI, Form, Header, HTTPException, Query, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 from . import __version__
 from .auth import (
@@ -87,6 +87,15 @@ def verify_dashboard_configuration(settings: Settings) -> None:
 
 class RunRequest(BaseModel):
     station: str = "altnation"
+    song_count: int | None = Field(default=None, ge=1, le=100)
+
+    @field_validator("station")
+    @classmethod
+    def validate_station(cls, value: str) -> str:
+        station = value.strip().lower()
+        if not station or len(station) > 64 or not station.replace("-", "").isalnum():
+            raise ValueError("station must use letters, numbers, and hyphens only")
+        return station
 
 
 class CandidateDecision(BaseModel):
@@ -164,16 +173,19 @@ async def ready(settings: Settings = Depends(get_settings), db: Database = Depen
 
 @app.post("/api/v1/runs", dependencies=[Depends(require_scope("runs:write"))], status_code=202)
 async def create_run(payload: RunRequest, db: Database = Depends(get_db)):
-    if payload.station != "altnation":
-        raise HTTPException(status_code=422, detail="The MVP supports only altnation")
     active = db.one(
         """SELECT id FROM runs WHERE status IN ('queued','running','processing')
            ORDER BY id DESC LIMIT 1"""
     )
     if active:
         raise HTTPException(status_code=409, detail=f"Run {active['id']} is already active")
-    run_id = db.create_run(payload.station)
-    return {"id": run_id, "status": "queued"}
+    run_id = db.create_run(payload.station, payload.song_count)
+    return {
+        "id": run_id,
+        "status": "queued",
+        "station": payload.station,
+        "song_count": payload.song_count,
+    }
 
 
 @app.get("/api/v1/runs", dependencies=[Depends(require_scope("read"))])
@@ -217,10 +229,19 @@ async def get_run(run_id: int, db: Database = Depends(get_db)):
 
 
 @app.get("/api/v1/charts/latest", dependencies=[Depends(require_scope("read"))])
-async def latest_chart(db: Database = Depends(get_db)):
-    chart = db.latest_chart("altnation")
+async def latest_chart(
+    station: str = Query(default="altnation", min_length=1, max_length=64),
+    db: Database = Depends(get_db),
+):
+    station = station.strip().lower()
+    if not station or not station.replace("-", "").isalnum():
+        raise HTTPException(
+            status_code=422,
+            detail="station must use letters, numbers, and hyphens only",
+        )
+    chart = db.latest_chart(station)
     if not chart:
-        raise HTTPException(status_code=404, detail="No Alt Nation chart has been captured yet")
+        raise HTTPException(status_code=404, detail=f"No {station} chart has been captured yet")
     return chart
 
 

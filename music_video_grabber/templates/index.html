@@ -44,7 +44,7 @@
 </head>
 <body>
   <header>
-    <div><h1>Music Video<br>Grabber</h1><p>Alt Nation Top 18 acquisition control room.</p></div>
+    <div><h1>Music Video<br>Grabber</h1><p>Recent-play music-video acquisition control room.</p></div>
     <div><button class="secondary" onclick="openSettings()">Settings</button> <form action="/auth/logout" method="post" style="display:inline"><button class="secondary" type="submit">Sign out</button></form></div>
   </header>
   <main class="grid">
@@ -56,9 +56,10 @@
         <div class="stat"><strong id="queued">—</strong><span class="muted">Queued</span></div>
         <div class="stat"><strong id="failed">—</strong><span class="muted">Failed</span></div>
       </div>
-      <p><button onclick="startRun()">Capture and process current 18 plays</button> <button class="secondary" onclick="refresh()">Refresh</button> <span id="message"></span></p>
+      <p><label class="muted">SiriusXM station <input id="stationInput" value="altnation" maxlength="64" pattern="[A-Za-z0-9-]+" autocapitalize="none" spellcheck="false"></label> <label class="muted">Recent plays <input id="songCountInput" type="number" value="18" min="1" max="100"></label></p>
+      <p><button onclick="startRun()">Capture and process recent plays</button> <button class="secondary" onclick="refresh()">Refresh</button> <span id="message"></span></p>
       <p class="muted" id="lastUpdated">Loading…</p>
-      <p class="muted">Use immediately after an Alt18 broadcast. At other times this captures ordinary Alt Nation plays, not the countdown.</p>
+      <p class="muted">Enter any SiriusXM identifier accepted by xmplaylist (for example, <code>altnation</code>). This captures the most recent plays at request time; Alt Nation Top 18 timing remains useful when you specifically want the weekly countdown.</p>
     </section>
     <section class="panel">
       <h2>Latest run result</h2>
@@ -70,7 +71,7 @@
       <p><button class="secondary" onclick="checkLivePlex()">Check Plex now</button> <span id="plexLiveMessage" class="muted">Uses read-only Plex requests.</span></p>
     </section>
     <section class="panel">
-      <h2>Latest captured Alt18</h2>
+      <h2>Latest captured station plays</h2>
       <div id="chart"><p>No broadcast snapshot has been captured yet.</p></div>
     </section>
     <section class="panel">
@@ -101,7 +102,9 @@
 <script>
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 async function api(path,options={}) { const response=await fetch(path,{...options,headers:{'Content-Type':'application/json',...options.headers}}); if(response.status===401){window.location='/';throw new Error('Session expired');} if(!response.ok) throw new Error((await response.json()).detail||response.statusText); return response.json(); }
-async function startRun(){try{const run=await api('/api/v1/runs',{method:'POST',body:JSON.stringify({station:'altnation'})}); message.textContent=`Run ${run.id} queued`; refresh();}catch(e){message.textContent=e.message;message.className='error';}}
+function selectedStation(){return document.querySelector('#stationInput').value.trim().toLowerCase();}
+function selectedSongCount(){return Number(document.querySelector('#songCountInput').value);}
+async function startRun(){try{const station=selectedStation(),song_count=selectedSongCount();if(!station.match(/^[a-z0-9][a-z0-9-]{0,63}$/))throw new Error('Station must use letters, numbers, and hyphens only.');if(!Number.isInteger(song_count)||song_count<1||song_count>100)throw new Error('Recent plays must be a whole number from 1 to 100.');const run=await api('/api/v1/runs',{method:'POST',body:JSON.stringify({station,song_count})});message.textContent=`Run ${run.id} queued for ${run.station} (${run.song_count} plays)`;refresh();}catch(e){message.textContent=e.message;message.className='error';}}
 async function decide(track,candidate,action){const path=action==='undo'?'undo-reject':action;await api(`/api/v1/tracks/${track}/${path}`,{method:'POST',body:JSON.stringify({candidate_id:candidate})});refresh();}
 let previewOpen=false;
 function togglePreview(button){const preview=button.closest('.candidate').querySelector('.preview');if(!preview.hidden){preview.replaceChildren();preview.hidden=true;button.textContent='Preview';previewOpen=false;refresh();return;}const frame=document.createElement('iframe');frame.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(button.dataset.videoId)}?rel=0`;frame.title='Candidate video preview';frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';frame.allowFullscreen=true;preview.append(frame);preview.hidden=false;button.textContent='Close preview';previewOpen=true;}
@@ -125,7 +128,7 @@ function candidateView(track,c){const rejected=Boolean(c.rejected);return `<div 
 function reviewTrackView(track){const active=track.candidates.filter(c=>!c.rejected);const rejected=track.candidates.filter(c=>c.rejected);const visible=active.slice(0,3);const hidden=active.slice(3);return `<article class="track"><strong>${esc(track.artist)} — ${esc(track.title)}</strong>${visible.map(c=>candidateView(track,c)).join('')}${hidden.length?`<details><summary>Show ${hidden.length} more candidate${hidden.length===1?'':'s'}</summary>${hidden.map(c=>candidateView(track,c)).join('')}</details>`:''}${rejected.length?`<p class="rejected-label">Rejected choices</p>${rejected.map(c=>candidateView(track,c)).join('')}`:''}</article>`;}
 function table(rows,cols){if(!rows.length)return '<p>No records yet.</p>';return `<table><thead><tr>${cols.map(c=>`<th>${esc(c[0])}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td>${esc(c[1](r))}</td>`).join('')}</tr>`).join('')}</tbody></table>`;}
 let refreshing=false;
-async function refresh(){if(refreshing)return;refreshing=true;try{const [tracks,review,runs,jobs,chart]=await Promise.all([api('/api/v1/tracks?limit=500'),api('/api/v1/review'),api('/api/v1/runs'),api('/api/v1/jobs?limit=12'),api('/api/v1/charts/latest').catch(()=>null)]);const latest=await (runs.length?api(`/api/v1/runs/${runs[0].id}`):Promise.resolve(null));owned.textContent=tracks.filter(t=>['imported','published'].includes(t.status)).length;reviewCount.textContent=review.length;queued.textContent=jobs.filter(j=>['queued','running'].includes(j.status)).length;failed.textContent=jobs.filter(j=>j.status==='failed').length;document.querySelector('#latestRun').innerHTML=latestRunView(latest);document.querySelector('#chart').innerHTML=chart?`<p>As of <strong>${esc(new Date(chart.as_of).toLocaleString())}</strong> · captured ${esc(new Date(chart.captured_at).toLocaleString())} · source: ${esc(chart.source)}</p><p class="muted">Ranks are inferred from reverse playback order at the end of the broadcast.</p>${table(chart.entries,[['Rank',r=>`#${r.rank}`],['Artist',r=>r.artist],['Song',r=>r.title]])}`:'<p>No broadcast snapshot has been captured yet.</p>';document.querySelector('#review').innerHTML=review.length?review.map(reviewTrackView).join(''):'<p>Nothing needs review.</p>';document.querySelector('#runs').innerHTML=table(runs,[['Run',r=>r.id],['Status',r=>r.status],['Requested',r=>r.requested_at]]);document.querySelector('#jobs').innerHTML=table(jobs,[['Job',r=>`#${r.id} ${r.kind}`],['Status',r=>r.status],['Attempts',r=>r.attempts]]);lastUpdated.textContent=`Last updated ${new Date().toLocaleTimeString()} · refreshes every 15 seconds`;message.textContent='';message.className='';}catch(e){message.textContent=e.message;message.className='error';}finally{refreshing=false;}}
+async function refresh(){if(refreshing)return;refreshing=true;try{const [tracks,review,runs,jobs,chart]=await Promise.all([api('/api/v1/tracks?limit=500'),api('/api/v1/review'),api('/api/v1/runs'),api('/api/v1/jobs?limit=12'),api(`/api/v1/charts/latest?station=${encodeURIComponent(selectedStation())}`).catch(()=>null)]);const latest=await (runs.length?api(`/api/v1/runs/${runs[0].id}`):Promise.resolve(null));owned.textContent=tracks.filter(t=>['imported','published'].includes(t.status)).length;reviewCount.textContent=review.length;queued.textContent=jobs.filter(j=>['queued','running'].includes(j.status)).length;failed.textContent=jobs.filter(j=>j.status==='failed').length;document.querySelector('#latestRun').innerHTML=latestRunView(latest);document.querySelector('#chart').innerHTML=chart?`<p><strong>${esc(chart.station)}</strong> · as of <strong>${esc(new Date(chart.as_of).toLocaleString())}</strong> · captured ${esc(new Date(chart.captured_at).toLocaleString())} · source: ${esc(chart.source)}</p><p class="muted">Ranks are inferred from reverse playback order at the end of the broadcast.</p>${table(chart.entries,[['Rank',r=>`#${r.rank}`],['Artist',r=>r.artist],['Song',r=>r.title]])}`:'<p>No broadcast snapshot has been captured yet for this station.</p>';document.querySelector('#review').innerHTML=review.length?review.map(reviewTrackView).join(''):'<p>Nothing needs review.</p>';document.querySelector('#runs').innerHTML=table(runs,[['Run',r=>r.id],['Status',r=>r.status],['Requested',r=>r.requested_at]]);document.querySelector('#jobs').innerHTML=table(jobs,[['Job',r=>`#${r.id} ${r.kind}`],['Status',r=>r.status],['Attempts',r=>r.attempts]]);lastUpdated.textContent=`Last updated ${new Date().toLocaleTimeString()} · refreshes every 15 seconds`;message.textContent='';message.className='';}catch(e){message.textContent=e.message;message.className='error';}finally{refreshing=false;}}
 refresh(); refreshPlexStatus(); setInterval(()=>{if(!previewOpen)refresh();refreshPlexStatus();},15000);
 </script>
 </body></html>

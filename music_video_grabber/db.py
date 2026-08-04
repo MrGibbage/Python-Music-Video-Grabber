@@ -188,7 +188,7 @@ class Database:
         finally:
             conn.close()
 
-    def create_run(self, station: str) -> int:
+    def create_run(self, station: str, song_count: int | None = None) -> int:
         now = utcnow()
         with self.connect() as conn:
             cursor = conn.execute(
@@ -196,7 +196,10 @@ class Database:
                 (station, now),
             )
             run_id = int(cursor.lastrowid)
-            self._enqueue(conn, "discover", {"station": station}, run_id=run_id)
+            payload: dict[str, Any] = {"station": station}
+            if song_count is not None:
+                payload["song_count"] = song_count
+            self._enqueue(conn, "discover", payload, run_id=run_id)
             return run_id
 
     def save_chart(

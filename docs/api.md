@@ -16,10 +16,10 @@ Available personal-token scopes are `read`, `runs:write`, `review:write`,
 
 | Method | Path | Purpose |
 |---|---|---|
-| `POST` | `/api/v1/runs` | Capture and process the current 18-play window |
+| `POST` | `/api/v1/runs` | Capture and process recent plays for a SiriusXM station |
 | `GET` | `/api/v1/runs` | List recent runs |
 | `GET` | `/api/v1/runs/{id}` | Show one run, its jobs, and events |
-| `GET` | `/api/v1/charts/latest` | Show the latest dated broadcast snapshot and ranks |
+| `GET` | `/api/v1/charts/latest?station=altnation` | Show a station's latest dated broadcast snapshot and ranks |
 | `GET` | `/api/v1/tracks` | Query the catalog and acquisition states |
 | `GET` | `/api/v1/tracks/{id}` | Show a track and all candidates |
 | `GET` | `/api/v1/review` | Show ambiguous tracks and scored candidates |
@@ -35,3 +35,15 @@ Available personal-token scopes are `read`, `runs:write`, `review:write`,
 
 The generated schema at `/openapi.json` is the canonical request/response
 reference.
+
+## SiriusXM runs
+
+`POST /api/v1/runs` accepts a safe xmplaylist station identifier and an optional
+`song_count` from 1 through 100. If omitted, `song_count` uses the configured
+default (18). The service asks xmplaylist for that station's most recent plays,
+persists the exact returned snapshot, then processes those tracks.
+
+For example: `curl -X POST -H 'Authorization: Bearer …' -H 'Content-Type: application/json' --data '{"station":"siriusxmhits1","song_count":2}' https://grabber.pelorus.org/api/v1/runs`
+
+An identifier is considered valid when xmplaylist accepts it; MVG only limits
+the identifier's characters so it is safe to send to the upstream service.

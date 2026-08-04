@@ -1,9 +1,9 @@
 # Music Video Grabber
 
-Music Video Grabber (MVG) turns SiriusXM Alt Nation recent-play data into a
-managed music-video library. It captures a dated 18-song window, scores YouTube
-candidates, downloads only confident matches, and keeps ambiguous choices in a
-small human review queue.
+Music Video Grabber (MVG) turns recent-play data from SiriusXM stations into a
+managed music-video library. It captures a dated, caller-selected window,
+scores YouTube candidates, downloads only confident matches, and keeps
+ambiguous choices in a small human review queue.
 
 It is built for a real media library rather than a throwaway downloader:
 
@@ -21,7 +21,7 @@ its Docker Compose stack.
 ## How it works
 
 ```text
-xmplaylist recent plays -> dated 18-track snapshot -> candidate scoring
+xmplaylist recent plays -> dated station snapshot -> candidate scoring
                                                         |          |
                                                 auto-approved   review queue
                                                         |
@@ -30,9 +30,11 @@ xmplaylist recent plays -> dated 18-track snapshot -> candidate scoring
                                                 atomic NAS publish
 ```
 
-When MVG runs immediately after the weekly Alt18 broadcast, it reverses the
-most recent 18 plays to infer ranks 1–18. A manual run at another time is still
-useful, but represents ordinary recent plays rather than the countdown.
+Any safe xmplaylist station identifier can be requested with a window of 1–100
+recent plays (18 by default). When an Alt Nation run happens immediately after
+the weekly Alt18 broadcast, MVG reverses the most recent 18 plays to infer ranks
+1–18. A manual run at another time, or for another station, represents ordinary
+recent plays rather than a countdown.
 
 Automatic approval requires a high score *and* a safe lead over the runner-up.
 Every other choice remains inspectable in the dashboard with scoring reasons.
@@ -97,11 +99,13 @@ after the weekly broadcast and load its token from the protected environment.
 curl --fail-with-body -X POST https://grabber.pelorus.org/api/v1/runs \
   -H "Authorization: Bearer $MVG_API_TOKEN" \
   -H 'Content-Type: application/json' \
-  --data '{"station":"altnation"}'
+  --data '{"station":"altnation","song_count":18}'
 ```
 
 The endpoint returns `202 Accepted`; the worker processes durable jobs in the
-background. See `/docs` or [docs/api.md](docs/api.md) for the API.
+background. Station identifiers are validated by xmplaylist when the worker
+fetches them; MVG accepts only letters, numbers, and hyphens. See `/docs` or
+[docs/api.md](docs/api.md) for the API.
 
 ## First import and backups
 
