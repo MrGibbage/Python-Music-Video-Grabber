@@ -158,6 +158,12 @@ This uses only Plex `GET` requests and stores the selected library metadata in
 MVG’s SQLite database. It does not change Plex metadata, library settings,
 playlists, or Plex’s database.
 
+The dashboard’s **Refresh local snapshot** button performs the same read-only
+Plex lookup and updates only MVG’s local SQLite snapshot. **Check Plex now**
+then compares selected playlist membership using Plex GET requests. If a Top 18
+entry has not yet been acquired or scanned, MVG lists it as unresolved and
+still reports the New and Older playlist comparisons.
+
 ### Static playlists
 
 MVG manages these static video playlists:

@@ -25,6 +25,7 @@ from .config import Settings, get_settings
 from .db import Database, database_from_settings, utcnow
 from .jobs import JobProcessor
 from .logging_config import configure_logging
+from .plex import PlexReadOnlyClient
 from .plex_playlists import PlexPlaylistClient, build_playlist_plans
 
 configure_logging()
@@ -557,10 +558,33 @@ async def plex_status(settings: Settings = Depends(get_settings), db: Database =
         "cutoff": plan_data["cutoff"],
         "preferences": preferences,
         "unresolved_top_18": plan_data["unresolved"],
+        "snapshot_needs_refresh": bool(
+            snapshot
+            and db.one(
+                """SELECT 1 AS newer_publish FROM tracks
+                   WHERE status='published' AND updated_at > ? LIMIT 1""",
+                (snapshot["last_synced_at"],),
+            )
+        ),
         "playlists": [
             {"title": plan.title, "target_count": len(plan.rating_keys)} for plan in plans
         ],
     }
+
+
+@app.post("/api/v1/plex-status/snapshot", dependencies=[Depends(require_scope("ops:write"))])
+async def refresh_plex_snapshot(
+    settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    """Refresh MVG's local Plex snapshot using Plex GET requests only."""
+    if not settings.plex_url or not settings.plex_token:
+        raise HTTPException(status_code=503, detail="Plex is not configured")
+    try:
+        library, media = PlexReadOnlyClient(settings).snapshot_library()
+        result = db.save_plex_library_snapshot(library, media)
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Plex snapshot refresh failed: {exc}") from exc
+    return {"read_only": True, "snapshot": result}
 
 
 @app.get("/api/v1/plex-status/live", dependencies=[Depends(require_scope("read"))])
@@ -572,12 +596,28 @@ async def live_plex_status(
     library, plans, _preferences, plan_data = selected_plex_playlist_plans(db, settings)
     if library is None:
         raise HTTPException(status_code=409, detail="No local Plex snapshot exists")
+    skipped = []
+    comparable_plans = plans
     if plan_data["unresolved"]:
-        raise HTTPException(status_code=409, detail="Top 18 membership is unresolved")
+        comparable_plans = [
+            plan for plan in plans if plan.title != "Alt Nation — Latest Top 18"
+        ]
+        if len(comparable_plans) != len(plans):
+            skipped.append(
+                {
+                    "title": "Alt Nation — Latest Top 18",
+                    "status": "unresolved",
+                    "unresolved": plan_data["unresolved"],
+                }
+            )
     try:
         refresh = PlexPlaylistClient(settings.plex_url, settings.plex_token).playlist_refresh_plan(
-            plans
+            comparable_plans
         )
     except Exception as exc:
         raise HTTPException(status_code=502, detail=f"Plex status check failed: {exc}") from exc
-    return {"read_only": True, "refresh": refresh}
+    return {
+        "read_only": True,
+        "refresh": [*skipped, *refresh],
+        "unresolved_top_18": plan_data["unresolved"],
+    }

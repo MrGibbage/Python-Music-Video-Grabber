@@ -20,6 +20,9 @@ Available personal-token scopes are `read`, `runs:write`, `review:write`,
 | `GET` | `/api/v1/runs` | List recent runs |
 | `GET` | `/api/v1/runs/{id}` | Show one run, its jobs, and events |
 | `GET` | `/api/v1/charts/latest?station=altnation` | Show a station's latest dated broadcast snapshot and ranks |
+| `GET` | `/api/v1/plex-status` | Show MVG's local Plex snapshot and playlist targets |
+| `POST` | `/api/v1/plex-status/snapshot` | Refresh MVG's local snapshot using Plex GET requests only |
+| `GET` | `/api/v1/plex-status/live` | Compare resolvable selected playlists with Plex using GET requests only |
 | `GET` | `/api/v1/tracks` | Query the catalog and acquisition states |
 | `GET` | `/api/v1/tracks/{id}` | Show a track and all candidates |
 | `GET` | `/api/v1/review` | Show ambiguous tracks and scored candidates |
