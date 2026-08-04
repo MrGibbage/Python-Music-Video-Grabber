@@ -3,7 +3,9 @@ from __future__ import annotations
 import json
 import subprocess
 from contextlib import asynccontextmanager
+from datetime import datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from fastapi import Depends, FastAPI, Form, Header, HTTPException, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -23,6 +25,7 @@ from .config import Settings, get_settings
 from .db import Database, database_from_settings, utcnow
 from .jobs import JobProcessor
 from .logging_config import configure_logging
+from .plex_playlists import PlexPlaylistClient, build_playlist_plans
 
 configure_logging()
 
@@ -473,3 +476,87 @@ async def update_plex_playlist_preferences(
     if not (payload.include_top_18 or payload.include_new or payload.include_older):
         raise HTTPException(status_code=422, detail="Select at least one playlist type")
     return db.save_plex_playlist_preferences(payload.model_dump())
+
+
+def selected_plex_playlist_plans(db: Database, settings: Settings):
+    library = db.one(
+        "SELECT plex_section_key FROM plex_libraries WHERE title=?",
+        (settings.plex_library_title,),
+    )
+    if library is None:
+        return None, [], db.plex_playlist_preferences(), None
+    today = datetime.now(ZoneInfo("America/New_York")).date()
+    cutoff = today.replace(year=today.year - 2)
+    plans, unresolved = build_playlist_plans(
+        db,
+        section_key=library["plex_section_key"],
+        cutoff=cutoff,
+    )
+    preferences = db.plex_playlist_preferences()
+    selected = [
+        plan
+        for plan, enabled in zip(
+            plans,
+            (
+                preferences["include_top_18"],
+                preferences["include_new"],
+                preferences["include_older"],
+            ),
+            strict=True,
+        )
+        if enabled
+    ]
+    return library, selected, preferences, {"cutoff": cutoff.isoformat(), "unresolved": unresolved}
+
+
+@app.get("/api/v1/plex-status", dependencies=[Depends(require_scope("read"))])
+async def plex_status(settings: Settings = Depends(get_settings), db: Database = Depends(get_db)):
+    library, plans, preferences, plan_data = selected_plex_playlist_plans(db, settings)
+    if library is None:
+        return {
+            "configured": bool(settings.plex_url and settings.plex_token),
+            "snapshot": None,
+            "preferences": preferences,
+            "playlists": [],
+        }
+    snapshot = db.one(
+        """SELECT l.title, l.last_synced_at, COUNT(m.plex_rating_key) AS media_count,
+                  SUM(m.originally_available_at >= ?) AS new_count,
+                  SUM(
+                      m.originally_available_at < ? OR m.originally_available_at IS NULL
+                  ) AS older_count,
+                  SUM(m.originally_available_at IS NULL) AS missing_date_count
+           FROM plex_libraries l LEFT JOIN plex_media m ON m.plex_section_key=l.plex_section_key
+           WHERE l.plex_section_key=? GROUP BY l.plex_section_key""",
+        (plan_data["cutoff"], plan_data["cutoff"], library["plex_section_key"]),
+    )
+    return {
+        "configured": bool(settings.plex_url and settings.plex_token),
+        "snapshot": snapshot,
+        "cutoff": plan_data["cutoff"],
+        "preferences": preferences,
+        "unresolved_top_18": plan_data["unresolved"],
+        "playlists": [
+            {"title": plan.title, "target_count": len(plan.rating_keys)} for plan in plans
+        ],
+    }
+
+
+@app.get("/api/v1/plex-status/live", dependencies=[Depends(require_scope("read"))])
+async def live_plex_status(
+    settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    if not settings.plex_url or not settings.plex_token:
+        raise HTTPException(status_code=503, detail="Plex is not configured")
+    library, plans, _preferences, plan_data = selected_plex_playlist_plans(db, settings)
+    if library is None:
+        raise HTTPException(status_code=409, detail="No local Plex snapshot exists")
+    if plan_data["unresolved"]:
+        raise HTTPException(status_code=409, detail="Top 18 membership is unresolved")
+    try:
+        refresh = PlexPlaylistClient(settings.plex_url, settings.plex_token).playlist_refresh_plan(
+            plans
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=502, detail=f"Plex status check failed: {exc}") from exc
+    return {"read_only": True, "refresh": refresh}
