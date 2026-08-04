@@ -130,6 +130,13 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             assert run_response.status_code == 202
             assert run_response.json()["station"] == "siriusxmhits1"
             assert run_response.json()["song_count"] == 2
+            station_history = client.get(
+                "/api/v1/stations/recent",
+                headers={"Authorization": "Bearer legacy-service-token"},
+            )
+            assert station_history.status_code == 200
+            assert station_history.json()[0]["station"] == "siriusxmhits1"
+            assert station_history.json()[0]["run_count"] == 1
             latest_chart = client.get(
                 "/api/v1/charts/latest?station=siriusxmhits1",
                 headers={"Authorization": "Bearer legacy-service-token"},

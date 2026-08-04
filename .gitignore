@@ -20,6 +20,8 @@ __pycache__/
 *.db-shm
 *.db-wal
 /data/
+/test-data/
+/test-videos/
 /staging/
 /secrets/
 *.cookies.txt
