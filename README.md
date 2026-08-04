@@ -124,6 +124,11 @@ docker compose run --rm --no-deps music-video-grabber-worker \
   music-video-grabber backup-db /data/backups/music-video-grabber.db
 ```
 
+The dashboard’s **Operations** panel reports the local database size, newest
+online backup, available media storage, and open job failures. Acknowledging a
+historical failed job retains its row and event history but removes it from the
+open-failure count; it does not retry or delete anything.
+
 ## Repeatable discovery testing
 
 Set `MVG_XMPLAYLIST_FIXTURE_PATH` to a captured xmplaylist response-shaped JSON
