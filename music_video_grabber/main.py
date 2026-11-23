@@ -28,6 +28,7 @@ from .jobs import JobProcessor
 from .logging_config import configure_logging
 from .plex import PlexReadOnlyClient
 from .plex_playlists import PlexPlaylistClient, build_playlist_plans
+from .providers import is_youtube_video_url
 
 configure_logging()
 
@@ -102,6 +103,10 @@ class RunRequest(BaseModel):
 
 class CandidateDecision(BaseModel):
     candidate_id: int
+
+
+class ManualUrlRequest(BaseModel):
+    url: str
 
 
 class ApiTokenRequest(BaseModel):
@@ -397,9 +402,8 @@ async def media_info(
     }
 
 
-@app.get("/api/v1/review", dependencies=[Depends(require_scope("read"))])
-async def review_queue(db: Database = Depends(get_db)):
-    tracks = db.query("SELECT * FROM tracks WHERE status='review' ORDER BY updated_at DESC")
+def _tracks_with_candidates(db: Database, status: str) -> list[dict]:
+    tracks = db.query("SELECT * FROM tracks WHERE status=? ORDER BY updated_at DESC", (status,))
     for track in tracks:
         candidates = db.query(
             """SELECT * FROM candidates WHERE track_id=?
@@ -410,6 +414,81 @@ async def review_queue(db: Database = Depends(get_db)):
             candidate["reasons"] = json.loads(candidate.pop("reasons_json") or "[]")
         track["candidates"] = candidates
     return tracks
+
+
+@app.get("/api/v1/review", dependencies=[Depends(require_scope("read"))])
+async def review_queue(db: Database = Depends(get_db)):
+    return _tracks_with_candidates(db, "review")
+
+
+@app.get("/api/v1/dismissed", dependencies=[Depends(require_scope("read"))])
+async def dismissed_tracks(db: Database = Depends(get_db)):
+    """Songs the owner set aside because no acceptable video existed yet."""
+    return _tracks_with_candidates(db, "dismissed")
+
+
+@app.post(
+    "/api/v1/tracks/{track_id}/dismiss", dependencies=[Depends(require_scope("review:write"))]
+)
+async def dismiss_track(
+    track_id: int, settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    try:
+        JobProcessor(settings, db).dismiss(track_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return {"status": "dismissed"}
+
+
+@app.post(
+    "/api/v1/tracks/{track_id}/restore", dependencies=[Depends(require_scope("review:write"))]
+)
+async def restore_track(
+    track_id: int, settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    try:
+        JobProcessor(settings, db).restore(track_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return {"status": "review"}
+
+
+@app.post(
+    "/api/v1/tracks/{track_id}/search",
+    dependencies=[Depends(require_scope("review:write"))],
+    status_code=202,
+)
+async def search_track_again(
+    track_id: int, settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    try:
+        job_id = JobProcessor(settings, db).queue_research(track_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return {"job_id": job_id, "status": "queued"}
+
+
+@app.post(
+    "/api/v1/tracks/{track_id}/manual-url",
+    dependencies=[Depends(require_scope("review:write"))],
+    status_code=202,
+)
+async def download_manual_url(
+    track_id: int,
+    request: ManualUrlRequest,
+    settings: Settings = Depends(get_settings),
+    db: Database = Depends(get_db),
+):
+    url = request.url.strip()
+    if not is_youtube_video_url(url):
+        raise HTTPException(status_code=422, detail="Only single YouTube video URLs are accepted")
+    try:
+        job_id = JobProcessor(settings, db).queue_manual_candidate(track_id, url)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    return {"job_id": job_id, "status": "queued"}
 
 
 @app.post(

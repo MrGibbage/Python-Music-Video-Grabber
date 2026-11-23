@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 import shutil
 import tempfile
 from contextlib import contextmanager
@@ -130,6 +131,46 @@ class YouTubeClient:
                 )
             )
         return candidates
+
+    def lookup(self, url: str) -> CandidateInput:
+        """Fetch metadata for one specific video the owner picked by hand."""
+        options: dict[str, Any] = {
+            "quiet": True,
+            "no_warnings": True,
+            "skip_download": True,
+            "noplaylist": True,
+        }
+        with (
+            tempfile.TemporaryDirectory(prefix="mvg-youtube-cookies-") as temporary_directory,
+            writable_cookie_copy(
+                self.settings.youtube_cookie_file, Path(temporary_directory)
+            ) as cookie,
+        ):
+            if cookie:
+                options["cookiefile"] = str(cookie)
+            with yt_dlp.YoutubeDL(options) as ydl:
+                info = ydl.extract_info(url, download=False, process=False) or {}
+        video_id = str(info.get("id") or "")
+        if not video_id:
+            raise ValueError(f"No video found at {url}")
+        return CandidateInput(
+            video_id=video_id,
+            url=info.get("webpage_url") or f"https://www.youtube.com/watch?v={video_id}",
+            title=str(info.get("title") or ""),
+            uploader=str(info.get("uploader") or info.get("channel") or ""),
+            duration=info.get("duration"),
+            view_count=info.get("view_count"),
+        )
+
+
+YOUTUBE_URL = re.compile(
+    r"^https://(www\.|m\.|music\.)?(youtube\.com/(watch\?v=|shorts/)|youtu\.be/)"
+    r"[A-Za-z0-9_-]{11}([&?#][^\s]*)?$"
+)
+
+
+def is_youtube_video_url(url: str) -> bool:
+    return bool(YOUTUBE_URL.match(url.strip()))
 
 
 @contextmanager
