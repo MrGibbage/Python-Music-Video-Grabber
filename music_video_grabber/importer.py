@@ -11,9 +11,11 @@ from .text import canonical_track_key
 logger = logging.getLogger(__name__)
 
 _YEAR = re.compile(r"[\[(]((?:19|20)\d{2})[\])]")
+# Bracketed tags that describe the upload rather than the song. Some older
+# downloads end in "[Song]" where a release year would normally be.
 _DESCRIPTORS = re.compile(
-    r"\s*[\[(]\s*(?:official\s*(?:music\s*)?(?:video|audio)?|music\s*video|"
-    r"lyric\s*video|audio|visuali[sz]er|hd|4k)\s*[\])]",
+    r"\s*[\[(]\s*(?:(?:official\s*)?(?:hd\s*)?(?:music\s*|lyric\s*)?"
+    r"(?:video|audio|visuali[sz]er)|official|song|lyrics?|hd|4k)\s*[\])]",
     re.IGNORECASE,
 )
 _SEPARATORS = (" - ", " — ", " – ")
