@@ -128,6 +128,7 @@ class YouTubeClient:
                     uploader=str(entry.get("uploader") or entry.get("channel") or ""),
                     duration=entry.get("duration"),
                     view_count=entry.get("view_count"),
+                    channel_verified=entry.get("channel_is_verified"),
                 )
             )
         return candidates
@@ -160,6 +161,7 @@ class YouTubeClient:
             uploader=str(info.get("uploader") or info.get("channel") or ""),
             duration=info.get("duration"),
             view_count=info.get("view_count"),
+            channel_verified=info.get("channel_is_verified"),
         )
 
 
