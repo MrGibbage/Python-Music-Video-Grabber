@@ -41,6 +41,9 @@ def test_dashboard_login_and_personal_token_scopes(tmp_path: Path) -> None:
             assert "Recent runs" in dashboard
             assert "youtube-nocookie.com/embed" in dashboard
             assert "if(!previewOpen)refresh();" in dashboard
+            assert 'id="tab-dismissed"' in dashboard
+            assert '<main class="grid" id="view-dismissed" hidden>' in dashboard
+            assert "[hidden] { display:none !important; }" in dashboard
             plex_status = client.get("/api/v1/plex-status")
             assert plex_status.status_code == 200
             assert plex_status.json()["snapshot"] is None
