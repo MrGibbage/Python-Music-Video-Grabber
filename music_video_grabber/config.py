@@ -34,6 +34,8 @@ class Settings(BaseSettings):
     max_results: int = Field(default=8, ge=1, le=25)
     auto_approve_score: float = Field(default=88, ge=0, le=100)
     auto_approve_margin: float = Field(default=8, ge=0, le=100)
+    # Storyboard checks per search for album-art-over-audio uploads (0 = off).
+    still_image_checks: int = Field(default=3, ge=0, le=25)
     max_download_height: int = Field(default=1080, ge=360, le=4320)
 
     spotify_client_id: str = ""

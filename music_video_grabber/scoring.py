@@ -16,6 +16,8 @@ class CandidateInput:
     duration: int | None = None
     view_count: int | None = None
     channel_verified: bool | None = None
+    # From the storyboard check: one picture for the whole runtime. None = not checked.
+    still_image: bool | None = None
 
 
 @dataclass(frozen=True)
@@ -53,6 +55,9 @@ OFFICIAL_CHANNELS = frozenset(
 # upload even on the artist's own channel, so it is never auto-approved.
 _VIDEO_MARKERS = ("official video", "music video", "official hd video", "official 4k video")
 _NO_MARKER_CAP = 85.0
+# Enough to drop the artist's own album-art upload (90 before the cap) below the
+# same artist's lyric video (about 66-71), which at least shows the words.
+_STILL_IMAGE_PENALTY = 30.0
 # Below this title similarity the result is almost always a different song from
 # the same artist, so channel and "official" bonuses must not lift it.
 _TITLE_MISMATCH = 0.6
@@ -93,6 +98,11 @@ def _channel_is_artist(channel: str, artist: str) -> bool:
             }:
                 return True
     return False
+
+
+def has_video_marker(title: str) -> bool:
+    raw = normalize(title)
+    return any(marker in raw for marker in _VIDEO_MARKERS)
 
 
 def score_candidate(track_title: str, artist: str, candidate: CandidateInput) -> ScoreResult:
@@ -167,6 +177,10 @@ def score_candidate(track_title: str, artist: str, candidate: CandidateInput) ->
         if term in raw and term not in normalize(track_title):
             score -= penalty
             reasons.append(f"{term} penalty")
+
+    if candidate.still_image:
+        score -= _STILL_IMAGE_PENALTY
+        reasons.append("still image for the whole video")
 
     if candidate.duration is not None and candidate.duration < 60:
         score -= 20

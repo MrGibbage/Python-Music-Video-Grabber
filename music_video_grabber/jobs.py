@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import logging
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any
 
 from .config import Settings
@@ -12,7 +12,7 @@ from .downloader import Downloader
 from .importer import import_legacy_json, import_media_directory
 from .notifications import Notifier
 from .providers import SpotifyClient, StationTrack, XmPlaylistClient, YouTubeClient, parse_played_at
-from .scoring import CandidateInput, score_candidate, should_auto_approve
+from .scoring import CandidateInput, has_video_marker, score_candidate, should_auto_approve
 from .text import canonical_track_key
 
 logger = logging.getLogger(__name__)
@@ -139,6 +139,9 @@ class JobProcessor:
 
             was_dismissed = bool(existing and existing["status"] == "dismissed")
             candidates = self.youtube.search(station_track.title, station_track.artist)
+            candidates = self._check_still_images(
+                station_track.title, station_track.artist, candidates
+            )
             scored = self._store_candidates(
                 track_id, station_track.title, station_track.artist, candidates
             )
@@ -287,6 +290,29 @@ class JobProcessor:
             if result.rowcount != 1:
                 raise LookupError("Rejected candidate not found")
 
+    def _check_still_images(
+        self, title: str, artist: str, candidates: list[CandidateInput]
+    ) -> list[CandidateInput]:
+        """Look at the storyboard of the best few results that don't say "video" in
+        their title, since those are the ones that may be album art over audio.
+
+        Each check is a full YouTube lookup, so only the top few are checked.
+        """
+        limit = self.settings.still_image_checks
+        check_still = getattr(self.youtube, "is_still_image", None)
+        if not limit or check_still is None:
+            return candidates
+        unmarked = sorted(
+            (c for c in candidates if not has_video_marker(c.title)),
+            key=lambda c: score_candidate(title, artist, c).score,
+            reverse=True,
+        )
+        verdicts = {c.video_id: check_still(c.video_id) for c in unmarked[:limit]}
+        return [
+            replace(c, still_image=verdicts[c.video_id]) if c.video_id in verdicts else c
+            for c in candidates
+        ]
+
     def _store_candidates(
         self, track_id: int, title: str, artist: str, candidates: list[CandidateInput]
     ) -> list[StoredCandidate]:
@@ -366,6 +392,7 @@ class JobProcessor:
         if not track:
             raise LookupError(f"Track {track_id} not found")
         candidates = self.youtube.search(track["title"], track["artist"])
+        candidates = self._check_still_images(track["title"], track["artist"], candidates)
         stored = self._store_candidates(track_id, track["title"], track["artist"], candidates)
         fresh = [item for item in stored if item.is_new and not item.rejected]
         active = [item for item in stored if not item.rejected]

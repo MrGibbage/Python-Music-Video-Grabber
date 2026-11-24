@@ -4,6 +4,7 @@ import json
 import logging
 import re
 import shutil
+import subprocess
 import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -17,6 +18,7 @@ import yt_dlp
 
 from .config import Settings
 from .scoring import CandidateInput
+from .stillness import is_still, moving_share, parse_pgm
 
 logger = logging.getLogger(__name__)
 
@@ -163,6 +165,51 @@ class YouTubeClient:
             view_count=info.get("view_count"),
             channel_verified=info.get("channel_is_verified"),
         )
+
+    def is_still_image(self, video_id: str) -> bool | None:
+        """True when the video is one picture for its whole runtime, judged from
+        its storyboard. None when that can't be told (no storyboard, network
+        error); callers treat None as "unknown" and score as before."""
+        options: dict[str, Any] = {"quiet": True, "no_warnings": True, "skip_download": True}
+        try:
+            with (
+                tempfile.TemporaryDirectory(prefix="mvg-youtube-cookies-") as temporary_directory,
+                writable_cookie_copy(
+                    self.settings.youtube_cookie_file, Path(temporary_directory)
+                ) as cookie,
+            ):
+                if cookie:
+                    options["cookiefile"] = str(cookie)
+                with yt_dlp.YoutubeDL(options) as ydl:
+                    info = ydl.extract_info(
+                        f"https://www.youtube.com/watch?v={video_id}", download=False
+                    ) or {}
+            boards = [
+                fmt for fmt in info.get("formats") or []
+                if fmt.get("format_note") == "storyboard" and fmt.get("fragments")
+                and fmt.get("width") and fmt.get("height")
+            ]
+            if not boards:
+                return None
+            # The smallest storyboard is a single sheet spanning the whole video.
+            board = min(boards, key=lambda fmt: fmt["width"])
+            fragment = board["fragments"][0]
+            url = fragment.get("url") or board.get("fragment_base_url", "") + fragment["path"]
+            response = httpx.get(url, headers=board.get("http_headers") or {}, timeout=20)
+            response.raise_for_status()
+            decoded = subprocess.run(
+                ["ffmpeg", "-v", "error", "-i", "-", "-frames:v", "1", "-vf", "format=gray",
+                 "-f", "image2pipe", "-vcodec", "pgm", "-"],
+                input=response.content, capture_output=True, timeout=30, check=True,
+            ).stdout
+            width, height, pixels = parse_pgm(decoded)
+            return is_still(moving_share(pixels, width, height, board["width"], board["height"]))
+        except Exception as exc:  # unknown is a safe answer; never fail a search
+            logger.warning(
+                "Storyboard check failed for %s: %s", video_id, str(exc)[:200],
+                extra={"event": "storyboard_check_failed"},
+            )
+            return None
 
 
 YOUTUBE_URL = re.compile(
