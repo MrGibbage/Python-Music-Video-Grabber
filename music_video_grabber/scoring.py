@@ -137,10 +137,20 @@ def score_candidate(track_title: str, artist: str, candidate: CandidateInput) ->
     score = title_ratio * 58 + artist_ratio * 24
     reasons = [f"title {title_ratio:.0%}", f"artist in title {artist_in_title:.0%}"]
 
+    # Anyone can put "Official Music Video" in a title. Believe it only from the
+    # artist, VEVO, a label/session channel, a verified channel (catches official
+    # channels the name match misses), or when the uploader is unknown.
+    reupload = bool(
+        uploader and not (is_topic or is_vevo or by_artist or is_official_channel)
+    )
+    trusted = not reupload or bool(candidate.channel_verified)
     if "official video" in raw or "official music video" in raw:
-        score += 10
-        reasons.append("official video")
-    elif "official" in raw:
+        if trusted:
+            score += 10
+            reasons.append("official video")
+        else:
+            reasons.append("says official video, but re-uploaded: no bonus")
+    elif "official" in raw and trusted:
         score += 5
         reasons.append("official")
 

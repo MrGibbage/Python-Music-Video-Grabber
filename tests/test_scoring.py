@@ -110,3 +110,25 @@ def test_other_song_from_artist_channel_does_not_outrank_right_song():
     )
     assert "title mismatch: probably a different song" in wrong.reasons
     assert right.score > wrong.score
+
+
+def test_fan_reupload_titled_official_gets_no_official_bonus():
+    fan = score_candidate(
+        "Naked Kids", "Grouplove",
+        candidate("GROUPLOVE - Naked Kids Official Music Video", "manueltcrespin"),
+    )
+    plain_fan = score_candidate(
+        "Naked Kids", "Grouplove", candidate("GROUPLOVE - Naked Kids", "Cloud Mind Productions")
+    )
+    assert "official video" not in fan.reasons
+    assert "says official video, but re-uploaded: no bonus" in fan.reasons
+    assert fan.score == plain_fan.score
+
+
+def test_verified_unrecognised_channel_keeps_official_bonus():
+    result = score_candidate(
+        "Song", "Artist",
+        CandidateInput("a", "u", "Artist - Song (Official Video)", "Artist Records Intl", 200,
+                       channel_verified=True),
+    )
+    assert "official video" in result.reasons
