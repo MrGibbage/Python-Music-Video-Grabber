@@ -28,8 +28,11 @@ class FakeYouTube:
 
     def search(self, title, artist):
         return [
-            CandidateInput(video_id=vid, url=f"https://www.youtube.com/watch?v={vid}", title=t)
-            for vid, t in self.videos
+            CandidateInput(
+                video_id=vid, url=f"https://www.youtube.com/watch?v={vid}", title=t,
+                uploader=rest[0] if rest else "",
+            )
+            for vid, t, *rest in self.videos
         ]
 
     def lookup(self, url):
@@ -39,6 +42,8 @@ class FakeYouTube:
 # Titles chosen so nothing auto-approves unless a test wants it to.
 WEAK = [("weakvideo01", "Song One lyrics fan edit"), ("weakvideo02", "Song One cover live")]
 STRONG = ("strongvid01", "Artist One - Song One (Official Music Video)")
+# Good enough to show again (scores in the 60s), but not to auto-download.
+DECENT = ("decentvid01", "Artist One - Song One (Official Lyric Video)")
 
 
 def processor(tmp_path, videos):
@@ -82,13 +87,25 @@ def test_dismissed_track_stays_dismissed_without_new_videos(tmp_path):
     assert '"dismissed": 1' in run["summary_json"]
 
 
-def test_dismissed_track_resurfaces_when_youtube_has_a_new_video(tmp_path):
+def test_dismissed_track_resurfaces_when_youtube_has_a_decent_new_video(tmp_path):
     db, proc = processor(tmp_path, WEAK[:1])
     track = run_discovery(db, proc)
     proc.dismiss(track["id"])
-    proc.youtube = FakeYouTube(WEAK)
+    proc.youtube = FakeYouTube([DECENT, *WEAK])
     run_discovery(db, proc)
     assert db.one("SELECT status FROM tracks WHERE id=?", (track["id"],))["status"] == "review"
+
+
+def test_weak_or_reuploaded_new_videos_do_not_resurface(tmp_path):
+    db, proc = processor(tmp_path, WEAK[:1])
+    track = run_discovery(db, proc)
+    proc.dismiss(track["id"])
+    # A new weak result, and a decent-looking title from a fan channel.
+    proc.youtube = FakeYouTube([*WEAK, ("fanupload01", DECENT[1], "Random Fan 99")])
+    run_discovery(db, proc)
+    assert db.one("SELECT status FROM tracks WHERE id=?", (track["id"],))["status"] == "dismissed"
+    proc._research({"payload": {"track_id": track["id"]}})
+    assert db.one("SELECT status FROM tracks WHERE id=?", (track["id"],))["status"] == "dismissed"
 
 
 def test_dismissed_track_auto_downloads_a_new_strong_video(tmp_path):

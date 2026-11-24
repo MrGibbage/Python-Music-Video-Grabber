@@ -24,6 +24,7 @@ class StoredCandidate:
     score: float
     rejected: bool
     is_new: bool
+    reupload: bool = False
 
 
 class JobProcessor:
@@ -146,10 +147,10 @@ class JobProcessor:
                 track_id, station_track.title, station_track.artist, candidates
             )
             active = [item for item in scored if not item.rejected]
-            fresh = [item for item in active if item.is_new]
+            fresh = self._worth_resurfacing(active)
 
             if was_dismissed and not fresh:
-                # Dismissed and nothing new on YouTube: stay out of the review queue.
+                # Dismissed and nothing worth a look is new: stay out of the review queue.
                 with self.db.connect() as conn:
                     conn.execute(
                         "UPDATE tracks SET status='dismissed', updated_at=? WHERE id=?",
@@ -290,6 +291,19 @@ class JobProcessor:
             if result.rowcount != 1:
                 raise LookupError("Rejected candidate not found")
 
+    def _worth_resurfacing(self, stored: list[StoredCandidate]) -> list[StoredCandidate]:
+        """New results good enough to bring a dismissed track back to review.
+
+        YouTube's results shift week to week, so "a video we haven't offered
+        before" alone mostly surfaced fan re-uploads and wrong songs (22 of 30
+        dismissed tracks came back on 2026-11-24, 3 with anything worth seeing).
+        """
+        return [
+            item for item in stored
+            if item.is_new and not item.rejected and not item.reupload
+            and item.score >= self.settings.resurface_min_score
+        ]
+
     def _check_still_images(
         self, title: str, artist: str, candidates: list[CandidateInput]
     ) -> list[CandidateInput]:
@@ -365,6 +379,7 @@ class JobProcessor:
                         score=result.score,
                         rejected=rejected,
                         is_new=candidate.video_id not in previous,
+                        reupload=any(r.startswith("re-upload") for r in result.reasons),
                     )
                 )
             # Rejected videos that dropped out of this search are kept as tombstones
@@ -394,7 +409,7 @@ class JobProcessor:
         candidates = self.youtube.search(track["title"], track["artist"])
         candidates = self._check_still_images(track["title"], track["artist"], candidates)
         stored = self._store_candidates(track_id, track["title"], track["artist"], candidates)
-        fresh = [item for item in stored if item.is_new and not item.rejected]
+        fresh = self._worth_resurfacing(stored)
         active = [item for item in stored if not item.rejected]
         # A manual search always lands in review when there is something to pick;
         # a dismissed track with nothing new stays dismissed.
