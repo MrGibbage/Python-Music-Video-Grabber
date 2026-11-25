@@ -190,3 +190,62 @@ def test_dismiss_api_round_trip(tmp_path: Path):
             assert client.post("/api/v1/tracks/999/dismiss").status_code == 404
     finally:
         app.dependency_overrides.clear()
+
+
+def test_not_for_me_is_never_searched_again(tmp_path):
+    db, proc = processor(tmp_path, WEAK)
+    track = run_discovery(db, proc)
+    proc.not_for_me(track["id"])
+    # Even a strong new video on the next run must not bring it back or download it.
+    proc.youtube = FakeYouTube([STRONG, *WEAK])
+    run_discovery(db, proc)
+    assert db.one("SELECT status FROM tracks WHERE id=?", (track["id"],))["status"] == "ignored"
+    assert db.one("SELECT COUNT(*) n FROM jobs WHERE kind='download'")["n"] == 0
+    run = db.one("SELECT summary_json FROM runs ORDER BY id DESC LIMIT 1")
+    assert '"not_for_me": 1' in run["summary_json"]
+    proc._research({"payload": {"track_id": track["id"]}})
+    assert db.one("SELECT status FROM tracks WHERE id=?", (track["id"],))["status"] == "ignored"
+
+
+def test_dismissed_track_can_be_marked_not_for_me_and_restored(tmp_path):
+    db, proc = processor(tmp_path, WEAK)
+    track = run_discovery(db, proc)
+    proc.dismiss(track["id"])
+    proc.not_for_me(track["id"])
+    proc.restore(track["id"])
+    assert db.one("SELECT status FROM tracks WHERE id=?", (track["id"],))["status"] == "review"
+
+
+def test_not_for_me_api_and_chart_status(tmp_path: Path):
+    settings = Settings(
+        environment="test",
+        database_path=tmp_path / "mvg.db",
+        media_dir=tmp_path,
+        app_password="pw",
+        dashboard_session_secret="secret",
+        api_token="svc",
+    )
+    db = Database(settings.database_path)
+    db.initialize()
+    proc = JobProcessor(Settings(top_tracks_limit=1, media_dir=tmp_path), db)
+    proc.xm, proc.spotify, proc.youtube = FixedXm(), NoSpotify(), FakeYouTube(WEAK)
+    track = run_discovery(db, proc)
+    app.dependency_overrides[get_settings] = lambda: settings
+    try:
+        with TestClient(app, base_url="https://testserver") as client:
+            client.post("/auth/login", data={"password": "pw"})
+            chart = client.get("/api/v1/charts/latest").json()
+            assert chart["entries"][0]["track_status"] == "review"
+            assert client.post(f"/api/v1/tracks/{track['id']}/not-for-me").status_code == 200
+            assert client.post(f"/api/v1/tracks/{track['id']}/not-for-me").status_code == 409
+            listed = client.get("/api/v1/not-for-me").json()
+            assert [t["id"] for t in listed] == [track["id"]]
+            assert listed[0]["marked_at"] and listed[0]["skipped_since"] == 0
+            chart = client.get("/api/v1/charts/latest").json()
+            assert chart["entries"][0]["track_status"] == "ignored"
+            run_discovery(db, proc)
+            assert client.get("/api/v1/not-for-me").json()[0]["skipped_since"] == 1
+            assert client.post(f"/api/v1/tracks/{track['id']}/restore").status_code == 200
+            assert client.get("/api/v1/not-for-me").json() == []
+    finally:
+        app.dependency_overrides.clear()

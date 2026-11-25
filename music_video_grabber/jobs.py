@@ -112,6 +112,7 @@ class JobProcessor:
             "auto_approved_tracks": [],
             "review_tracks": [],
             "dismissed_tracks": [],
+            "not_for_me_tracks": [],
         }
 
         for station_track in tracks:
@@ -124,6 +125,17 @@ class JobProcessor:
                 self.db.event(
                     "duplicate_skipped",
                     f"Already owned: {station_track.artist} - {station_track.title}",
+                    run_id=run_id,
+                    track_id=existing["id"],
+                )
+                continue
+            if existing and existing["status"] == "ignored":
+                # The owner said "not for me": never search for it again.
+                counters["not_for_me"] += 1
+                track_lists["not_for_me_tracks"].append(label)
+                self.db.event(
+                    "not_for_me_skipped",
+                    f"Not for me, skipped: {station_track.artist} - {station_track.title}",
                     run_id=run_id,
                     track_id=existing["id"],
                 )
@@ -406,6 +418,8 @@ class JobProcessor:
         track = self.db.one("SELECT * FROM tracks WHERE id=?", (track_id,))
         if not track:
             raise LookupError(f"Track {track_id} not found")
+        if track["status"] == "ignored":
+            return  # "Not for me": nothing to look for.
         candidates = self.youtube.search(track["title"], track["artist"])
         candidates = self._check_still_images(track["title"], track["artist"], candidates)
         stored = self._store_candidates(track_id, track["title"], track["artist"], candidates)
@@ -484,15 +498,35 @@ class JobProcessor:
             )
         self.db.event("track_dismissed", "Track dismissed from review", track_id=track_id)
 
-    def restore(self, track_id: int) -> None:
+    # "Not for me" can be said from the review queue or the Dismissed list.
+    IGNORABLE = DISMISSABLE | {"dismissed"}
+
+    def not_for_me(self, track_id: int) -> None:
+        """The owner doesn't like the song: never download or search for it."""
+        track = self.db.one("SELECT status FROM tracks WHERE id=?", (track_id,))
+        if not track:
+            raise LookupError("Track not found")
+        if track["status"] not in self.IGNORABLE:
+            raise ValueError(f"A track in status {track['status']!r} cannot be set aside")
         with self.db.connect() as conn:
-            result = conn.execute(
-                "UPDATE tracks SET status='review', updated_at=? WHERE id=? AND status='dismissed'",
+            conn.execute(
+                "UPDATE tracks SET status='ignored', updated_at=? WHERE id=?",
                 (utcnow(), track_id),
             )
-            if result.rowcount != 1:
-                raise LookupError("Dismissed track not found")
-        self.db.event("track_restored", "Dismissed track restored to review", track_id=track_id)
+        self.db.event("track_not_for_me", "Marked not for me", track_id=track_id)
+
+    def restore(self, track_id: int) -> None:
+        """Back to the review queue from Dismissed or Not for me."""
+        track = self.db.one("SELECT status FROM tracks WHERE id=?", (track_id,))
+        if not track or track["status"] not in {"dismissed", "ignored"}:
+            raise LookupError("Dismissed or not-for-me track not found")
+        with self.db.connect() as conn:
+            conn.execute(
+                "UPDATE tracks SET status='review', updated_at=? WHERE id=?",
+                (utcnow(), track_id),
+            )
+        label = "Dismissed" if track["status"] == "dismissed" else "Not-for-me"
+        self.db.event("track_restored", f"{label} track restored to review", track_id=track_id)
 
     def queue_research(self, track_id: int) -> int:
         if not self.db.one("SELECT id FROM tracks WHERE id=?", (track_id,)):
@@ -556,6 +590,7 @@ class JobProcessor:
                     f"Requested recent plays: {summary.get('song_count', 'unknown')}",
                     f"Status: {status}",
                     f"Already owned: {summary.get('already_owned', 0)}",
+                    f"Not for me (skipped): {summary.get('not_for_me', 0)}",
                     f"Automatically approved: {summary.get('auto_approved', 0)}",
                     f"Needs review: {summary.get('needs_review', 0)}",
                     f"Failed jobs: {(failed or {}).get('count', 0)}",

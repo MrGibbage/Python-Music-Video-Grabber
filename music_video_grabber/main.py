@@ -29,6 +29,7 @@ from .logging_config import configure_logging
 from .plex import PlexReadOnlyClient
 from .plex_playlists import PlexPlaylistClient, build_playlist_plans
 from .providers import is_youtube_video_url
+from .text import canonical_track_key
 
 configure_logging()
 
@@ -296,6 +297,14 @@ async def latest_chart(
     chart = db.latest_chart(station)
     if not chart:
         raise HTTPException(status_code=404, detail=f"No {station} chart has been captured yet")
+    # What MVG has done with each play, so the dashboard can show it at a glance.
+    for entry in chart["entries"]:
+        track = db.one(
+            "SELECT id, status FROM tracks WHERE canonical_key=?",
+            (canonical_track_key(entry["artist"], entry["title"]),),
+        )
+        entry["track_id"] = track["id"] if track else None
+        entry["track_status"] = track["status"] if track else None
     return chart
 
 
@@ -440,6 +449,42 @@ async def dismiss_track(
     except ValueError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     return {"status": "dismissed"}
+
+
+@app.get("/api/v1/not-for-me", dependencies=[Depends(require_scope("read"))])
+async def not_for_me_tracks(db: Database = Depends(get_db)):
+    """Songs the owner doesn't like: never searched for or downloaded again.
+
+    ``marked_at`` comes from the event log, and ``skipped_since`` counts the
+    station runs that played the song again after it was marked.
+    """
+    return db.query(
+        """SELECT t.id, t.artist, t.title, t.played_at, t.updated_at,
+                  (SELECT MAX(created_at) FROM events
+                    WHERE track_id=t.id AND event='track_not_for_me') AS marked_at,
+                  (SELECT COUNT(*) FROM events e
+                    WHERE e.track_id=t.id AND e.event='not_for_me_skipped'
+                      AND e.created_at >= (SELECT MAX(created_at) FROM events
+                        WHERE track_id=t.id AND event='track_not_for_me')) AS skipped_since
+           FROM tracks t WHERE t.status='ignored'
+           ORDER BY marked_at DESC, t.id DESC"""
+    )
+
+
+@app.post(
+    "/api/v1/tracks/{track_id}/not-for-me",
+    dependencies=[Depends(require_scope("review:write"))],
+)
+async def not_for_me_track(
+    track_id: int, settings: Settings = Depends(get_settings), db: Database = Depends(get_db)
+):
+    try:
+        JobProcessor(settings, db).not_for_me(track_id)
+    except LookupError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    return {"status": "ignored"}
 
 
 @app.post(
