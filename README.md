@@ -1,5 +1,8 @@
 # Music Video Grabber
 
+> **[Alt Nation Top 18 archive →](https://mrgibbage.github.io/Python-Music-Video-Grabber/)**
+> An unofficial weekly record of the countdown, updated automatically.
+
 Music Video Grabber (MVG) turns recent-play data from SiriusXM stations into a
 managed music-video library. It captures a dated, caller-selected window,
 scores YouTube candidates, downloads only confident matches, and keeps
@@ -31,10 +34,17 @@ xmplaylist recent plays -> dated station snapshot -> candidate scoring
 ```
 
 Any safe xmplaylist station identifier can be requested with a window of 1–100
-recent plays (18 by default). When an Alt Nation run happens immediately after
-the weekly Alt18 broadcast, MVG reverses the most recent 18 plays to infer ranks
-1–18. A manual run at another time, or for another station, represents ordinary
-recent plays rather than a countdown.
+recent plays (18 by default); that is ordinary recent-play history. The weekly
+Alt Nation Top 18 is handled differently: the countdown airs Saturday around
+13:00 ET and is replayed several times over the weekend, always the same 18
+songs in the same order with different songs around it. MVG fetches the
+Saturday airing and a replay from xmplaylist's history and takes the run of
+plays the two share, which must be exactly 18 songs. If they don't line up (a
+special show, say), it waits for the next replay.
+
+**[Alt Nation Top 18 archive](https://mrgibbage.github.io/Python-Music-Video-Grabber/)**:
+every week confirmed this way, from October 31, 2026, with rank and movement.
+It is unofficial and not affiliated with SiriusXM.
 
 Automatic approval requires a high score *and* a safe lead over the runner-up.
 Every other choice remains inspectable in the dashboard with scoring reasons.

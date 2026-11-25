@@ -13,6 +13,7 @@ from .importer import import_legacy_json, import_media_directory
 from .logging_config import configure_logging
 from .plex import PlexReadOnlyClient
 from .plex_playlists import PlexPlaylistClient, build_playlist_plans
+from .publish import render_top18_html
 from .worker import run_worker
 
 
@@ -190,6 +191,16 @@ def apply_plex_playlist_refresh() -> None:
     )
 
 
+def export_top18(destination: Path) -> None:
+    """Write the page atomically, so a publisher never copies a half-written file."""
+    db = database_from_settings(get_settings())
+    db.initialize()
+    temporary = destination.with_suffix(".tmp")
+    temporary.write_text(render_top18_html(db), encoding="utf-8")
+    temporary.replace(destination)
+    print(destination)
+
+
 def main() -> None:
     configure_logging()
     parser = argparse.ArgumentParser(prog="music-video-grabber")
@@ -218,6 +229,10 @@ def main() -> None:
         help="Refresh selected existing Plex playlists after writing a rollback manifest",
     )
     apply_refresh.add_argument("--apply", action="store_true", help="Required acknowledgement")
+    export = subparsers.add_parser(
+        "export-top18", help="Write the public Top 18 archive page (confirmed weeks only)"
+    )
+    export.add_argument("destination", type=Path)
     args = parser.parse_args()
 
     if args.command == "worker":
@@ -232,6 +247,8 @@ def main() -> None:
         sync_plex_playlists(apply=args.apply)
     elif args.command == "plan-plex-playlist-refresh":
         plan_plex_playlist_refresh()
+    elif args.command == "export-top18":
+        export_top18(args.destination)
     elif args.command == "apply-plex-playlist-refresh":
         if not args.apply:
             raise SystemExit("Refusing Plex write: re-run with --apply after reviewing the plan")

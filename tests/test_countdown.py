@@ -157,3 +157,30 @@ def test_last_attempt_says_so(tmp_path):
     _, proc, run = run_countdown(tmp_path, original, special, monday)
     assert run["status"] == "aborted"
     assert "last replay this weekend" in proc.notifier.sent[0][1]
+
+
+def test_public_archive_has_confirmed_weeks_only(tmp_path):
+    from music_video_grabber.publish import render_top18_html
+
+    db = Database(tmp_path / "app.db")
+    db.initialize()
+
+    def chart(run_id, as_of, source, titles):
+        db.create_run("altnation")
+        db.save_chart(
+            run_id=run_id, station="altnation", source=source, as_of=as_of,
+            entries=[{"rank": i, "source_track_id": "", "title": t, "artist": "Band <&>",
+                      "played_at": as_of} for i, t in enumerate(titles, 1)],
+        )
+
+    chart(1, "2026-10-24T18:03:00+00:00", "xmplaylist_recent_plays", ["Old Capture"])
+    chart(2, "2026-10-31T18:06:00+00:00", "xmplaylist_countdown", ["A", "B", "C"])
+    chart(3, "2026-11-07T19:05:00+00:00", "xmplaylist_countdown", ["B", "A", "D"])
+    html = render_top18_html(db)
+    assert "Old Capture" not in html
+    assert "Week of November 7, 2026" in html and "Week of October 31, 2026" in html
+    assert "Band &lt;&amp;&gt;" in html
+    assert '<span class="up">▲1</span>' in html  # B: 2 -> 1
+    assert '<span class="down">▼1</span>' in html  # A: 1 -> 2
+    assert '<span class="new">NEW</span>' in html  # D
+    assert html == render_top18_html(db)  # stable, so unchanged weeks never commit
