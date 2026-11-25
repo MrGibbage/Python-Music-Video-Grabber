@@ -110,6 +110,19 @@ CREATE TABLE IF NOT EXISTS chart_entries (
     UNIQUE(chart_id, rank)
 );
 
+-- Raw xmplaylist plays fetched for countdown matching, kept so the matcher can
+-- be re-checked or re-tuned later (xmplaylist history only reaches back 30 days).
+CREATE TABLE IF NOT EXISTS station_play_windows (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER REFERENCES runs(id) ON DELETE SET NULL,
+    station TEXT NOT NULL,
+    label TEXT NOT NULL,
+    window_start TEXT NOT NULL,
+    window_end TEXT NOT NULL,
+    plays_json TEXT NOT NULL,
+    fetched_at TEXT NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS api_tokens (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
@@ -188,7 +201,9 @@ class Database:
         finally:
             conn.close()
 
-    def create_run(self, station: str, song_count: int | None = None) -> int:
+    def create_run(
+        self, station: str, song_count: int | None = None, *, mode: str = "recent"
+    ) -> int:
         now = utcnow()
         with self.connect() as conn:
             cursor = conn.execute(
@@ -199,6 +214,8 @@ class Database:
             payload: dict[str, Any] = {"station": station}
             if song_count is not None:
                 payload["song_count"] = song_count
+            if mode != "recent":
+                payload["mode"] = mode
             self._enqueue(conn, "discover", payload, run_id=run_id)
             return run_id
 
@@ -236,6 +253,18 @@ class Database:
                 ],
             )
         return chart_id
+
+    def save_play_window(
+        self, *, run_id: int | None, station: str, label: str,
+        start: str, end: str, plays: list[dict[str, Any]],
+    ) -> None:
+        with self.connect() as conn:
+            conn.execute(
+                """INSERT INTO station_play_windows(
+                       run_id, station, label, window_start, window_end, plays_json, fetched_at
+                   ) VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                (run_id, station, label, start, end, json.dumps(plays), utcnow()),
+            )
 
     def latest_chart(self, station: str) -> dict[str, Any] | None:
         chart = self.one(

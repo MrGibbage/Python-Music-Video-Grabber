@@ -25,7 +25,7 @@ def notify_trigger_failure(detail: str) -> None:
     message["To"] = NOTIFICATION_TO
     message["Subject"] = "Alt Nation music video run failed to start"
     message.set_content(
-        "The Saturday Alt Nation run could not be queued.\n\n"
+        "The Alt Nation Top 18 run could not be queued.\n\n"
         f"Reason: {detail}\n\n"
         "Check the music-video-grabber containers and cron log on docker-server."
     )
@@ -52,7 +52,10 @@ def main() -> int:
         token = read_token(ENV_FILE)
         request = urllib.request.Request(
             API_URL,
-            data=json.dumps({"station": "altnation"}).encode(),
+            # Countdown mode: MVG confirms the Top 18 by matching the Saturday
+            # airing against the latest replay, or aborts (with a Telegram
+            # message) so the next scheduled attempt can try the next replay.
+            data=json.dumps({"station": "altnation", "mode": "countdown"}).encode(),
             headers={
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "application/json",

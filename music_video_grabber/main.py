@@ -6,6 +6,7 @@ import subprocess
 from contextlib import asynccontextmanager
 from datetime import datetime
 from pathlib import Path
+from typing import Literal
 from zoneinfo import ZoneInfo
 
 from fastapi import Depends, FastAPI, Form, Header, HTTPException, Query, Request, status
@@ -92,6 +93,9 @@ def verify_dashboard_configuration(settings: Settings) -> None:
 class RunRequest(BaseModel):
     station: str = "altnation"
     song_count: int | None = Field(default=None, ge=1, le=100)
+    # "countdown": the weekly Top 18, confirmed against a replay (cron's mode).
+    # "recent": the latest N plays right now (the dashboard button).
+    mode: Literal["recent", "countdown"] = "recent"
 
     @field_validator("station")
     @classmethod
@@ -234,12 +238,13 @@ async def create_run(payload: RunRequest, db: Database = Depends(get_db)):
     )
     if active:
         raise HTTPException(status_code=409, detail=f"Run {active['id']} is already active")
-    run_id = db.create_run(payload.station, payload.song_count)
+    run_id = db.create_run(payload.station, payload.song_count, mode=payload.mode)
     return {
         "id": run_id,
         "status": "queued",
         "station": payload.station,
         "song_count": payload.song_count,
+        "mode": payload.mode,
     }
 
 
@@ -297,15 +302,56 @@ async def latest_chart(
     chart = db.latest_chart(station)
     if not chart:
         raise HTTPException(status_code=404, detail=f"No {station} chart has been captured yet")
-    # What MVG has done with each play, so the dashboard can show it at a glance.
+    return _enrich_chart(db, chart)
+
+
+def _enrich_chart(db: Database, chart: dict) -> dict:
+    """Add what MVG has done with each song, and its rank the week before."""
+    previous = db.one(
+        """SELECT id, as_of FROM charts WHERE station=? AND id<>?
+           AND datetime(as_of) BETWEEN datetime(?, '-9 days') AND datetime(?, '-5 days')
+           ORDER BY as_of DESC LIMIT 1""",
+        (chart["station"], chart["id"], chart["as_of"], chart["as_of"]),
+    )
+    last_week: dict[str, int] = {}
+    if previous:
+        for row in db.query(
+            "SELECT rank, artist, title FROM chart_entries WHERE chart_id=?", (previous["id"],)
+        ):
+            last_week[canonical_track_key(row["artist"], row["title"])] = row["rank"]
+    chart["previous_chart_id"] = previous["id"] if previous else None
     for entry in chart["entries"]:
-        track = db.one(
-            "SELECT id, status FROM tracks WHERE canonical_key=?",
-            (canonical_track_key(entry["artist"], entry["title"]),),
-        )
+        key = canonical_track_key(entry["artist"], entry["title"])
+        track = db.one("SELECT id, status FROM tracks WHERE canonical_key=?", (key,))
         entry["track_id"] = track["id"] if track else None
         entry["track_status"] = track["status"] if track else None
+        entry["last_week_rank"] = last_week.get(key)
     return chart
+
+
+@app.get("/api/v1/charts", dependencies=[Depends(require_scope("read"))])
+async def list_charts(
+    station: str = Query(default="altnation", min_length=1, max_length=64),
+    db: Database = Depends(get_db),
+):
+    """Every captured chart for a station, newest first, for the Top 18 history."""
+    return db.query(
+        """SELECT c.id, c.run_id, c.station, c.source, c.as_of, c.captured_at,
+                  (SELECT COUNT(*) FROM chart_entries e WHERE e.chart_id=c.id) AS entry_count
+           FROM charts c WHERE c.station=? ORDER BY c.as_of DESC""",
+        (station.strip().lower(),),
+    )
+
+
+@app.get("/api/v1/charts/{chart_id}", dependencies=[Depends(require_scope("read"))])
+async def get_chart(chart_id: int, db: Database = Depends(get_db)):
+    chart = db.one("SELECT * FROM charts WHERE id=?", (chart_id,))
+    if not chart:
+        raise HTTPException(status_code=404, detail="Chart not found")
+    chart["entries"] = db.query(
+        "SELECT * FROM chart_entries WHERE chart_id=? ORDER BY rank", (chart_id,)
+    )
+    return _enrich_chart(db, chart)
 
 
 @app.get("/api/v1/stations/recent", dependencies=[Depends(require_scope("read"))])

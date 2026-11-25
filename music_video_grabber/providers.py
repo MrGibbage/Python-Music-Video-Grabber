@@ -6,6 +6,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -64,6 +65,75 @@ class XmPlaylistClient:
                 )
             )
         return tracks
+
+
+    def history(self, station: str, start: datetime, end: datetime) -> list[StationTrack]:
+        """Plays between ``start`` and ``end`` (aware datetimes), oldest first.
+
+        Pages back with xmplaylist's ``last`` parameter (epoch ms, within the
+        last 30 days). Anonymous paging is rate limited: about 85 pages in a
+        burst returned HTTP 429 with a Retry-After of ~5 minutes. So this
+        fetches only the window asked for, pauses between pages, and waits out
+        a 429 at most twice before giving up.
+        """
+        if self.fixture_path:
+            items = json.loads(self.fixture_path.read_text(encoding="utf-8")).get("results", [])
+        else:
+            items = []
+            scraper = cloudscraper.create_scraper()
+            last = int(end.timestamp() * 1000)
+            waits = 0
+            for _page in range(60):
+                response = scraper.get(
+                    f"{self.base_url}/station/{station}", params={"last": last}, timeout=30
+                )
+                if response.status_code == 429 and waits < 2:
+                    waits += 1
+                    delay = min(int(response.headers.get("retry-after") or 120), 360) + 5
+                    logger.warning(
+                        "xmplaylist rate limit; waiting %ss", delay,
+                        extra={"event": "xmplaylist_rate_limited"},
+                    )
+                    time.sleep(delay)
+                    continue
+                response.raise_for_status()
+                page = response.json().get("results") or []
+                if not page:
+                    break
+                items.extend(page)
+                oldest = _parse_timestamp(page[-1].get("timestamp"))
+                if oldest is None or oldest < start:
+                    break
+                last = int(oldest.timestamp() * 1000)
+                time.sleep(2)
+        tracks = []
+        seen = set()
+        for item in items:
+            played = _parse_timestamp(item.get("timestamp"))
+            track = item.get("track") or {}
+            artists = track.get("artists") or []
+            if played is None or not (start <= played <= end) or not track.get("title"):
+                continue
+            if not artists or item.get("timestamp") in seen:
+                continue
+            seen.add(item.get("timestamp"))
+            tracks.append(
+                StationTrack(
+                    source_track_id=str(track.get("id") or ""),
+                    title=str(track["title"]),
+                    artist=" ".join(str(artist) for artist in artists),
+                    played_at=item.get("timestamp"),
+                )
+            )
+        tracks.sort(key=lambda t: t.played_at or "")
+        return tracks
+
+
+def _parse_timestamp(value: str | None) -> datetime | None:
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
 
 
 class SpotifyClient:

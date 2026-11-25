@@ -4,9 +4,11 @@ import json
 import logging
 from collections import Counter
 from dataclasses import dataclass, replace
+from datetime import UTC, datetime
 from typing import Any
 
 from .config import Settings
+from .countdown import COUNTDOWN_SIZE, EASTERN, Play, find_countdown, weekend_for
 from .db import Database, utcnow
 from .downloader import Downloader
 from .importer import import_legacy_json, import_media_directory
@@ -65,6 +67,7 @@ class JobProcessor:
         station = job["payload"].get("station", self.settings.station)
         song_count = int(job["payload"].get("song_count", self.settings.top_tracks_limit))
         run_id = job["run_id"]
+        countdown_info: dict[str, Any] | None = None
         with self.db.connect() as conn:
             conn.execute(
                 "UPDATE runs SET status='running', started_at=? WHERE id=?",
@@ -83,7 +86,16 @@ class JobProcessor:
             ]
             logger.info("Reusing persisted chart snapshot", extra={"event": "chart_reused"})
         else:
-            tracks = self.xm.latest(station, song_count)
+            if job["payload"].get("mode") == "countdown":
+                found = self._countdown_tracks(station, run_id)
+                if found is None:
+                    return  # aborted or already done; maybe_finalize_run reports it
+                tracks, countdown_info = found
+                source = "xmplaylist_countdown"
+                song_count = len(tracks)
+            else:
+                tracks = self.xm.latest(station, song_count)
+                source = "xmplaylist_recent_plays"
             if len(tracks) != song_count:
                 raise RuntimeError(
                     f"xmplaylist returned {len(tracks)} usable tracks; "
@@ -93,7 +105,7 @@ class JobProcessor:
             self.db.save_chart(
                 run_id=run_id,
                 station=station,
-                source="xmplaylist_recent_plays",
+                source=source,
                 as_of=as_of or utcnow(),
                 entries=[
                     {
@@ -199,6 +211,8 @@ class JobProcessor:
         summary = dict(counters)
         summary.update(track_lists)
         summary["song_count"] = song_count
+        if countdown_info:
+            summary["countdown"] = countdown_info
         with self.db.connect() as conn:
             conn.execute(
                 "UPDATE runs SET status='processing', summary_json=? WHERE id=?",
@@ -208,6 +222,97 @@ class JobProcessor:
             "discovery_complete",
             f"Found {len(tracks)} tracks: {dict(counters)}",
             run_id=run_id,
+        )
+
+    def now(self) -> datetime:
+        return datetime.now(UTC)
+
+    def _countdown_tracks(
+        self, station: str, run_id: int
+    ) -> tuple[list[StationTrack], dict[str, Any]] | None:
+        """This weekend's countdown, #1 first, confirmed by matching the Saturday
+        airing against the most recent replay. None when the run should stop:
+        already confirmed this weekend, or the airings didn't line up."""
+        now = self.now()
+        weekend = weekend_for(now)
+        done = self.db.one(
+            """SELECT id FROM charts WHERE station=? AND source='xmplaylist_countdown'
+               AND as_of >= ?""",
+            (station, weekend.starts.astimezone(UTC).isoformat()),
+        )
+        if done:
+            self._end_countdown(
+                run_id, "already_confirmed",
+                f"This weekend's Top 18 is already confirmed (chart {done['id']}).",
+            )
+            return None
+        original_window = weekend.original_window
+        replay_window = weekend.replay_window(now)
+        if replay_window is None:
+            self._end_countdown(
+                run_id, "not_aligned",
+                "No replay to compare yet: the Saturday airing hasn't finished.",
+                final=False,
+            )
+            return None
+        original = self.xm.history(station, *original_window)
+        replay = self.xm.history(station, *replay_window)
+        for label, window, plays in (
+            ("countdown_original", original_window, original),
+            ("countdown_replay", replay_window, replay),
+        ):
+            self.db.save_play_window(
+                run_id=run_id, station=station, label=label,
+                start=window[0].isoformat(), end=window[1].isoformat(),
+                plays=[track.__dict__ for track in plays],
+            )
+        match = find_countdown(_as_plays(original), _as_plays(replay))
+        replay_text = (
+            f"{replay_window[0].astimezone(EASTERN):%a %H:%M}–"
+            f"{replay_window[1].astimezone(EASTERN):%H:%M} ET"
+        )
+        if not match.found:
+            self._end_countdown(
+                run_id, "not_aligned",
+                f"The Saturday airing ({len(original)} plays) and the replay window "
+                f"{replay_text} ({len(replay)} plays) share a run of {match.matched} "
+                f"songs, not exactly {COUNTDOWN_SIZE}.",
+                final=weekend.is_final_attempt(now),
+            )
+            return None
+        tracks = [
+            StationTrack(p.source_track_id, p.title, p.artist, p.played_at.isoformat())
+            for p in reversed(match.plays)
+        ]
+        info = {
+            "weekend": weekend.saturday.isoformat(),
+            "replay_window": replay_text,
+            "first_song_et": f"{match.plays[0].played_at.astimezone(EASTERN):%H:%M}",
+            "number_one_et": f"{match.plays[-1].played_at.astimezone(EASTERN):%H:%M}",
+        }
+        self.db.event(
+            "countdown_confirmed",
+            f"Top 18 confirmed: Saturday {info['first_song_et']}–{info['number_one_et']} ET "
+            f"matched the replay in {replay_text}",
+            run_id=run_id,
+        )
+        return tracks, info
+
+    def _end_countdown(self, run_id: int, outcome: str, message: str, final: bool = False):
+        with self.db.connect() as conn:
+            conn.execute(
+                "UPDATE runs SET summary_json=? WHERE id=?",
+                (
+                    json.dumps(
+                        {"countdown_outcome": outcome, "countdown_message": message,
+                         "final_attempt": final}
+                    ),
+                    run_id,
+                ),
+            )
+        self.db.event(
+            f"countdown_{outcome}", message,
+            level="warning" if outcome == "not_aligned" else "info", run_id=run_id,
         )
 
     def _upsert_track(self, station: str, station_track: Any) -> int:
@@ -538,6 +643,38 @@ class JobProcessor:
             raise LookupError("Track not found")
         return self.db.enqueue("manual_candidate", {"track_id": track_id, "url": url})
 
+    def _finalize_countdown_stop(self, run: dict[str, Any], outcome: str) -> None:
+        """A countdown run that stopped before processing: quietly skipped when the
+        weekend is already done, otherwise aborted with a Telegram message."""
+        summary = json.loads(run.get("summary_json") or "{}")
+        status = "skipped" if outcome == "already_confirmed" else "aborted"
+        with self.db.connect() as conn:
+            conn.execute(
+                "UPDATE runs SET status=?, finished_at=? WHERE id=?",
+                (status, utcnow(), run["id"]),
+            )
+        if status == "skipped":
+            return
+        next_step = (
+            "That was the last replay this weekend, so this week's Top 18 was not captured."
+            if summary.get("final_attempt")
+            else "MVG will try again after the next replay."
+        )
+        sent = self.notifier.send(
+            f"{run['station']} Top 18 not confirmed",
+            "\n".join(
+                [summary.get("countdown_message", ""), "", next_step, "",
+                 f"Run: {run['id']}", "Details: https://grabber.pelorus.org/"]
+            ),
+        )
+        self.db.event(
+            "notification_sent" if sent else "notification_not_sent",
+            "Countdown abort notification "
+            + ("accepted by Mailrise" if sent else "was disabled or not accepted"),
+            level="info" if sent else "warning",
+            run_id=run["id"],
+        )
+
     def maybe_finalize_run(self, run_id: int | None) -> None:
         if run_id is None:
             return
@@ -547,6 +684,11 @@ class JobProcessor:
             (run_id,),
         )
         if active and active["count"]:
+            return
+        run = self.db.one("SELECT * FROM runs WHERE id=?", (run_id,)) or {}
+        outcome = json.loads(run.get("summary_json") or "{}").get("countdown_outcome")
+        if outcome:
+            self._finalize_countdown_stop(run, outcome)
             return
         failed = self.db.one(
             "SELECT COUNT(*) AS count FROM jobs WHERE run_id=? AND status='failed'", (run_id,)
@@ -609,3 +751,14 @@ class JobProcessor:
             level="info" if notification_sent else "warning",
             run_id=run_id,
         )
+
+
+def _as_plays(tracks: list[StationTrack]) -> list[Play]:
+    return [
+        Play(
+            played_at=datetime.fromisoformat(str(t.played_at).replace("Z", "+00:00")),
+            artist=t.artist, title=t.title, source_track_id=t.source_track_id,
+        )
+        for t in tracks
+        if t.played_at
+    ]
