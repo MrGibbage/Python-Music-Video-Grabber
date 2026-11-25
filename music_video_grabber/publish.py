@@ -10,12 +10,18 @@ from __future__ import annotations
 
 from datetime import datetime
 from html import escape
+from pathlib import Path
+from urllib.parse import quote
 
 from .countdown import EASTERN
 from .db import Database
 from .text import canonical_track_key
 
 CONFIRMED = "xmplaylist_countdown"
+# The MVG favicon, inlined so the published page stays a single file.
+_FAVICON = quote(
+    (Path(__file__).with_name("static") / "favicon.svg").read_text(encoding="utf-8").strip()
+)
 
 _CSS = """
 :root {
@@ -156,6 +162,7 @@ def render_top18_html(db: Database) -> str:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alt Nation Top 18 archive</title>
+<link rel="icon" href="data:image/svg+xml,{_FAVICON}">
 <style>
 {_CSS}</style>
 </head>

@@ -260,3 +260,16 @@ def test_plex_status_allows_partial_comparison_and_snapshot_refresh(tmp_path: Pa
             assert db.one("SELECT plex_rating_key FROM plex_media WHERE plex_rating_key='fresh'")
     finally:
         app.dependency_overrides.clear()
+
+
+def test_icons_are_served_without_signing_in(tmp_path):
+    from fastapi.testclient import TestClient
+
+    from music_video_grabber.main import app
+
+    with TestClient(app, base_url="https://testserver") as client:
+        for path, kind in (("/favicon.svg", "image/svg+xml"), ("/favicon.ico", "image/x-icon"),
+                           ("/apple-touch-icon.png", "image/png")):
+            response = client.get(path)
+            assert response.status_code == 200, path
+            assert response.headers["content-type"].startswith(kind)

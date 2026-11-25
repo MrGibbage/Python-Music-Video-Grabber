@@ -10,7 +10,7 @@ from typing import Literal
 from zoneinfo import ZoneInfo
 
 from fastapi import Depends, FastAPI, Form, Header, HTTPException, Query, Request, status
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel, Field, field_validator
 
@@ -49,6 +49,26 @@ app = FastAPI(
     lifespan=lifespan,
 )
 templates = Jinja2Templates(directory=str(Path(__file__).with_name("templates")))
+STATIC = Path(__file__).with_name("static")
+# Icons are public (the sign-in page needs them too) and change rarely.
+ICONS = {
+    "/favicon.svg": ("favicon.svg", "image/svg+xml"),
+    "/favicon.ico": ("favicon.ico", "image/x-icon"),
+    "/apple-touch-icon.png": ("apple-touch-icon.png", "image/png"),
+}
+
+
+def _icon_route(filename: str, media_type: str):
+    async def serve_icon() -> FileResponse:
+        return FileResponse(
+            STATIC / filename, media_type=media_type,
+            headers={"Cache-Control": "public, max-age=604800"},
+        )
+    return serve_icon
+
+
+for _path, (_filename, _media_type) in ICONS.items():
+    app.add_api_route(_path, _icon_route(_filename, _media_type), include_in_schema=False)
 
 
 @app.middleware("http")
